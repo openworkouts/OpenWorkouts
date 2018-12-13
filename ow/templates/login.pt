@@ -1,0 +1,51 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="OpenWorkouts"
+      metal:use-macro="load: base_anonymous.pt"
+      tal:attributes="lang request.locale_name">
+
+  <metal:content metal:fill-slot="content">
+
+      <!-- Login -->
+
+      <div class="login-content">
+
+        <form method="post" name="login" action="">
+
+          <input type="hidden" name="return_to" value=""
+                 tal:attributes="value redirect_url">
+
+          <div id="messages" class="message message-error"
+               tal:content="message" tal:condition="message != ''"></div>
+
+          <fieldset>
+            <div>
+              <label for="username" i18n:translate="">Username</label>
+              <input placeholder="Your username..." type="text" name="username"
+                     value="" i18n:attributes="placeholder"
+                     tal:attributes="value username">
+            </div>
+            <div>
+              <label for="password" i18n:translate="">Password</label>
+              <input placeholder="Your password..." name="password"
+                     type="password" i18n:attributes="placeholder">
+            </div>
+            <input class="button" type="submit" name="submit" value="Login">
+            <a class="login-remember" href="#" i18n:translate="">
+              Forgot your password?</a> |
+            <a class="join-now" href="" i18n:translate=""
+               tal:attributes="href request.resource_url(context, 'signup')">
+              Join now!</a>
+
+          </fieldset>
+
+        </form>
+
+      </div>
+
+  </metal:content>
+
+</html>

@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="OpenWorkouts"
+      metal:use-macro="load: base.pt"
+      tal:attributes="lang request.locale_name">
+
+  <metal:head-title metal:fill-slot="head-title">
+    <tal:t i18n:translate="">Update workout from file</tal:t> -
+    <tal:w tal:content="context.title"></tal:w>
+  </metal:head-title>
+
+  <metal:title metal:fill-slot="title">
+    <tal:t i18n:translate="">Update workout from file</tal:t>
+    <tal:w tal:content="context.title"></tal:w>
+  </metal:title>
+
+  <metal:content metal:fill-slot="content">
+    <div id="update_workout_file">
+      ${form.begin(multipart=True)}
+      ${form.csrf_token()}
+
+      <div tal:condition="context.has_tracking_file"
+           i18n:translate="">
+        Existing
+        <tal:filetype i18n:name="filetype"
+                      tal:content="context.tracking_filetype"></tal:filetype>
+        tracking file data:
+        <tal:data i18n:name="start"
+                  tal:content="context.start"></tal:data> -
+        <tal:data i18n:name="end"
+                  tal:content="context.end"></tal:data> -
+        <tal:data i18n:name="distance"
+                  tal:content="context.distance"></tal:data> kms
+      </div>
+
+      <fieldset>
+        ${form.errorlist('tracking_file')}
+        <label for="notes" i18n:translate="">Workout file (gpx, fit):</label>
+        ${form.file('tracking_file')}
+      </fieldset>
+
+      ${form.submit("submit", "Save")}
+      <a href="" tal:attributes="href request.resource_url(request.root)"
+         i18n:translate="">Cancel</a>
+
+      ${form.end()}
+    </div>
+
+  </metal:content>
+
+</html>

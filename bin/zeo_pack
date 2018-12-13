@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# Script to pack the ZODB served by the ZEO server
+#
+# You have to set some values for the address, port, socket, days, etc
+# variables before running this script.
+#
+
+here=`dirname $0`
+address="localhost"
+port="8081"
+socket="${here}/../var/zeo/zeo.sock"
+days=7
+
+if [ -S ${socket} ]; then
+    echo "Found unix socket: ${socket}"
+    echo "Packing database"
+    # If the unix socket exists, pack the db connecting to ZEO using it
+    zeopack -d ${days} -U ${socket}
+    echo "Done"
+else
+    # check if there is a ZEO instance running in this address/port
+    nc -z ${address} ${port} > /dev/null
+    if [ $? == 0 ]; then
+	echo "Found running server (tcp): ${address}:${port}"
+	echo "Packing database"
+	# something is running there, try to pack the db
+	zeopack -d ${days} -h ${address} -p ${port}
+	echo "Done"
+    else
+	echo "Nor a valid unix socket neither an available tcp port could be"
+	echo "found, aborting"
+    fi
+fi

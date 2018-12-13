@@ -1,0 +1,25 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="OpenWorkouts"
+      metal:use-macro="load: add_manual_workout.pt"
+      tal:attributes="lang request.locale_name">
+
+  <!--!
+      This template loads the add manual workout, reusing the form and
+      overriding just the titles
+    -->
+
+  <metal:head-title metal:fill-slot="head-title">
+    <tal:t i18n:translate="">Edit workout</tal:t> -
+    <tal:w tal:content="context.title"></tal:w>
+  </metal:head-title>
+
+  <metal:title metal:fill-slot="title">
+    <tal:t i18n:translate="">Edit workout</tal:t>
+    <tal:w tal:content="context.title"></tal:w>
+  </metal:title>
+
+</html>

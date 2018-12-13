@@ -1,0 +1,56 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="OpenWorkouts"
+      metal:use-macro="load: base.pt"
+      tal:attributes="lang request.locale_name">
+
+  <metal:head-title metal:fill-slot="head-title">
+    <tal:t i18n:translate="">Add user</tal:t>
+  </metal:head-title>
+
+  <metal:title metal:fill-slot="title">
+    <tal:t i18n:translate="">Add user</tal:t>
+  </metal:title>
+
+  <metal:content metal:fill-slot="content">
+    <div id="add_user">
+      ${form.begin()}
+      ${form.csrf_token()}
+
+      <fieldset>
+        ${form.errorlist('user_id')}
+        <label for="email" i18n:translate="">User ID:</label>
+        ${form.text('user_id')}
+        ${form.errorlist('email')}
+        <label for="email" i18n:translate="">E-Mail:</label>
+        ${form.text('email')}
+      </fieldset>
+
+      <fieldset>
+        ${form.errorlist('firstname')}
+        <label for="firstname" i18n:translate="">Firstname:</label>
+        ${form.text('firstname')}
+        ${form.errorlist('lastname')}
+        <label for="lastname" i18n:translate="">Lastname:</label>
+        ${form.text('lastname')}
+      </fieldset>
+
+      <fieldset>
+        ${form.errorlist('group')}
+        <label for="group" i18n:translate="">Group / Admin:</label>
+        ${form.text('group')}
+      </fieldset>
+
+      ${form.submit("submit", "Save")}
+      <a href="" tal:attributes="href request.resource_url(request.root)"
+         i18n:translate="">Cancel</a>
+
+      ${form.end()}
+    </div>
+
+  </metal:content>
+
+</html>

@@ -1,0 +1,12 @@
+
+#map {
+    height: 360px;
+}
+
+#ow-analysis {
+    float: left;
+    width: 98%;
+    padding: 10px;
+    font-size: 0.8em;
+    background-color: #eeeeee;
+}

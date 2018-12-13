@@ -1,0 +1,50 @@
+<html xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="OpenWorkouts"
+      tal:attributes="lang request.locale_name">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+          content="OpenWorkouts - tracking your workouts openly">
+    <meta name="author" content="The OpenWorkouts Project">
+
+    <link rel="shortcut icon"
+          href="${request.static_url('ow:static/pyramid-16x16.png')}">
+
+    <!--! This should be 182x182px-->
+    <link rel="apple-touch-icon"
+          href="${request.static_url('ow:static/pyramid-16x16.png')}">
+
+    <title>OpenWorkouts - tracking your workouts openly</title>
+
+    <link rel="stylesheet"
+          href="${request.static_url('ow:static/css/main.min.css')}" />
+
+  </head>
+
+  <body>
+
+    <div class="page">
+
+      <header class="header-content">
+        <h1 class="logo">
+          <a href="#" tal:attributes="href request.resource_url(request.root)">
+            <span class="logo-open">Open</span><span class="logo-work">work</span><span class="logo-outs">outs</span>
+        </a>
+        </h1>
+        <p class="description">tracking your workouts openly</p>
+      </header>
+
+      <metal:content metal:define-slot="content"></metal:content>
+
+    </div>
+
+  </body>
+
+</html>

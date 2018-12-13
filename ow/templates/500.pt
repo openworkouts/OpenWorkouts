@@ -1,0 +1,29 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="OpenWorkouts"
+      metal:use-macro="load: base.pt"
+      tal:attributes="lang request.locale_name">
+
+  <metal:head-title metal:fill-slot="head-title">
+    <tal:t i18n:translate="Internal Error"></tal:t>
+  </metal:head-title>
+
+  <metal:title metal:fill-slot="title">
+    <tal:t i18n:translate="">
+      Dammit! Something got broken! :-(
+    </tal:t>
+  </metal:title>
+
+  <metal:content metal:fill-slot="content">
+    <div id="userinfo" i18n:translate="">
+      Our support stuff has been notified already with all details about
+      the problem, please
+      <a href="" tal:attributes="href url">
+        go back to your dashboard</a> and be patient while we fix it.
+    </div>
+  </metal:content>
+
+</html>

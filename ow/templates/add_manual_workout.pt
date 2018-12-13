@@ -1,0 +1,94 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="OpenWorkouts"
+      metal:use-macro="load: base.pt"
+      tal:attributes="lang request.locale_name">
+
+  <metal:head-title metal:fill-slot="head-title">
+    <tal:t i18n:translate="">Add workout manually</tal:t>
+  </metal:head-title>
+
+  <metal:title metal:fill-slot="title">
+    <tal:t i18n:translate="">Add workout Manually</tal:t>
+  </metal:title>
+
+  <metal:css metal:fill-slot="css">
+    <link rel="stylesheet"
+          href="${request.static_url('ow:static/components/EasyAutocomplete/easy-autocomplete.min.css')}" />
+  </metal:css>
+
+  <metal:content metal:fill-slot="content">
+    <div id="add_workout">
+      ${form.begin()}
+      ${form.csrf_token()}
+
+      <fieldset>
+        ${form.errorlist('sport')}
+        <label for="sport" i18n:translate="">Sport/Activity:</label>
+        ${form.text('sport')}
+        ${form.errorlist('title')}
+        <label for="title" i18n:translate="">Title:</label>
+        ${form.text('title')}
+      </fieldset>
+
+      <fieldset>
+        ${form.errorlist('start_date')}
+        <label for="start_date" i18n:translate="">Start date (dd/mm/yyyy):
+        </label>
+        ${form.text('start_date', size=10)}
+        ${form.errorlist('start_time')}
+        <label for="start_time" i18n:translate="">Start time (HH:MM):</label>
+        ${form.text('start_time', size=5)}
+
+        <br /> <hr />  <!-- o_O! -->
+
+        ${form.errorlist('duration_hours')}
+        <label for="duration_hours" i18n:translate="">Hours:</label>
+        ${form.text('duration_hours', size=3)}
+
+        ${form.errorlist('duration_minutes')}
+        <label for="duration_minutes" i18n:translate="">Minutes:</label>
+        ${form.text('duration_minutes', size=3)}
+
+        ${form.errorlist('duration_seconds')}
+        <label for="duration_seconds" i18n:translate="">Seconds:</label>
+        ${form.text('duration_seconds', size=3)}
+
+        ${form.errorlist('distance')}
+        <label for="distance" i18n:translate="">Distance (Km):</label>
+        ${form.text('distance', size=4)}
+      </fieldset>
+
+      <fieldset>
+        ${form.errorlist('notes')}
+        <label for="notes" i18n:translate="">Notes:</label>
+        ${form.textarea('notes', rows=10, cols=50)}
+      </fieldset>
+
+      ${form.submit("submit", "Save")}
+      <a href="" tal:attributes="href request.resource_url(request.root)"
+         i18n:translate="">Cancel</a>
+
+      ${form.end()}
+    </div>
+
+  </metal:content>
+
+
+  <metal:body-js metal:fill-slot="body-js">
+    <script src="${request.static_url('ow:static/components/EasyAutocomplete/jquery.easy-autocomplete.min.js')}"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+          var options = {
+              data: ${request.root.sports_json},
+          };
+          $("#sport").easyAutocomplete(options);
+      });
+    </script>
+  </metal:body-js>
+
+
+</html>

@@ -1,0 +1,28 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="OpenWorkouts"
+      metal:use-macro="load: base.pt"
+      tal:attributes="lang request.locale_name">
+
+  <metal:head-title metal:fill-slot="head-title">
+    <tal:t i18n:translate="Content not found"></tal:t>
+  </metal:head-title>
+
+  <metal:title metal:fill-slot="title">
+    <tal:t i18n:translate="">
+      So sorry! :-(
+    </tal:t>
+  </metal:title>
+
+  <metal:content metal:fill-slot="content">
+    <div id="userinfo" i18n:translate="">
+      We are sorry, but the contents you were looking for can not be found.
+      Please <a href="" tal:attributes="href url">
+        go back to your dashboard</a> and, if the problem persist, let us know!
+    </div>
+  </metal:content>
+
+</html>

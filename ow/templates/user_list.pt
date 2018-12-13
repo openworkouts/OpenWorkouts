@@ -1,0 +1,43 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="OpenWorkouts"
+      metal:use-macro="load: base.pt"
+      tal:attributes="lang request.locale_name">
+
+  <metal:head-title metal:fill-slot="head-title">
+    <tal:t i18n:translate="">User list</tal:t>
+  </metal:head-title>
+
+  <metal:title metal:fill-slot="title">
+    <tal:t i18n:translate="">user list</tal:t>
+  </metal:title>
+
+  <metal:content metal:fill-slot="content">
+    <table id="users">
+      <thead>
+        <tr>
+        <th i18n:translate="">Name</th>
+        <th i18n:translate="">E-mail</th>
+        <th i18n:translate="">Workouts</th>
+        </tr>
+      </thead>
+      <tal:r tal:repeat="user users">
+      <tr tal:attributes="id 'user-' + user.user_id">
+        <td>${user.fullname}</td>
+        <td>${user.email}</td>
+        <td>${user.num_workouts}</td>
+      </tr>
+      </tal:r>
+    </table>
+
+  <p>
+    Add a user on the
+    <a href="adduser">Add User Form</a>
+  </p>
+
+  </metal:content>
+
+</html>

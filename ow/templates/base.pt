@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+
+<html xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="OpenWorkouts"
+      metal:define-macro="base"
+      tal:attributes="lang request.locale_name">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+          content="OpenWorkouts, tracking your workouts openly">
+    <meta name="author" content="The OpenWorkouts Project">
+
+    <metal:header-metas metal:define-slot="header-metas"></metal:header-metas>
+
+    <link rel="shortcut icon"
+          href="${request.static_url('ow:static/pyramid-16x16.png')}">
+
+    <!--! This should be 182x182px-->
+    <link rel="apple-touch-icon"
+          href="${request.static_url('ow:static/pyramid-16x16.png')}">
+
+    <title>
+      OpenWorkouts |
+      <metal:head-title metal:define-slot="head-title"></metal:head-title>
+    </title>
+
+    <link rel="stylesheet"
+          href="${request.static_url('ow:static/css/main.min.css')}" />
+
+    <link rel="stylesheet"
+          href="${request.static_url('ow:static/css/openworkouts.css')}" />
+
+    <metal:css metal:define-slot="css"></metal:css>
+
+    <metal:header-js metal:define-slot="header-js"></metal:header-js>
+
+  </head>
+
+  <body class="is-login">
+
+    <div class="page">
+
+      <header class="header-content">
+        <h1 class="logo">
+          <a href="" tal:attributes="href request.resource_url(request.root)">
+            <span class="logo-open">Open</span><span class="logo-work">work</span><span class="logo-outs">outs</span>
+          </a>
+          <!--! <metal:title metal:define-slot="title"></metal:title> -->
+        </h1>
+        <p class="description">tracking your workouts openly</p>
+
+        <metal:menu tal:condition="request.authenticated_userid"
+                    tal:define="current_user request.authenticated_userid">
+
+          <nav class="nav-site">
+            <!--! renderer_name contains the name of the template rendered at
+              view-level, so we can use that to know in which sections is the
+              current user now -->
+            <ul>
+              <li class=""
+                  tal:attributes="class 'is-active' if 'dashboard' in renderer_name else ''">
+                <a href="" i18n:translate=""
+                   tal:attributes="href request.resource_url(request.root)">
+                  Dashboard</a>
+              </li>
+              <li class=""
+                  tal:attributes="class 'is-active' if 'profile' in renderer_name else ''">
+                <a href="" i18n:translate=""
+                   tal:attributes="href request.resource_url(request.root, current_user, 'profile')">
+                  My profile</a>
+              </li>
+              <li class="add-workout">
+                <a href="#"><span i18n:translate="">Add Workout</span></a>
+                <ul>
+                  <li>
+                    <a href="" i18n:translate=""
+                       tal:attributes="href request.resource_url(request.root, current_user, 'add-workout')">
+                      Upload file</a>
+                  </li>
+                  <li>
+                    <a href="" i18n:translate=""
+                       tal:attributes="href request.resource_url(request.root, current_user, 'add-workout-manually')">
+                      Add manually</a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a href="" i18n:translate=""
+                   tal:attributes="href request.resource_url(request.root, 'logout')">
+                  Log out
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </metal:menu>
+      </header>
+
+      <metal:content metal:define-slot="content"></metal:content>
+
+    </div>
+
+    <script src="${request.static_url('ow:static/components/jquery/jquery.js')}"></script>
+
+    <metal:body-js metal:define-slot="body-js"></metal:body-js>
+
+  </body>
+
+</html>

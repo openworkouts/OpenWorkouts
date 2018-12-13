@@ -1,0 +1,69 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="OpenWorkouts"
+      metal:use-macro="load: base_anonymous.pt"
+      tal:attributes="lang request.locale_name">
+
+  <metal:content metal:fill-slot="content">
+
+      <!-- Login -->
+
+      <div class="signup-content">
+
+        <form method="post" name="signup" action="">
+
+          <fieldset>
+            <div>
+              ${form.errorlist('username')}
+              <label for="username" i18n:translate="">Username</label>
+              <input placeholder="Choose a cool username" type="text"
+                     name="username" value="" i18n:attributes="placeholder">
+            </div>
+
+            <div>
+              ${form.errorlist('email')}
+              <label for="email" i18n:translate="">Email</label>
+              <input placeholder="We need a valid email address"
+                     type="text" name="email"
+                     value="" i18n:attributes="placeholder">
+            </div>
+            <div>
+              ${form.errorlist('firstname')}
+              <label for="firstname" i18n:translate="">First name</label>
+              <input placeholder="Your real first name here" type="text"
+                     name="firstname" value="" i18n:attributes="placeholder">
+            </div>
+            <div>
+              ${form.errorlist('lastname')}
+              <label for="lastname" i18n:translate="">Last name</label>
+              <input placeholder="Your family name here" type="text"
+                     name="lastname" value="" i18n:attributes="placeholder">
+            </div>
+            <div>
+              ${form.errorlist('password')}
+              <label for="password" i18n:translate="">Password</label>
+              <input placeholder="More than 9 characters, numbers and/or symbols"
+                     name="password"
+                     type="password" i18n:attributes="placeholder">
+            </div>
+
+            <div>
+              ${form.errorlist('password_confirm')}
+              <label for="password_confirm" i18n:translate="">Password (confirm)</label>
+              <input placeholder="Confirm your password" name="password_confirm"
+                     type="password" i18n:attributes="placeholder">
+            </div>
+          </fieldset>
+
+          <input class="button" type="submit" name="submit" value="Sign up!">
+
+        </form>
+
+      </div>
+
+  </metal:content>
+
+</html>

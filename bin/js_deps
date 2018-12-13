@@ -1,0 +1,191 @@
+#!/bin/sh
+#
+# Download all the needed static js assets and put them in the
+# proper place
+#
+
+# Hints on curl:
+#  -L - needed to follow redirections, which is needed for downloading release
+#       tarballs from github
+#  -O - keep the remote file name when saving it locally
+#  -# - show progress bar
+
+# Set curl, unzip and tar full paths + default parameters/options
+GET="`which curl` -L -O -#"
+UNZIP="`which unzip` -q"
+TAR="`which tar` -zxf"
+
+# Temp dir where compressed files are downloaded, uncompressed, etc
+TMP=ow/static/tmp
+# Destination directory for all the components
+COMPONENTS=ow/static/components
+# Cache file, to keep track of which components have been installed
+# already
+CACHE=$COMPONENTS/js_deps.cache
+# Full path to where we run the script from
+CURRENT=`pwd`
+
+# Some repeated messages all over the script
+ALREADY_INSTALLED="is already installed, use --reinstall to install again"
+
+if [ ! -d ${CURRENT}/ow ]; then
+    echo "Error: Please run this script inside the OpenWorkouts repository"
+    exit 1
+fi
+
+if [ ! -d ${TMP} ]; then
+    mkdir ${TMP}
+fi
+
+if [ ! -d ${COMPONENTS} ]; then
+    mkdir ${COMPONENTS}
+fi
+
+if [ ! -f ${CACHE} ]; then
+    touch ${CACHE}
+fi
+
+# Look for the --reinstall parameter, which forces the reinstall of any
+# installed components
+REINSTALL=1
+if [ "$1" == "--reinstall" ]; then
+    REINSTALL=0
+fi
+
+check_cache() {
+    # Check the cache file, see if we can skip installing a component
+    #
+    # Expects 2 parameters, first one is the component name, second is
+    # the version of that component
+    grep -q "$1-$2" $CACHE
+    res=$?
+    return "$res"
+}
+
+# The next few functions will take care of download and "install" each
+# component.
+#
+# To Upgrade a component to a new version, change VERSION inside the function
+# and run the script. Fix the code inside the function if needed
+#
+# To Add a new component, add a new function, using one of the existing as
+# a base start. Some of them download js/css files directly, some of them
+# grab a zipped file or a tarball and uncompress it, copying over the needed
+# data to the proper place, just try to find out what fits best for the new
+# component and start from there.
+#
+# HINT: when installing a new component, comment the lines calling all the other
+# components install functions, so you do not have to wait for all components to
+# be installed.
+
+jquery() {
+    NAME="jquery"
+    VERSION=3.3.1
+    URL=https://code.jquery.com/${NAME}-${VERSION}.js
+    check_cache ${NAME} ${VERSION}
+    in_cache=$?
+    if [ ${in_cache} -eq 0 -a ${REINSTALL} -eq 1 ]; then
+        echo "${NAME}-${VERSION} $ALREADY_INSTALLED"
+    else
+        echo "> Installing ${NAME} ${VERSION}"
+        if [ -d ${COMPONENTS}/${NAME} ]; then
+            # Clean up, delete previous install before installing
+            rm -r ${COMPONENTS}/${NAME}
+        fi
+        mkdir ${COMPONENTS}/${NAME}
+        cd ${COMPONENTS}/${NAME}
+        ${GET} ${URL}
+        # Better to have a simple jquery.js, so we do not have to set an
+        # specific version when loading it in the templates or assets
+        ln -sf ${NAME}-${VERSION}.js ${NAME}.js
+        cd ${CURRENT}
+        echo "${NAME}-${VERSION}" >> ${CACHE}
+        echo "< Installed ${NAME} ${VERSION}"
+    fi
+}
+
+easy_autocomplete() {
+    NAME="EasyAutocomplete"
+    VERSION=1.3.4
+    URL=https://github.com/pawelczak/${NAME}/archive/${VERSION}.tar.gz
+    check_cache ${NAME} ${VERSION}
+    in_cache=$?
+    if [ ${in_cache} -eq 0 -a ${REINSTALL} -eq 1 ]; then
+        echo "${NAME}-${VERSION} $ALREADY_INSTALLED"
+    else
+        echo "> Installing ${NAME} ${VERSION}"
+        if [ -d ${COMPONENTS}/${NAME} ]; then
+            # Clean up, delete previous install before installing
+            rm -r ${COMPONENTS}/${NAME}
+        fi
+        cd ${TMP}
+        ${GET} ${URL}
+        ${TAR} ${VERSION}.tar.gz
+        cd ${CURRENT}
+        mv ${TMP}/${NAME}-${VERSION}/dist ${COMPONENTS}/${NAME}
+        echo "${NAME}-${VERSION}" >> ${CACHE}
+        echo "< Installed ${NAME} ${VERSION}"
+    fi
+}
+
+leaflet() {
+    NAME="Leaflet"
+    VERSION=1.3.4
+    URL=https://github.com/${NAME}/${NAME}/archive/v${VERSION}.tar.gz
+    check_cache ${NAME} ${VERSION}
+    in_cache=$?
+    if [ ${in_cache} -eq 0 -a ${REINSTALL} -eq 1 ]; then
+        echo "${NAME}-${VERSION} $ALREADY_INSTALLED"
+    else
+        echo "> Installing ${NAME} ${VERSION}"
+        if [ -d ${COMPONENTS}/${NAME} ]; then
+            # Clean up, delete previous install before installing
+            rm -r ${COMPONENTS}/${NAME}
+        fi
+        cd ${TMP}
+        ${GET} ${URL}
+        ${TAR} v${VERSION}.tar.gz
+        cd ${CURRENT}
+        mv ${TMP}/${NAME}-${VERSION}/dist ${COMPONENTS}/${NAME}
+        echo "${NAME}-${VERSION}" >> ${CACHE}
+        echo "< Installed ${NAME} ${VERSION}"
+    fi
+}
+
+
+leaflet_gpx() {
+    NAME="leaflet-gpx"
+    VERSION=1.4.0
+    URL=https://github.com/mpetazzoni/${NAME}/archive/v${VERSION}.tar.gz
+    check_cache ${NAME} ${VERSION}
+    in_cache=$?
+    if [ ${in_cache} -eq 0 -a ${REINSTALL} -eq 1 ]; then
+        echo "${NAME}-${VERSION} $ALREADY_INSTALLED"
+    else
+        echo "> Installing ${NAME} ${VERSION}"
+        if [ -d ${COMPONENTS}/${NAME} ]; then
+            # Clean up, delete previous install before installing
+            rm -r ${COMPONENTS}/${NAME}
+        fi
+        cd ${TMP}
+        ${GET} ${URL}
+        ${TAR} v${VERSION}.tar.gz
+        cd ${CURRENT}
+        mv ${TMP}/${NAME}-${VERSION} ${COMPONENTS}/${NAME}
+        echo "${NAME}-${VERSION}" >> ${CACHE}
+        echo "< Installed ${NAME} ${VERSION}"
+    fi
+}
+
+
+
+echo "Installing JS dependencies in ${COMPONENTS}"
+
+jquery
+easy_autocomplete
+leaflet
+leaflet_gpx
+
+# Clean up, remove the tmp directory
+echo "Cleaning up temp storage"
+rm -r ${TMP}

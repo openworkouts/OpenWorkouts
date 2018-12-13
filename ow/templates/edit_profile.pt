@@ -1,0 +1,83 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="OpenWorkouts"
+      metal:use-macro="load: base.pt"
+      tal:attributes="lang request.locale_name">
+
+  <metal:head-title metal:fill-slot="head-title">
+    <tal:t i18n:translate="">Edit profile</tal:t>
+  </metal:head-title>
+
+  <metal:title metal:fill-slot="title">
+    <tal:t i18n:translate="">Edit profile</tal:t>
+  </metal:title>
+
+  <metal:content metal:fill-slot="content">
+    <div id="add_workout">
+      ${form.begin(multipart=True)}
+      ${form.csrf_token()}
+
+      <fieldset>
+        ${form.errorlist('email')}
+        <label for="email" i18n:translate="">Email address:</label>
+        ${form.text('email')}
+      </fieldset>
+
+      <fieldset>
+        <tal:c tal:condition="getattr(context, 'picture', None)">
+          <tal:t i18n:translate="">Current picture:</tal:t>
+          <img tal:attributes="src request.resource_path(context, 'picture')"
+               width="150" />
+        </tal:c>
+        ${form.errorlist('picture')}
+        <label for="picture" i18n:translate="">
+          Picture (jpg, jpeg, png or gif):</label>
+        ${form.file('picture')}
+      </fieldset>
+
+      <fieldset>
+        ${form.errorlist('firstname')}
+        <label for="firstname" i18n:translate="">First name:</label>
+        ${form.text('firstname')}
+        ${form.errorlist('lastname')}
+        <label for="lastname" i18n:translate="">Last name:</label>
+        ${form.text('lastname')}
+      </fieldset>
+
+      <fieldset>
+        ${form.errorlist('gender')}
+        <label for="gender" i18n:translate="">Gender:</label>
+        ${form.select('gender', ['male', 'female'])}
+
+        ${form.errorlist('birth_date')}
+        <label for="birth_date" i18n:translate="">Birth date:</label>
+        ${form.date('birth_date', date_format='%d/%m/%Y')}
+
+        ${form.errorlist('height')}
+        <label for="height" i18n:translate="">Height (meters):</label>
+        ${form.text('height')}
+
+        ${form.errorlist('weight')}
+        <label for="weight" i18n:translate="">Weight (kg):</label>
+        ${form.text('weight')}
+      </fieldset>
+
+      <fieldset>
+        ${form.errorlist('bio')}
+        <label for="bio" i18n:translate="">Bio/About you:</label>
+        ${form.textarea('bio', rows=10, cols=50)}
+      </fieldset>
+
+      ${form.submit("submit", "Save")}
+      <a href="" tal:attributes="href request.resource_url(context, 'profile')"
+         i18n:translate="">Cancel</a>
+
+      ${form.end()}
+    </div>
+
+  </metal:content>
+
+</html>

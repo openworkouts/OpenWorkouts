@@ -1,0 +1,7 @@
+#!/bin/sh
+#
+# Script to start the ZEO server, using the proper paths
+#
+
+# the path to zeoctl should be correctly set by the virtualenv
+zeoctl -d -C etc/zeo.conf start

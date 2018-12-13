@@ -1,0 +1,93 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="OpenWorkouts"
+      metal:use-macro="load: base.pt"
+      tal:attributes="lang request.locale_name">
+
+  <metal:head-title metal:fill-slot="head-title">
+    <tal:t i18n:translate="">My dashboard</tal:t>
+  </metal:head-title>
+
+  <!--!
+      <metal:title metal:fill-slot="title">
+        <tal:t i18n:translate="">dashboard for user</tal:t>
+        <tal:user tal:content="context.fullname"></tal:user>
+      </metal:title>
+      -->
+
+  <metal:content metal:fill-slot="content">
+
+    <div class="workout-content">
+
+      <section class="workout-list">
+
+        <h2 tal:content="context.fullname"></h2>
+
+        <tal:r tal:repeat="workout context.workouts()">
+
+          <article class="workout-resume">
+
+            <h2 class="workout-title">
+              <a href="" tal:content="workout.title"
+                 tal:attributes="href request.resource_url(workout)"></a>
+            </h2>
+
+            <ul class="workout-info">
+              <li>
+                <tal:c tal:content="workout.start"></tal:c>
+              </li>
+              <li>
+                <tal:c tal:content="workout.duration"></tal:c>
+              </li>
+              <li tal:condition="workout.distance">
+                <tal:c tal:content="workout.rounded_distance"></tal:c> km
+              </li>
+            </ul>
+
+            <ul class="workout-info" tal:define="hr workout.hr; cad workout.cad">
+              <li tal:condition="hr">
+                <span i18n:translate="">HR (bpm)</span>:
+                <tal:c tal:content="hr['min']"></tal:c>
+                <tal:t i18n:translate="">Min.</tal:t>,
+                <tal:c tal:content="hr['avg']"></tal:c>
+                <tal:t i18n:translate="">Avg.</tal:t>,
+                <tal:c tal:content="hr['max']"></tal:c>
+                <tal:t i18n:translate="">Max.</tal:t>
+              </li>
+              <li tal:condition="cad">
+                <span i18n:translate="">Cad</span>:
+                <tal:c tal:content="cad['min']"></tal:c>
+                <tal:t i18n:translate="">Min.</tal:t>,
+                <tal:c tal:content="cad['avg']"></tal:c>
+                <tal:t i18n:translate="">Avg.</tal:t>,
+                <tal:c tal:content="cad['max']"></tal:c>
+                <tal:t i18n:translate="">Max.</tal:t>
+              </li>
+            </ul>
+
+            <div class="workout-intro" tal:content="workout.notes"></div>
+
+            <ul class="workout-options">
+              <li class="owo-edit"><a href="" i18n:translate="" tal:attributes="href request.resource_url(workout, 'edit')"><span>edit</span></a></li>
+              <li class="owo-update"><a href="" i18n:translate="" tal:attributes="href request.resource_url(workout, 'update-from-file')"><span>update with tracking file</span></a></li>
+              <li class="owo-del"><a href="" i18n:translate="" tal:attributes="href request.resource_url(workout, 'delete')"><span>delete</span></a></li>
+            </ul>
+
+          </article>
+
+        </tal:r>
+
+      </section>
+
+      <aside class="workout-aside">
+        <h2>...</h2>
+      </aside>
+
+    </div>
+
+  </metal:content>
+
+</html>

@@ -1,0 +1,85 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="OpenWorkouts"
+      metal:use-macro="load: base.pt"
+      tal:attributes="lang request.locale_name">
+
+  <metal:head-title metal:fill-slot="head-title">
+    <tal:t i18n:translate="">My profile</tal:t>
+  </metal:head-title>
+
+  <metal:content metal:fill-slot="content">
+
+    <div class="user-profile">
+      <tal:c tal:condition="getattr(context, 'picture', None)">
+        <img tal:attributes="src request.resource_path(context, 'picture')"
+             width="450" />
+      </tal:c>
+      <h2>
+        <tal:fullname tal:content="context.fullname"></tal:fullname>
+        (<tal:user_id tal:content="context.user_id"></tal:user_id>)
+      </h2>
+      <h3>
+        <tal:email tal:content="context.email"></tal:email>
+      </h3>
+      <h4>
+        <a href=""
+           tal:attributes="href request.resource_url(context, 'edit')"
+           i18n:translate="">edit profile</a> |
+        <a href=""
+           tal:attributes="href request.resource_url(context, 'passwd')"
+           i18n:translate="">change password</a>
+      </h4>
+      <div class="profile-info">
+        <ul>
+          <li>
+            <tal:t i18n:translate="">Gender:</tal:t>
+            <tal:c tal:content="getattr(context, 'gender', '-')"></tal:c>
+          </li>
+          <li tal:define="birth_date getattr(context, 'birth_date', None)">
+            <tal:t i18n:translate="">Birth date:</tal:t>
+            <tal:c tal:condition="birth_date"
+                   tal:content="birth_date.strftime('%d/%m/%Y')"></tal:c>
+            <tal:c tal:condition="birth_date is None">-</tal:c>
+          </li>
+          <li>
+            <tal:t i18n:translate="">Height:</tal:t>
+            <tal:c tal:content="getattr(context, 'height', '-')"></tal:c> meters
+          </li>
+          <li>
+            <tal:t i18n:translate="">Weight:</tal:t>
+            <tal:c tal:content="getattr(context, 'weight', '-')"></tal:c> kg
+          </li>
+        </ul>
+      </div>
+
+      <div class="profile-bio" tal:content="getattr(context, 'bio', '')">
+      </div>
+
+      <div class="workouts">
+        <tal:t i18n:translate="">Total number of workouts</tal:t>:
+        <tal:w tal:replace="context.num_workouts"></tal:w>
+      </div>
+
+      <div class="latest-workouts">
+        <p i18n:translate="">Latest workouts</p>
+        <tal:r tal:repeat="workout context.workouts()[:5]">
+          <div class="workout">
+            <tal:c tal:content="workout.sport"></tal:c> -
+            <a href="" tal:content="workout.title"
+               tal:attributes="href request.resource_url(workout)"></a>
+            (<tal:c tal:content="workout.start"></tal:c>,
+            <tal:c tal:content="workout.duration"></tal:c>,
+            <tal:c tal:content="workout.rounded_distance"></tal:c> km)
+          </div>
+        </tal:r>
+      </div>
+
+    </div>
+
+  </metal:content>
+
+</html>

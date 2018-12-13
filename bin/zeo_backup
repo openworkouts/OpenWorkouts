@@ -1,0 +1,89 @@
+#!/bin/sh
+#
+# Script to backup the ZODB served by the ZEO server
+#
+# The path to the db file is already set appropiately (relative), but you have
+# to adjust the path to the backups directory.The user running the script needs
+# write and exec permissions on such directory.
+#
+# This script will create per-month directories where a first full backup,
+# then incremental backups, will be saved (2013-10, 2013-11, etc)
+#
+# When doing the first full backup It will create a symlink called "latest",
+# pointing to the latest backup
+#
+
+here=`dirname $0`
+db="${here}/../var/zeo/Data.fs"
+backups=/home/backups/zodb/openworkouts
+month=`date "+%Y-%m"`
+now=`date "+%Y%m%d-%H%M%S"`
+
+
+usage()
+{
+    echo "$0 full | incremental | help"
+    echo ""
+    echo " full: performs a full backup, initializing a new backup directory"
+    echo "       for the current month"
+    echo ""
+    echo " incremental: runs another backup in an existing backup directory"
+    echo "              adding only new changes from the database"
+    echo ""
+    echo " help: shows this message"
+}
+
+
+init_backup_dir()
+{
+    # Creates a new backup directory using the current month as the name.
+    # Also creates a symlink called "latest" pointing to this directory
+    if [ -d ${backups}/${month} ]; then
+	# move aside any previous backup directory
+	echo "[ Warning ] A previous backup has been found for ${month}, "
+	echo "            saving it as ${backups}/${month}.${now}"
+	mv ${backups}/${month} ${backups}/${month}.${now}
+    fi
+    mkdir -p ${backups}/${month}
+    if [  -L ${backups}/latest ]; then
+	rm ${backups}/latest
+    fi
+    ln -sf ${backups}/${month} ${backups}/latest
+}
+
+
+if [ ! -f ${db} ]; then
+    echo "[ Error ] Database file ${db} not found, aborting"
+    exit 1
+fi
+
+if [ ! -d ${backups} ]; then
+    echo "[ Warning ] Backups directory not found, creating it"
+    mkdir -p ${backups}
+fi
+
+if [ ! -d ${backups} ]; then
+    echo "[ Error ] Backups directory still not found, aborting"
+    exit 1
+fi
+
+
+case "$1" in
+    'full')
+	echo "Creating new full backup: ${backups}/${month}"
+	init_backup_dir
+	repozo -B -v -F -f ${db} -r ${backups}/latest -z
+	;;
+    'incremental')
+	echo "Adding incremental backup to ${backups}/latest"
+	if [ ! -d ${backups}/${month} ]; then
+	    # Current month backup does not exist, start with a full backup
+	    echo "[ Error ] Latest full backup not found, please run a full"
+	    echo "          backup first"
+	    exit 1
+	fi
+	repozo -B -v -f ${db} -r ${backups}/latest -z
+	;;
+    *)
+	usage
+esac

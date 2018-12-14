@@ -1,6 +1,6 @@
 
 
-def groupfinder(user_id, request):
+def groupfinder(uid, request):
     """
     Return the groups a user belongs to.
 
@@ -8,6 +8,6 @@ def groupfinder(user_id, request):
     users can access only their own workouts. We will expand it later on to
     allow other users to view workouts from a given user
     """
-    if user_id in request.root.all_usernames():
-        return [user_id]
+    if uid in request.root.all_usernames():
+        return [uid]
     return []

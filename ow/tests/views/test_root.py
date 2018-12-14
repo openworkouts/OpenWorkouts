@@ -72,7 +72,7 @@ class TestRootOpenWorkoutsViews(object):
 
     def test_add_user_post_valid(self, post_request):
         request = post_request
-        request.POST['user_id'] = 'addeduser'
+        request.POST['uid'] = 'addeduser'
         request.POST['email'] = 'addeduser@example.net'
         request.POST['firstname'] = 'added'
         request.POST['lastname'] = 'user'

@@ -29,7 +29,7 @@ class TestRootOpenWorkouts(object):
         assert [u for u in root.all_usernames()] == ['john']
 
     def test_lowercase_usernames(self, root):
-        root.add_user(user_id='Jack', firstname='Jack', lastname='Dumb',
+        root.add_user(uid='Jack', firstname='Jack', lastname='Dumb',
                       email='jack.dumb@example.net')
         assert root.lowercase_usernames() == ['jack', 'john']
 
@@ -37,7 +37,7 @@ class TestRootOpenWorkouts(object):
         assert root.emails() == ['john.doe@example.net']
 
     def test_lowercase_emails(self, root):
-        root.add_user(user_id='Jack', firstname='Jack', lastname='Dumb',
+        root.add_user(uid='Jack', firstname='Jack', lastname='Dumb',
                       email='Jack.Dumb@example.net')
         assert root.lowercase_emails() == ['jack.dumb@example.net',
                                            'john.doe@example.net']
@@ -54,7 +54,7 @@ class TestRootOpenWorkouts(object):
 
     def test_add_user(self, root):
         assert len(root.users()) == 1
-        root.add_user(user_id='jack', firstname='Jack', lastname='Dumb',
+        root.add_user(uid='jack', firstname='Jack', lastname='Dumb',
                       email='jack.dumb@example.net')
         assert len(root.users()) == 2
         assert 'jack' in root.all_usernames()

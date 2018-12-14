@@ -21,9 +21,9 @@
       ${form.csrf_token()}
 
       <fieldset>
-        ${form.errorlist('user_id')}
+        ${form.errorlist('uid')}
         <label for="email" i18n:translate="">User ID:</label>
-        ${form.text('user_id')}
+        ${form.text('uid')}
         ${form.errorlist('email')}
         <label for="email" i18n:translate="">E-Mail:</label>
         ${form.text('email')}

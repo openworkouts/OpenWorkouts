@@ -20,7 +20,7 @@
       </tal:c>
       <h2>
         <tal:fullname tal:content="context.fullname"></tal:fullname>
-        (<tal:user_id tal:content="context.user_id"></tal:user_id>)
+        (<tal:uid tal:content="context.uid"></tal:uid>)
       </h2>
       <h3>
         <tal:email tal:content="context.email"></tal:email>

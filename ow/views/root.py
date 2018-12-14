@@ -33,9 +33,9 @@ def add_user(context, request):
     form = Form(request, schema=UserAddSchema())
 
     if 'submit' in request.POST and form.validate():
-        user_id = request.POST['user_id']
-        user = form.bind(User(), exclude=['user_id'])
-        context[user_id] = user
+        uid = request.POST['uid']
+        user = form.bind(User(), exclude=['uid'])
+        context[uid] = user
         return HTTPFound(location=request.resource_url(context, 'userlist'))
 
     return {

@@ -50,7 +50,7 @@ class UserAddSchema(Schema):
     """
     allow_extra_fields = True
     filter_extra_fields = True
-    user_id = validators.UnicodeString()
+    uid = validators.UnicodeString()
     firstname = validators.UnicodeString()
     lastname = validators.UnicodeString()
     email = validators.Email(not_empty=True)

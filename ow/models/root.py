@@ -61,12 +61,12 @@ class OpenWorkouts(Folder):
         """
         return [u for u in self.values() if isinstance(u, User)]
 
-    def get_user(self, user_id):
-        return self.get(user_id, None)
+    def get_user(self, uid):
+        return self.get(uid, None)
 
-    def add_user(self, user_id, **kw):
+    def add_user(self, uid, **kw):
         u = User(**kw)
-        self[user_id] = u
+        self[uid] = u
 
     @property
     def sports(self):

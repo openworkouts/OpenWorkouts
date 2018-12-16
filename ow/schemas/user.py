@@ -70,7 +70,8 @@ class UserProfileSchema(Schema):
     height = validators.Number()
     weight = validators.Number()
     gender = validators.OneOf(('male', 'female'), not_empty=True)
-    picture = FieldStorageBlob(whitelist=['jpg', 'jpeg', 'png', 'gif'])
+    picture = FieldStorageBlob(if_emtpy=None, if_missing=None,
+                               whitelist=['jpg', 'jpeg', 'png', 'gif'])
 
 
 class ChangePasswordSchema(Schema):

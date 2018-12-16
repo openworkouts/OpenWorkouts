@@ -143,7 +143,14 @@ def profile_picture(context, request):
     name='edit',
     renderer='ow:templates/edit_profile.pt')
 def edit_profile(context, request):
+    # if not given a file there is an empty byte in POST, which breaks
+    # our blob storage validator.
+    # dirty fix until formencode fixes its api.is_empty method
+    if isinstance(request.POST.get('picture', None), bytes):
+        request.POST['picture'] = ''
+
     form = Form(request, schema=UserProfileSchema(), obj=context)
+
     if 'submit' in request.POST and form.validate():
         # No picture? do not override it
         if not form.data['picture']:

@@ -24,8 +24,13 @@ def dashboard_redirect(context, request):
     send to the login page if the user is not logged in.
     """
     if request.authenticated_userid:
-        user = request.root.get_user(request.authenticated_userid)
-        return HTTPFound(location=request.resource_url(user))
+        user = request.root.get_user_by_uid(request.authenticated_userid)
+        if user:
+            return HTTPFound(location=request.resource_url(user))
+        else:
+            # an authenticated user session, for an user that does not exist
+            # anymore, logout!
+            return HTTPFound(location=request.resource_url(context, 'logout'))
     return HTTPFound(location=request.resource_url(context, 'login'))
 
 
@@ -35,27 +40,28 @@ def dashboard_redirect(context, request):
     renderer='ow:templates/login.pt')
 def login(context, request):
     message = ''
-    username = ''
+    email = ''
     password = ''
     return_to = request.params.get('return_to')
     redirect_url = return_to or request.resource_url(request.root)
 
     if 'submit' in request.POST:
-        username = request.POST.get('username', None)
-        if username in request.root.all_usernames():
-            user = request.root[username]
+        email = request.POST.get('email', None)
+        user = context.get_user_by_email(email)
+        if user:
             password = request.POST.get('password', None)
             if password is not None and user.check_password(password):
-                headers = remember(request, username)
+                headers = remember(request, str(user.uid))
+                redirect_url = return_to or request.resource_url(user)
                 return HTTPFound(location=redirect_url, headers=headers)
             else:
-                message = u'Bad password'
+                message = _('Wrong password')
         else:
-            message = u'Bad username'
+            message = _('Wrong email address')
 
     return {
         'message': message,
-        'username': username,
+        'email': email,
         'password': password,
         'redirect_url': redirect_url
     }
@@ -72,14 +78,13 @@ def logout(context, request):
     name='signup',
     renderer='ow:templates/signup.pt')
 def signup(context, request):
-    state = State(emails=context.lowercase_emails(),
-                  names=context.lowercase_usernames())
+    state = State(emails=context.lowercase_emails,
+                  names=context.lowercase_nicknames)
     form = Form(request, schema=SignUpSchema(), state=state)
 
     if 'submit' in request.POST and form.validate():
-        username = request.POST['username']
-        user = form.bind(User(), exclude=['username', 'password_confirm'])
-        context[username] = user
+        user = form.bind(User(), exclude=['password_confirm'])
+        context.add_user(user)
         # Send to login
         return HTTPFound(location=request.resource_url(context))
 

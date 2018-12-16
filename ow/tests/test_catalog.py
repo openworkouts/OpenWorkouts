@@ -55,17 +55,19 @@ class TestCatalog(object):
         indexes = {'newindex': CatalogFieldIndex('newindex')}
         changes = update_indexes(catalog, indexes)
         assert changes['added'] == ['newindex']
-        assert changes['removed'] == ['sport']
+        assert changes['removed'] == ['email', 'sport']
 
     def test_update_indexes_empty(self, root):
         catalog = get_catalog(root)
         indexes = {}
         changes = update_indexes(catalog, indexes)
         assert changes['added'] == []
-        assert changes['removed'] == ['sport']
+        assert changes['removed'] == ['email', 'sport']
 
     def test_install_catalog(self):
         root = OpenWorkouts()
+        assert isinstance(getattr(root, 'catalog', None), Catalog)
+        del root.catalog
         assert getattr(root, 'catalog', None) is None
         install_catalog(root)
         assert isinstance(getattr(root, 'catalog', None), Catalog)
@@ -77,6 +79,8 @@ class TestCatalog(object):
 
     def test_get_catalog_not_existing_catalog(self):
         root = OpenWorkouts()
+        assert isinstance(getattr(root, 'catalog', None), Catalog)
+        del root.catalog
         assert getattr(root, 'catalog', None) is None
         catalog = get_catalog(root)
         assert isinstance(getattr(root, 'catalog', None), Catalog)

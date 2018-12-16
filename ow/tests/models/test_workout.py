@@ -56,10 +56,6 @@ class TestWorkoutModels(object):
         assert expected == joe['1'].end
         assert 250 == joe['1'].distance * 1000
 
-    def test_add_user(self, root):
-        root.add_user('fred', firstname=u'Fred', lastname=u'Flintstone')
-        assert u'Fred Flintstone' == root['fred'].fullname
-
     def test_workout_id(self, root):
         assert root['john']['1'].workout_id == '1'
 

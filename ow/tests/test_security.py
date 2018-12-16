@@ -21,6 +21,6 @@ class TestSecurity(object):
         request = DummyRequest()
         request.root = root
         # User does exist
-        assert groupfinder('john', request) == ['john']
+        assert groupfinder('john', request) == [str(root['john'].uid)]
         # User does not exist
         assert groupfinder('jack', request) == []

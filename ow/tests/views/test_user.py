@@ -23,17 +23,22 @@ import ow.views.user as user_views
 class TestUserViews(object):
 
     @pytest.fixture
-    def root(self):
+    def john(self):
+        user = User(firstname='John', lastname='Doe',
+                    email='john.doe@example.net')
+        user.password = 's3cr3t'
+        return user
+
+    @pytest.fixture
+    def root(self, john):
         root = OpenWorkouts()
-        root['john'] = User(firstname='John', lastname='Doe',
-                            email='john.doe@example.net')
-        root['john'].password = 's3cr3t'
+        root.add_user(john)
         workout = Workout(
             start=datetime(2015, 6, 28, 12, 55, tzinfo=timezone.utc),
             duration=timedelta(minutes=60),
             distance=30
         )
-        root['john'].add_workout(workout)
+        john.add_workout(workout)
         return root
 
     @pytest.fixture
@@ -43,12 +48,12 @@ class TestUserViews(object):
         return request
 
     @pytest.fixture
-    def profile_post_request(self, root):
+    def profile_post_request(self, root, john):
         """
         This is a valid POST request to update an user profile.
         Form will validate, but nothing will be really updated/changed.
         """
-        user = root['john']
+        user = john
         request = DummyRequest()
         request.root = root
         request.method = 'POST'
@@ -93,7 +98,7 @@ class TestUserViews(object):
         request.method = 'POST'
         request.POST = MultiDict({
             'submit': True,
-            'username': 'JackBlack',
+            'nickname': 'JackBlack',
             'email': 'jack.black@example.net',
             'firstname': 'Jack',
             'lastname': 'Black',
@@ -133,22 +138,20 @@ class TestUserViews(object):
         assert isinstance(response, HTTPFound)
         assert response.location == '/dashboard'
 
-    def test_dashboard(self, dummy_request):
+    def test_dashboard(self, dummy_request, john):
         """
         Renders the user dashboard
         """
         request = dummy_request
-        user = request.root['john']
-        response = user_views.dashboard(user, request)
+        response = user_views.dashboard(john, request)
         assert response == {}
 
-    def test_profile(self, dummy_request):
+    def test_profile(self, dummy_request, john):
         """
         Renders the user profile page
         """
         request = dummy_request
-        user = request.root['john']
-        response = user_views.profile(user, request)
+        response = user_views.profile(john, request)
         assert response == {}
 
     def test_login_get(self, dummy_request):
@@ -158,46 +161,46 @@ class TestUserViews(object):
         request = dummy_request
         response = user_views.login(request.root, request)
         assert response['message'] == ''
-        assert response['username'] == ''
+        assert response['email'] == ''
         assert response['password'] == ''
         assert response['redirect_url'] == request.resource_url(request.root)
 
-    def test_login_get_return_to(self, dummy_request):
+    def test_login_get_return_to(self, dummy_request, john):
         """
         GET request to access the login page, if there is a page set to where
         the user should be sent to, the response "redirect_url" key will have
         such url
         """
         request = dummy_request
-        workout = request.root['john'].workouts()[0]
+        workout = john.workouts()[0]
         workout_url = request.resource_url(workout)
         request.params['return_to'] = workout_url
         response = user_views.login(request.root, request)
         assert response['redirect_url'] == workout_url
 
-    def test_login_post_bad_username(self, dummy_request):
+    def test_login_post_wrong_email(self, dummy_request):
         request = dummy_request
         request.method = 'POST'
         request.POST['submit'] = True
-        request.POST['username'] = 'jack'
+        request.POST['email'] = 'jack@example.net'
         response = user_views.login(request.root, request)
-        assert response['message'] == u'Bad username'
+        assert response['message'] == u'Wrong email address'
 
-    def test_login_post_bad_password(self, dummy_request):
+    def test_login_post_wrong_password(self, dummy_request):
         request = dummy_request
         request.method = 'POST'
         request.POST['submit'] = True
-        request.POST['username'] = 'john'
+        request.POST['email'] = 'john.doe@example.net'
         request.POST['password'] = 'badpassword'
         response = user_views.login(request.root, request)
-        assert response['message'] == u'Bad password'
+        assert response['message'] == u'Wrong password'
 
     @patch('ow.views.user.remember')
     def test_login_post_ok(self, rem, dummy_request):
         request = dummy_request
         request.method = 'POST'
         request.POST['submit'] = True
-        request.POST['username'] = 'john'
+        request.POST['email'] = 'john.doe@example.net'
         request.POST['password'] = 's3cr3t'
         response = user_views.login(request.root, request)
         assert isinstance(response, HTTPFound)
@@ -215,13 +218,13 @@ class TestUserViews(object):
     extensions = ('png', 'jpg', 'jpeg', 'gif')
 
     @pytest.mark.parametrize('extension', extensions)
-    def test_profile_picture(self, extension, dummy_request):
+    def test_profile_picture(self, extension, dummy_request, john):
         """
         GET request to get the profile picture of an user.
         """
         request = dummy_request
         # Get the user
-        user = request.root['john']
+        user = john
         # Get the path to the image, then open it and copy it to a new Blob
         # object
         path = 'fixtures/image.' + extension
@@ -241,13 +244,13 @@ class TestUserViews(object):
         assert response.status_int == 200
         assert response.content_type == 'image'
 
-    def test_edit_profile_get(self, dummy_request):
+    def test_edit_profile_get(self, dummy_request, john):
         """
         GET request to the edit profile page, returns the form ready to
         be rendered
         """
         request = dummy_request
-        user = request.root['john']
+        user = john
         response = user_views.edit_profile(user, request)
         assert isinstance(response['form'], OWFormRenderer)
         # no errors in the form (first load)
@@ -260,9 +263,9 @@ class TestUserViews(object):
         # and check the email to see data is properly loaded
         assert response['form'].data['email'] == 'john.doe@example.net'
 
-    def test_edit_profile_post_ok(self, profile_post_request):
+    def test_edit_profile_post_ok(self, profile_post_request, john):
         request = profile_post_request
-        user = request.root['john']
+        user = john
         # Update the bio field
         bio = 'Some text about this user'
         request.POST['bio'] = bio
@@ -271,10 +274,11 @@ class TestUserViews(object):
         assert response.location == request.resource_url(user, 'profile')
         assert user.bio == bio
 
-    def test_edit_profile_post_missing_required(self, profile_post_request):
+    def test_edit_profile_post_missing_required(
+            self, profile_post_request, john):
         request = profile_post_request
         request.POST['email'] = ''
-        user = request.root['john']
+        user = john
         response = user_views.edit_profile(user, request)
         assert isinstance(response['form'], OWFormRenderer)
         # error on the missing email field
@@ -283,17 +287,17 @@ class TestUserViews(object):
         assert response['form'].errorlist() == html_error
         assert response['form'].errors_for('email') == [error]
 
-    def test_change_password_get(self, dummy_request):
+    def test_change_password_get(self, dummy_request, john):
         request = dummy_request
-        user = request.root['john']
+        user = john
         response = user_views.change_password(user, request)
         assert isinstance(response['form'], OWFormRenderer)
         # no errors in the form (first load)
         assert response['form'].errorlist() == ''
 
-    def test_change_password_post_ok(self, passwd_post_request):
+    def test_change_password_post_ok(self, passwd_post_request, john):
         request = passwd_post_request
-        user = request.root['john']
+        user = john
         request.POST['old_password'] = 's3cr3t'
         request.POST['password'] = 'h1dd3n s3cr3t'
         request.POST['password_confirm'] = 'h1dd3n s3cr3t'
@@ -304,9 +308,9 @@ class TestUserViews(object):
         assert not user.check_password('s3cr3t')
         assert user.check_password('h1dd3n s3cr3t')
 
-    def test_change_password_post_no_values(self, passwd_post_request):
+    def test_change_password_post_no_values(self, passwd_post_request, john):
         request = passwd_post_request
-        user = request.root['john']
+        user = john
         response = user_views.change_password(user, request)
         assert isinstance(response['form'], OWFormRenderer)
         error = u'Please enter a value'
@@ -321,9 +325,10 @@ class TestUserViews(object):
         # password was not changed
         assert user.check_password('s3cr3t')
 
-    def test_change_password_post_bad_old_password(self, passwd_post_request):
+    def test_change_password_post_bad_old_password(
+            self, passwd_post_request, john):
         request = passwd_post_request
-        user = request.root['john']
+        user = john
         request.POST['old_password'] = 'FAIL PASSWORD'
         request.POST['password'] = 'h1dd3n s3cr3t'
         request.POST['password_confirm'] = 'h1dd3n s3cr3t'
@@ -337,9 +342,10 @@ class TestUserViews(object):
         assert user.check_password('s3cr3t')
         assert not user.check_password('h1dd3n s3cr3t')
 
-    def test_change_password_post_password_mismatch(self, passwd_post_request):
+    def test_change_password_post_password_mismatch(
+            self, passwd_post_request, john):
         request = passwd_post_request
-        user = request.root['john']
+        user = john
         request.POST['old_password'] = 's3cr3t'
         request.POST['password'] = 'h1dd3n s3cr3ts'
         request.POST['password_confirm'] = 'h1dd3n s3cr3t'
@@ -362,16 +368,19 @@ class TestUserViews(object):
 
     def test_signup_post_ok(self, signup_post_request):
         request = signup_post_request
-        assert 'JackBlack' not in request.root.all_usernames()
+        assert 'jack.black@example.net' not in request.root.emails
+        assert 'JackBlack' not in request.root.all_nicknames
         response = user_views.signup(request.root, request)
         assert isinstance(response, HTTPFound)
         assert response.location == request.resource_url(request.root)
-        assert 'JackBlack' in request.root.all_usernames()
+        assert 'jack.black@example.net' in request.root.emails
+        assert 'JackBlack' in request.root.all_nicknames
 
     def test_signup_missing_required(self, signup_post_request):
         request = signup_post_request
         request.POST['email'] = ''
-        assert 'JackBlack' not in request.root.all_usernames()
+        assert 'jack.black@example.net' not in request.root.emails
+        assert 'JackBlack' not in request.root.all_nicknames
         response = user_views.signup(request.root, request)
         assert isinstance(response['form'], OWFormRenderer)
         error = u'Please enter an email address'
@@ -381,27 +390,37 @@ class TestUserViews(object):
         errorlist = response['form'].errorlist().replace('\n', '')
         assert errorlist == html_error
         assert response['form'].errors_for('email') == [error]
-        assert 'JackBlack' not in request.root.all_usernames()
+        assert 'jack.black@example.net' not in request.root.emails
+        assert 'JackBlack' not in request.root.all_nicknames
 
-    def test_signup_existing_username(self, signup_post_request):
+    def test_signup_existing_nickname(self, signup_post_request, john):
         request = signup_post_request
-        request.POST['username'] = 'john'
-        assert 'JackBlack' not in request.root.all_usernames()
+        # assign john a nickname first
+        john.nickname = 'john'
+        # now set it for the POST request
+        request.POST['nickname'] = 'john'
+        # check jack is not there yet
+        assert 'jack.black@example.net' not in request.root.emails
+        assert 'JackBlack' not in request.root.all_nicknames
+        # now signup as jack, but trying to set the nickname 'john'
         response = user_views.signup(request.root, request)
         assert isinstance(response['form'], OWFormRenderer)
-        error = u'Another user is already registered with the username john'
+        error = u'Another user is already using the nickname john'
         html_error = '<ul class="error">'
         html_error += '<li>' + error + '</li>'
         html_error += '</ul>'
         errorlist = response['form'].errorlist().replace('\n', '')
         assert errorlist == html_error
-        assert response['form'].errors_for('username') == [error]
-        assert 'JackBlack' not in request.root.all_usernames()
+        assert response['form'].errors_for('nickname') == [error]
+        # all the errors, and jack is not there
+        assert 'jack.black@example.net' not in request.root.emails
+        assert 'JackBlack' not in request.root.all_nicknames
 
     def test_signup_existing_email(self, signup_post_request):
         request = signup_post_request
         request.POST['email'] = 'john.doe@example.net'
-        assert 'JackBlack' not in request.root.all_usernames()
+        assert 'jack.black@example.net' not in request.root.emails
+        assert 'JackBlack' not in request.root.all_nicknames
         response = user_views.signup(request.root, request)
         assert isinstance(response['form'], OWFormRenderer)
         error = u'Another user is already registered with the email '
@@ -412,4 +431,5 @@ class TestUserViews(object):
         errorlist = response['form'].errorlist().replace('\n', '')
         assert errorlist == html_error
         assert response['form'].errors_for('email') == [error]
-        assert 'JackBlack' not in request.root.all_usernames()
+        assert 'jack.black@example.net' not in request.root.emails
+        assert 'JackBlack' not in request.root.all_nicknames

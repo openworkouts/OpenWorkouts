@@ -8,6 +8,7 @@ def groupfinder(uid, request):
     users can access only their own workouts. We will expand it later on to
     allow other users to view workouts from a given user
     """
-    if uid in request.root.all_usernames():
-        return [uid]
+    user = request.root.get_user_by_uid(str(uid))
+    if user is not None:
+        return [str(user.uid)]
     return []

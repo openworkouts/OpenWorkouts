@@ -23,10 +23,10 @@
 
           <fieldset>
             <div>
-              <label for="username" i18n:translate="">Username</label>
-              <input placeholder="Your username..." type="text" name="username"
+              <label for="email" i18n:translate="">Email</label>
+              <input placeholder="Your email..." type="text" name="email"
                      value="" i18n:attributes="placeholder"
-                     tal:attributes="value username">
+                     tal:attributes="value email">
             </div>
             <div>
               <label for="password" i18n:translate="">Password</label>

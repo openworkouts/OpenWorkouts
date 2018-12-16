@@ -3,7 +3,7 @@ from formencode.validators import Invalid
 from pyramid_simpleform import State
 
 from ow.models.user import User
-from ow.schemas.user import PasswordMatch, UniqueUsername, UniqueEmail
+from ow.schemas.user import PasswordMatch, UniqueNickname, UniqueEmail
 
 
 class TestPasswordMatch(object):
@@ -26,7 +26,7 @@ class TestPasswordMatch(object):
             validator._validate_python('wr0ng#p4ss', state)
 
 
-class TestUniqueUsername(object):
+class TestUniqueNickname(object):
 
     @pytest.fixture
     def state(self):
@@ -34,14 +34,14 @@ class TestUniqueUsername(object):
         return state
 
     def test_validate_python_exists(self, state):
-        validator = UniqueUsername()
+        validator = UniqueNickname()
         with pytest.raises(Invalid):
             validator._validate_python('test', state)
         with pytest.raises(Invalid):
             validator._validate_python('ExiSTing', state)
 
     def test_validate_python_not_exists(self, state):
-        validator = UniqueUsername()
+        validator = UniqueNickname()
         res = validator._validate_python('not-existing', state)
         assert res is None
 

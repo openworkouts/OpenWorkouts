@@ -17,18 +17,17 @@
 
           <fieldset>
             <div>
-              ${form.errorlist('username')}
-              <label for="username" i18n:translate="">Username</label>
-              <input placeholder="Choose a cool username" type="text"
-                     name="username" value="" i18n:attributes="placeholder">
-            </div>
-
-            <div>
               ${form.errorlist('email')}
               <label for="email" i18n:translate="">Email</label>
               <input placeholder="We need a valid email address"
                      type="text" name="email"
                      value="" i18n:attributes="placeholder">
+            </div>
+            <div>
+              ${form.errorlist('nickname')}
+              <label for="nickname" i18n:translate="">Nickname</label>
+              <input placeholder="Choose a cool nickname" type="text"
+                     name="nickname" value="" i18n:attributes="placeholder">
             </div>
             <div>
               ${form.errorlist('firstname')}
@@ -49,7 +48,6 @@
                      name="password"
                      type="password" i18n:attributes="placeholder">
             </div>
-
             <div>
               ${form.errorlist('password_confirm')}
               <label for="password_confirm" i18n:translate="">Password (confirm)</label>

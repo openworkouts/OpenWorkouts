@@ -18,14 +18,13 @@ class PasswordMatch(validators.UnicodeString):
                 self.message('dont_match', state), value, state)
 
 
-class UniqueUsername(validators.UnicodeString):
+class UniqueNickname(validators.UnicodeString):
     messages = {
-        "name_exists": _('Another user is already registered with the '
-                         'username %(name)s')
+        "name_exists": _('Another user is already using the nickname %(name)s')
     }
 
     def _validate_python(self, value, state):
-        super(UniqueUsername, self)._validate_python(value, state)
+        super(UniqueNickname, self)._validate_python(value, state)
         if value.lower() in state.names:
             raise validators.Invalid(
                 self.message('name_exists', state, name=value), value, state)
@@ -50,10 +49,10 @@ class UserAddSchema(Schema):
     """
     allow_extra_fields = True
     filter_extra_fields = True
-    uid = validators.UnicodeString()
+    email = UniqueEmail(not_empty=True)
+    nickname = UniqueNickname(if_missing='')
     firstname = validators.UnicodeString()
     lastname = validators.UnicodeString()
-    email = validators.Email(not_empty=True)
     group = validators.UnicodeString(if_missing='')
 
 
@@ -91,7 +90,7 @@ class SignUpSchema(Schema):
     """
     allow_extra_fields = True
     filter_extra_fields = True
-    username = UniqueUsername(not_empty=True)
+    nickname = UniqueNickname()
     firstname = validators.UnicodeString(not_empty=True)
     lastname = validators.UnicodeString(not_empty=True)
     email = UniqueEmail(not_empty=True)
@@ -107,5 +106,5 @@ class RecoverPasswordSchema(Schema):
     """
     allow_extra_fields = True
     filter_extra_fields = True
-    username = UniqueUsername(not_empty=True)
+    nickname = UniqueNickname()
     email = UniqueEmail(not_empty=True)

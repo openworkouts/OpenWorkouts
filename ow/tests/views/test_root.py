@@ -19,17 +19,22 @@ from ow.schemas.user import UserAddSchema
 class TestRootOpenWorkoutsViews(object):
 
     @pytest.fixture
-    def root(self):
+    def john(self):
+        user = User(firstname='John', lastname='Doe',
+                    email='john.doe@example.net')
+        user.password = 's3cr3t'
+        return user
+
+    @pytest.fixture
+    def root(self, john):
         root = OpenWorkouts()
-        root['john'] = User(firstname='John', lastname='Doe',
-                            email='john.doe@example.net')
-        root['john'].password = 's3cr3t'
+        root.add_user(john)
         workout = Workout(
             start=datetime(2015, 6, 28, 12, 55, tzinfo=timezone.utc),
             duration=timedelta(minutes=60),
             distance=30, sport='cycling'
         )
-        root['john'].add_workout(workout)
+        john.add_workout(workout)
         return root
 
     @pytest.fixture
@@ -49,10 +54,10 @@ class TestRootOpenWorkoutsViews(object):
             })
         return request
 
-    def test_user_list(self, get_request):
+    def test_user_list(self, get_request, john):
         request = get_request
         response = user_list(request.root, request)
-        assert list(response['users']) == [request.root['john']]
+        assert list(response['users']) == [john]
 
     def test_add_user_get(self, get_request):
         request = get_request
@@ -65,19 +70,24 @@ class TestRootOpenWorkoutsViews(object):
         request = post_request
         response = add_user(request.root, request)
         assert 'form' in response
-        # All required fields (4) are marked in the form errors
+        # All required fields (3) are marked in the form errors
         # You can see which fields are required in the schema
         # ow.schemas.user.UserAddSchema
-        assert len(response['form'].form.errors) == 4
+        errors = response['form'].form.errors
+        assert len(errors) == 3
+        assert 'email' in errors
+        assert 'firstname' in errors
+        assert 'lastname' in errors
 
     def test_add_user_post_valid(self, post_request):
         request = post_request
-        request.POST['uid'] = 'addeduser'
+        request.POST['nickname'] = 'addeduser'
         request.POST['email'] = 'addeduser@example.net'
         request.POST['firstname'] = 'added'
         request.POST['lastname'] = 'user'
         response = add_user(request.root, request)
         assert isinstance(response, HTTPFound)
         assert response.location.endswith('/userlist')
-        assert len(request.root.all_usernames()) == 2
-        assert 'addeduser' in request.root.all_usernames()
+        # 1 nick name, as the default user has no nickname
+        assert len(request.root.all_nicknames) == 1
+        assert 'addeduser' in request.root.all_nicknames

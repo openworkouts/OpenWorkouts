@@ -22,6 +22,7 @@ class User(Folder):
 
     def __init__(self, **kw):
         self.uid = kw.get('uid', uuid1())
+        self.nickname = kw.get('nickname', '')
         self.firstname = kw.get('firstname', '')
         self.lastname = kw.get('lastname', '')
         self.email = kw.get('email', '')

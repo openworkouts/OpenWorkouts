@@ -1,5 +1,5 @@
 from pyramid.view import view_config
-from pyramid_simpleform import Form
+from pyramid_simpleform import Form, State
 from pyramid_simpleform.renderers import FormRenderer
 from pyramid.httpexceptions import HTTPFound
 
@@ -17,7 +17,7 @@ def user_list(context, request):
     """
     Show a list of all the users to admins
     """
-    users = context.users()
+    users = context.users
     return {'users': users}
 
 
@@ -30,12 +30,14 @@ def add_user(context, request):
     """
     Form to add a user
     """
-    form = Form(request, schema=UserAddSchema())
+    state = State(emails=context.lowercase_emails,
+                  names=context.lowercase_nicknames)
+
+    form = Form(request, schema=UserAddSchema(), state=state)
 
     if 'submit' in request.POST and form.validate():
-        uid = request.POST['uid']
-        user = form.bind(User(), exclude=['uid'])
-        context[uid] = user
+        user = form.bind(User())
+        context[str(user.uid)] = user
         return HTTPFound(location=request.resource_url(context, 'userlist'))
 
     return {

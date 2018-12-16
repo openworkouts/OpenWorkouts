@@ -196,7 +196,7 @@ class TestUserViews(object):
         assert response['message'] == u'Wrong password'
 
     @patch('ow.views.user.remember')
-    def test_login_post_ok(self, rem, dummy_request):
+    def test_login_post_ok(self, rem, dummy_request, john):
         request = dummy_request
         request.method = 'POST'
         request.POST['submit'] = True
@@ -205,7 +205,7 @@ class TestUserViews(object):
         response = user_views.login(request.root, request)
         assert isinstance(response, HTTPFound)
         assert rem.called
-        assert response.location == request.resource_url(request.root)
+        assert response.location == request.resource_url(john)
 
     @patch('ow.views.user.forget')
     def test_logout(self, forg, dummy_request):

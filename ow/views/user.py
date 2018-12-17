@@ -162,6 +162,8 @@ def edit_profile(context, request):
         if not form.data['picture']:
             del form.data['picture']
         form.bind(context)
+        # reindex
+        request.root.reindex(context)
         # Saved, send the user to the public view of her profile
         return HTTPFound(location=request.resource_url(context, 'profile'))
     # prevent crashes on the form

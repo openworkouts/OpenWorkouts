@@ -201,6 +201,31 @@ leaflet_elevation() {
     fi
 }
 
+pickadate() {
+    NAME="pickadate"
+    VERSION=3.5.6
+    URL=https://github.com/amsul/${NAME}.js/archive/${VERSION}.tar.gz
+    check_cache ${NAME} ${VERSION}
+    in_cache=$?
+    if [ ${in_cache} -eq 0 -a ${REINSTALL} -eq 1 ]; then
+        echo "${NAME}-${VERSION} $ALREADY_INSTALLED"
+    else
+        echo "> Installing ${NAME} ${VERSION}"
+        if [ -d ${COMPONENTS}/${NAME} ]; then
+            # Clean up, delete previous install before installing
+            rm -r ${COMPONENTS}/${NAME}
+        fi
+        mkdir ${COMPONENTS}/${NAME}
+        cd ${TMP}
+        ${GET} ${URL}
+        ${TAR} ${VERSION}.tar.gz
+        cd ${CURRENT}
+        mv ${TMP}/${NAME}.js-${VERSION}/lib/* ${COMPONENTS}/${NAME}
+        echo "${NAME}-${VERSION}" >> ${CACHE}
+        echo "< Installed ${NAME} ${VERSION}"
+    fi
+}
+
 echo "Installing JS dependencies in ${COMPONENTS}"
 
 jquery
@@ -208,6 +233,7 @@ easy_autocomplete
 leaflet
 leaflet_gpx
 leaflet_elevation
+pickadate
 
 # Clean up, remove the tmp directory
 echo "Cleaning up temp storage"

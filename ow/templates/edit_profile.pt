@@ -22,7 +22,7 @@
 
   <metal:content metal:fill-slot="content">
       <h2 i18n:translate="">Edit profile</h2>
-    <div class="edit-profile">
+    <div class="edit-profile ow-forms">
       ${form.begin(multipart=True)}
       ${form.csrf_token()}
 

@@ -105,19 +105,19 @@
 
 /* Edit profile form */
 
-.edit-profile form {
+.ow-forms form {
     width:100%;
     max-width:40%
 }
 
-.edit-profile ul.error {
+.ow-forms ul.error {
     margin: 0px;
     margin-bottom: 5px;
     padding: 0px;
     list-style-type:none;
 }
 
-.edit-profile ul.error li {
+.ow-forms ul.error li {
     border: 1px solid red;
     width:100%;
     padding:.5em .75em;
@@ -125,35 +125,35 @@
     border-radius:2px
 }
 
-.edit-profile legend {
+.ow-forms legend {
     display:none
 }
 
-.edit-profile fieldset {
+.ow-forms fieldset {
     border:none;
     border-bottom: 2px solid #e1e1e1;
 }
 
-.edit-profile fieldset>div {
+.ow-forms fieldset>div {
     margin-bottom:1.5em
 }
 
-.edit-profile input {
+.ow-forms input {
     width:100%;
     padding:.5em .75em;
     border:1px solid #e1e1e1;
     border-radius:2px
 }
 
-.edit-profile input:focus {
+.ow-forms input:focus {
     border-color: #333333;
 }
 
-.edit-profile input.button {
+.ow-forms input.button {
     width: 20%;
 }
 
-.edit-profile label {
+.ow-forms label {
     display:block;
     font-size:14px;
     font-size:.875rem;

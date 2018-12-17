@@ -145,6 +145,21 @@
     border-radius:2px
 }
 
+.ow-forms input.number {
+    /* width up to three characters */
+    width: 3em;
+}
+
+.ow-forms input.date {
+    /* width up to 10 characters */
+    width: 7em;
+}
+
+.ow-forms input.time {
+    /* width up to 6 characters */
+    width: 5em;
+}
+
 .ow-forms input:focus {
     border-color: #333333;
 }
@@ -159,4 +174,11 @@
     font-size:.875rem;
     color:#959595;
     margin-bottom:.25em
+}
+
+.ow-forms div.input-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: center;
 }

@@ -149,7 +149,13 @@ def edit_profile(context, request):
     if isinstance(request.POST.get('picture', None), bytes):
         request.POST['picture'] = ''
 
-    form = Form(request, schema=UserProfileSchema(), obj=context)
+    nicknames = request.root.lowercase_nicknames
+    if context.nickname:
+        # remove the current user nickname from the list, preventing form
+        # validation error
+        nicknames.remove(context.nickname.lower())
+    state = State(emails=request.root.lowercase_emails, names=nicknames)
+    form = Form(request, schema=UserProfileSchema(), state=state, obj=context)
 
     if 'submit' in request.POST and form.validate():
         # No picture? do not override it

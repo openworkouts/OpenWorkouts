@@ -65,6 +65,7 @@ class UserProfileSchema(Schema):
     firstname = validators.UnicodeString(not_empty=True)
     lastname = validators.UnicodeString(not_empty=True)
     email = validators.Email(not_empty=True)
+    nickname = UniqueNickname(if_missing='')
     bio = validators.UnicodeString(if_missing='')
     birth_date = validators.DateConverter(month_style='dd/mm/yyyy')
     height = validators.Number()
@@ -91,7 +92,7 @@ class SignUpSchema(Schema):
     """
     allow_extra_fields = True
     filter_extra_fields = True
-    nickname = UniqueNickname()
+    nickname = UniqueNickname(if_missing='')
     firstname = validators.UnicodeString(not_empty=True)
     lastname = validators.UnicodeString(not_empty=True)
     email = UniqueEmail(not_empty=True)
@@ -107,5 +108,5 @@ class RecoverPasswordSchema(Schema):
     """
     allow_extra_fields = True
     filter_extra_fields = True
-    nickname = UniqueNickname()
+    nickname = UniqueNickname(if_missing='')
     email = UniqueEmail(not_empty=True)

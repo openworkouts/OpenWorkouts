@@ -12,72 +12,122 @@
   </metal:head-title>
 
   <metal:title metal:fill-slot="title">
-    <tal:t i18n:translate="">Edit profile</tal:t>
+      <tal:t i18n:translate="">Edit profile</tal:t>
   </metal:title>
 
+  <metal:css metal:fill-slot="css">
+      <link rel="stylesheet" href="${request.static_url('ow:static/components/pickadate/themes/default.css')}" />
+      <link rel="stylesheet" href="${request.static_url('ow:static/components/pickadate/themes/default.date.css')}" />
+  </metal:css>
+
   <metal:content metal:fill-slot="content">
-    <div id="add_workout">
+      <h2 i18n:translate="">Edit profile</h2>
+    <div class="edit-profile">
       ${form.begin(multipart=True)}
       ${form.csrf_token()}
 
-      <fieldset>
-        ${form.errorlist('email')}
-        <label for="email" i18n:translate="">Email address:</label>
-        ${form.text('email')}
-      </fieldset>
+        <fieldset>
+            <p>
+                <label for="email" i18n:translate="">Email address:</label>
+                ${form.errorlist('email')}
+                ${form.text('email')}
+            </p>
+            <p>
+                <label for="nickname" i18n:translate="">Nickname:</label>
+                ${form.errorlist('nickname')}
+                ${form.text('nickname')}
+            </p>
+        </fieldset>
 
-      <fieldset>
-        <tal:c tal:condition="getattr(context, 'picture', None)">
-          <tal:t i18n:translate="">Current picture:</tal:t>
-          <img tal:attributes="src request.resource_path(context, 'picture')"
-               width="150" />
-        </tal:c>
-        ${form.errorlist('picture')}
-        <label for="picture" i18n:translate="">
-          Picture (jpg, jpeg, png or gif):</label>
-        ${form.file('picture')}
-      </fieldset>
+        <fieldset>
+            <p>
+                <tal:c tal:condition="getattr(context, 'picture', None)">
 
-      <fieldset>
-        ${form.errorlist('firstname')}
-        <label for="firstname" i18n:translate="">First name:</label>
-        ${form.text('firstname')}
-        ${form.errorlist('lastname')}
-        <label for="lastname" i18n:translate="">Last name:</label>
-        ${form.text('lastname')}
-      </fieldset>
+                    <label for="current_picture" i18n:translate="">
+                        Current picture:</label>
+                    <img id="current_picture" tal:attributes="src request.resource_path(context, 'picture')" width="150">
+                </tal:c>
+                <label for="picture" i18n:translate="">
+                    Picture (jpg, jpeg, png or gif):</label>
+                ${form.errorlist('picture')}
+                ${form.file('picture')}
+            </p>
+        </fieldset>
 
-      <fieldset>
-        ${form.errorlist('gender')}
-        <label for="gender" i18n:translate="">Gender:</label>
-        ${form.select('gender', ['male', 'female'])}
+        <fieldset>
+            <p>
+                <label for="firstname" i18n:translate="">First name:</label>
+                ${form.errorlist('firstname')}
+                ${form.text('firstname')}
+            </p>
+            <p>
+                <label for="lastname" i18n:translate="">Last name:</label>
+                ${form.errorlist('lastname')}
+                ${form.text('lastname')}
+            </p>
+        </fieldset>
 
-        ${form.errorlist('birth_date')}
-        <label for="birth_date" i18n:translate="">Birth date:</label>
-        ${form.date('birth_date', date_format='%d/%m/%Y')}
+        <fieldset>
+            <p>
+                <label for="gender" i18n:translate="">Gender:</label>
+                ${form.errorlist('gender')}
+                ${form.select('gender', ['male', 'female'])}
+            </p>
+            <p>
+                <label for="birth_date" i18n:translate="">Birth date:</label>
+                ${form.errorlist('birth_date')}
+                ${form.date('birth_date', date_format='%d/%m/%Y')}
+            </p>
+            <p>
+                <label for="height" i18n:translate="">Height (meters):</label>
+                ${form.errorlist('height')}
+                ${form.text('height')}
+            </p>
+            <p>
+                <label for="weight" i18n:translate="">Weight (kg):</label>
+                ${form.errorlist('weight')}
+                ${form.text('weight')}
+            </p>
+        </fieldset>
 
-        ${form.errorlist('height')}
-        <label for="height" i18n:translate="">Height (meters):</label>
-        ${form.text('height')}
+        <fieldset>
+            <p>
+                <label for="bio" i18n:translate="">Bio/About you:</label>
+                ${form.errorlist('bio')}
+                ${form.textarea('bio', rows=10, cols=50)}
+            </p>
+        </fieldset>
 
-        ${form.errorlist('weight')}
-        <label for="weight" i18n:translate="">Weight (kg):</label>
-        ${form.text('weight')}
-      </fieldset>
-
-      <fieldset>
-        ${form.errorlist('bio')}
-        <label for="bio" i18n:translate="">Bio/About you:</label>
-        ${form.textarea('bio', rows=10, cols=50)}
-      </fieldset>
-
-      ${form.submit("submit", "Save")}
-      <a href="" tal:attributes="href request.resource_url(context, 'profile')"
-         i18n:translate="">Cancel</a>
-
-      ${form.end()}
+        <p>
+            ${form.submit("submit", "Save",  **{'class':"button button-normal"})}
+            <a href="" class="button button-important"
+               tal:attributes="href request.resource_url(context, 'profile')"
+               i18n:translate="">Cancel</a>
+        </p>
+        ${form.end()}
     </div>
 
   </metal:content>
+
+  <metal:body-js metal:fill-slot="body-js">
+      <script src="${request.static_url('ow:static/components/pickadate/picker.js')}"></script>
+      <script src="${request.static_url('ow:static/components/pickadate/picker.date.js')}"></script>
+      <script type="text/javascript">
+       $(document).ready(function() {
+           var today = new Date();
+           var first_year = new Date();
+           // start 100 years ago, should be enough for birth date
+           first_year.setMonth(first_year.getMonth() - 1200);
+           $('#birth_date').pickadate({
+               format: 'dd/mm/yyyy',
+               formatSubmit: 'dd/mm/yyyy',
+               selectMonths: true,
+               selectYears: 100,
+               min: first_year,
+               max: today
+           });
+       });
+      </script>
+  </metal:body-js>
 
 </html>

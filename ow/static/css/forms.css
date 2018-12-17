@@ -1,0 +1,162 @@
+
+/*
+  Styles for the forms
+*/
+
+/* Basic/common styles for buttons */
+
+.button {
+  box-sizing: border-box;
+  display: inline-block;
+  position: relative;
+  max-width: 100%;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid transparent;
+  text-decoration: none;
+  white-space: nowrap;
+  margin: 0;
+  padding: 0.5em 1em;
+  border-radius: 4px;
+  overflow: hidden;
+  background: none;
+  color: black;
+  font-family: inherit;
+  font-style: normal;
+  font-size: 1em;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+}
+
+.button-normal {
+  letter-spacing: 0.02em;
+  font-weight: 300;
+}
+
+.button-normal:hover {
+  text-decoration: none;
+}
+
+.button-normal {
+  background-image: linear-gradient(to top, #f1f1f1, white);
+  color: #252525;
+  border-color: #bebebe;
+}
+
+.button-normal:hover {
+  background: #f1f1f1;
+}
+
+.button-neutral {
+  background-color: #bebebe;
+  color: white;
+}
+
+.button-neutral:hover {
+  background-color: #323232;
+}
+
+.button-action {
+  background-image: linear-gradient(to top, #F89507, #fbbb60);
+  color: white;
+  border-color: #e48906;
+}
+
+.button-action:hover {
+  background: #F89507;
+}
+
+.button-important {
+  background-image: linear-gradient(to top, #c35857, #d07d7d);
+  color: white;
+  border-color: #aa3e3d;
+}
+
+.button-important:hover {
+  background: #c35857;
+}
+
+.button-alt {
+  background-color: #c35857;
+  color: white;
+}
+
+.button-alt:hover {
+  background-color: #aa3e3d;
+}
+
+.button-important {
+  background-color: #E45759;
+  color: white;
+}
+
+.button-important:hover {
+  background-color: #b81d20;
+}
+
+.button-s {
+  font-size: 13px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+
+/* Edit profile form */
+
+.edit-profile form {
+    width:100%;
+    max-width:40%
+}
+
+.edit-profile ul.error {
+    margin: 0px;
+    margin-bottom: 5px;
+    padding: 0px;
+    list-style-type:none;
+}
+
+.edit-profile ul.error li {
+    border: 1px solid red;
+    width:100%;
+    padding:.5em .75em;
+    border:1px solid #EE4056;
+    border-radius:2px
+}
+
+.edit-profile legend {
+    display:none
+}
+
+.edit-profile fieldset {
+    border:none;
+    border-bottom: 2px solid #e1e1e1;
+}
+
+.edit-profile fieldset>div {
+    margin-bottom:1.5em
+}
+
+.edit-profile input {
+    width:100%;
+    padding:.5em .75em;
+    border:1px solid #e1e1e1;
+    border-radius:2px
+}
+
+.edit-profile input:focus {
+    border-color: #333333;
+}
+
+.edit-profile input.button {
+    width: 20%;
+}
+
+.edit-profile label {
+    display:block;
+    font-size:14px;
+    font-size:.875rem;
+    color:#959595;
+    margin-bottom:.25em
+}

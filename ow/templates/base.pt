@@ -32,7 +32,10 @@
     </title>
 
     <link rel="stylesheet"
-          href="${request.static_url('ow:static/css/main.min.css')}" />
+          href="${request.static_url('ow:static/css/main.css')}" />
+
+    <link rel="stylesheet"
+          href="${request.static_url('ow:static/css/forms.css')}" />
 
     <link rel="stylesheet"
           href="${request.static_url('ow:static/css/openworkouts.css')}" />

@@ -177,7 +177,29 @@ leaflet_gpx() {
     fi
 }
 
-
+leaflet_elevation() {
+    NAME="Leaflet.Elevation"
+    VERSION="master"
+    URL=https://github.com/MrMufflon/${NAME}/archive/${VERSION}.tar.gz
+    check_cache ${NAME} ${VERSION}
+    in_cache=$?
+    if [ ${in_cache} -eq 0 -a ${REINSTALL} -eq 1 ]; then
+        echo "${NAME}-${VERSION} $ALREADY_INSTALLED"
+    else
+        echo "> Installing ${NAME} ${VERSION}"
+        if [ -d ${COMPONENTS}/${NAME} ]; then
+            # Clean up, delete previous install before installing
+            rm -r ${COMPONENTS}/${NAME}
+        fi
+        cd ${TMP}
+        ${GET} ${URL}
+        ${TAR} ${VERSION}.tar.gz
+        cd ${CURRENT}
+        mv ${TMP}/${NAME}-${VERSION} ${COMPONENTS}/${NAME}
+        echo "${NAME}-${VERSION}" >> ${CACHE}
+        echo "< Installed ${NAME} ${VERSION}"
+    fi
+}
 
 echo "Installing JS dependencies in ${COMPONENTS}"
 
@@ -185,6 +207,7 @@ jquery
 easy_autocomplete
 leaflet
 leaflet_gpx
+leaflet_elevation
 
 # Clean up, remove the tmp directory
 echo "Cleaning up temp storage"

@@ -63,6 +63,12 @@ def add_workout(context, request):
     """
     Add a workout uploading a tracking file
     """
+    # if not given a file there is an empty byte in POST, which breaks
+    # our blob storage validator.
+    # dirty fix until formencode fixes its api.is_empty method
+    if isinstance(request.POST.get('tracking_file', None), bytes):
+        request.POST['tracking_file'] = ''
+
     form = Form(request, schema=UploadedWorkoutSchema())
 
     if 'submit' in request.POST and form.validate():
@@ -128,6 +134,12 @@ def edit_workout(context, request):
     name='update-from-file',
     renderer='ow:templates/update_workout_from_file.pt')
 def update_workout_from_file(context, request):
+    # if not given a file there is an empty byte in POST, which breaks
+    # our blob storage validator.
+    # dirty fix until formencode fixes its api.is_empty method
+    if isinstance(request.POST.get('tracking_file', None), bytes):
+        request.POST['tracking_file'] = ''
+
     form = Form(request, schema=UpdateWorkoutSchema())
     if 'submit' in request.POST and form.validate():
         # Grab some information from the tracking file

@@ -76,41 +76,6 @@ owjs.map = function(spec) {
             ele_container._container);
     };
 
-
-    var add_ow_charts = function add_ow_charts() {
-        /*
-           Add the analysis charts to the map (elevation, heartrate, cadence, etc)
-           This has to be called *after* create_map and *before* load_gpx.
-        */
-        ow_charts = L.control.ow({
-            position: "topright",
-            theme: "ow-analysis", //default: lime-theme
-            width: 600,
-            height: 125,
-            margins: {
-                top: 10,
-                right: 20,
-                bottom: 30,
-                left: 50
-            },
-            useHeightIndicator: true, //if false a marker is drawn at map position
-            interpolation: "linear", //see https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-area_interpolate
-            hoverNumber: {
-                decimalsX: 3, //decimals on distance (always in km)
-                decimalsY: 0, //deciamls on height (always in m)
-                formatter: undefined //custom formatter function may be injected
-            },
-            xTicks: undefined, //number of ticks in x axis, calculated by default according to width
-            yTicks: undefined, //number of ticks on y axis, calculated by default according to height
-            collapsed: false    //collapsed mode, show chart on click or mouseover
-        });
-
-        var ow_charts_container = ow_charts.addTo(map);
-        document.getElementById('ow-analysis').appendChild(
-            ow_charts_container._container);
-    };
-
-
     var load_gpx = function load_gpx(gpx_url) {
         /*
           Load the gpx from the given url, add it to the map and feed it to the
@@ -125,8 +90,8 @@ owjs.map = function(spec) {
             },
         });
         gpx.on("addline",function(e){
-            // elevation.addData(e.line);
-            ow_charts.addData(e.line);
+            elevation.addData(e.line);
+            // ow_charts.addData(e.line);
         });
         gpx.addTo(map);
     };
@@ -134,8 +99,8 @@ owjs.map = function(spec) {
     var render = function render() {
         // create the map, add elevation, load gpx
         create_map(latitude, longitude, zoom);
-        // add_elevation_chart();
-        add_ow_charts();
+        add_elevation_chart();
+        // add_ow_charts();
         load_gpx(gpx_url);
     };
 

@@ -19,8 +19,10 @@
              width="450" />
       </tal:c>
       <h2>
-        <tal:fullname tal:content="context.fullname"></tal:fullname>
-        (<tal:uid tal:content="context.uid"></tal:uid>)
+          <tal:fullname tal:content="context.fullname"></tal:fullname>
+          <tal:has-nickname tal:condition="context.nickname">
+              (<tal:nickname tal:content="context.nickname"></tal:nickname>)
+          </tal:has-nickname>
       </h2>
       <h3>
         <tal:email tal:content="context.email"></tal:email>

@@ -8,40 +8,50 @@
       tal:attributes="lang request.locale_name">
 
   <metal:head-title metal:fill-slot="head-title">
-    <tal:t i18n:translate="">Add workout</tal:t>
+    <tal:t i18n:translate="">Upload workout file</tal:t>
   </metal:head-title>
 
   <metal:title metal:fill-slot="title">
-    <tal:t i18n:translate="">Add workout</tal:t>
+    <tal:t i18n:translate="">Upload workout file</tal:t>
   </metal:title>
 
   <metal:content metal:fill-slot="content">
-    <div id="add_workout">
-      ${form.begin(multipart=True)}
-      ${form.csrf_token()}
+    <h2 i18n:translate="">Upload workout file</h2>
+    <div class="upload-workout ow-forms">
+        ${form.begin(multipart=True)}
+        ${form.csrf_token()}
 
-      <fieldset>
-        ${form.errorlist('title')}
-        <label for="title" i18n:translate="">Title:</label>
-        ${form.text('title')}
-      </fieldset>
+        <fieldset>
+            <p>
+                <label for="title" i18n:translate="">Title:</label>
+                ${form.errorlist('title')}
+                ${form.text('title')}
+            </p>
+        </fieldset>
 
-      <fieldset>
-        ${form.errorlist('notes')}
-        <label for="notes" i18n:translate="">Notes:</label>
-        ${form.textarea('notes', rows=10, cols=50)}
-      </fieldset>
+        <fieldset>
+            <p>
+                <label for="notes" i18n:translate="">Notes:</label>
+                ${form.errorlist('notes')}
+                ${form.textarea('notes', rows=10, cols=50)}
+            </p>
+        </fieldset>
 
-      <fieldset>
-        ${form.errorlist('tracking_file')}
-        <label for="tracking_file" i18n:translate="">
-          Workout file (gpx, fit):</label>
-        ${form.file('tracking_file')}
-      </fieldset>
+        <fieldset>
+            <p>
+                <label for="tracking_file" i18n:translate="">
+                    Workout file (gpx, fit):</label>
+                ${form.errorlist('tracking_file')}
+                ${form.file('tracking_file')}
+            </p>
+        </fieldset>
 
-      ${form.submit("submit", "Save")}
-      <a href="" tal:attributes="href request.resource_url(request.root)"
-         i18n:translate="">Cancel</a>
+        <p>
+            ${form.submit("submit", "Save",  **{'class':"button button-normal"})}
+            <a href="" class="button button-important"
+               tal:attributes="href request.resource_url(context)"
+               i18n:translate="">Cancel</a>
+        </p>
 
       ${form.end()}
     </div>

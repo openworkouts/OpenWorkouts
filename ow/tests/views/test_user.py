@@ -121,7 +121,7 @@ class TestUserViews(object):
         assert isinstance(response, HTTPFound)
         assert response.location == request.resource_url(root, 'login')
 
-    def test_dashboard_redirect_authenticated(self, root):
+    def test_dashboard_redirect_authenticated(self, root, john):
         """
         Authenticated user accesing the root object, send the user to her
         dashboard
@@ -130,13 +130,20 @@ class TestUserViews(object):
         Mock fully the request here, because we need to use
         authenticated_userid, which cannot be easily set in the DummyRequest
         """
+        alt_request = DummyRequest()
         request = Mock()
         request.root = root
-        request.authenticated_userid = 'john'
-        request.resource_url.return_value = '/dashboard'
+        request.authenticated_userid = str(john.uid)
+        request.resource_url = alt_request.resource_url
         response = user_views.dashboard_redirect(root, request)
         assert isinstance(response, HTTPFound)
-        assert response.location == '/dashboard'
+        assert response.location == request.resource_url(john)
+        # if authenticated_userid is the id of an user that does not exist
+        # anymore, we send the user to the logout page
+        request.authenticated_userid = 'faked-uid'
+        response = user_views.dashboard_redirect(root, request)
+        assert isinstance(response, HTTPFound)
+        assert response.location == request.resource_url(root, 'logout')
 
     def test_dashboard(self, dummy_request, john):
         """
@@ -286,6 +293,57 @@ class TestUserViews(object):
         html_error = u'<ul class="error"><li>' + error + '</li></ul>'
         assert response['form'].errorlist() == html_error
         assert response['form'].errors_for('email') == [error]
+
+    def test_edit_profile_post_ok_picture_empty_bytes(
+            self, profile_post_request, john):
+        """
+        POST request with an empty picture, the content of
+        request['POST'].picture is a empty bytes string (b'') which triggers
+        a bug in formencode, we put a fix in place, test that
+        (more in ow.user.views.edit_profile)
+        """
+        # for the purposes of this test, we can mock the picture
+        picture = Mock()
+        john.picture = picture
+        request = profile_post_request
+        user = john
+        # Mimic what happens when a picture is not provided by the user
+        request.POST['picture'] = b''
+        response = user_views.edit_profile(user, request)
+        assert isinstance(response, HTTPFound)
+        assert response.location == request.resource_url(user, 'profile')
+        assert user.picture == picture
+
+    def test_edit_profile_post_ok_missing_picture(
+            self, profile_post_request, john):
+        """
+        POST request without picture
+        """
+        # for the purposes of this test, we can mock the picture
+        picture = Mock()
+        john.picture = picture
+        request = profile_post_request
+        user = john
+        # No pic is provided in the request POST values
+        del request.POST['picture']
+        response = user_views.edit_profile(user, request)
+        assert isinstance(response, HTTPFound)
+        assert response.location == request.resource_url(user, 'profile')
+        assert user.picture == picture
+
+    def test_edit_profile_post_ok_nickname(self, profile_post_request, john):
+        """
+        User with a nickname set saves profile without changing the profile,
+        we have to be sure there are no "nickname already in use" errors
+        """
+        request = profile_post_request
+        user = john
+        user.nickname = 'mr_jones'
+        # add the nickname, the default post request has not a nickname set
+        request.POST['nickname'] = 'mr_jones'
+        response = user_views.edit_profile(user, request)
+        assert isinstance(response, HTTPFound)
+        assert response.location == request.resource_url(user, 'profile')
 
     def test_change_password_get(self, dummy_request, john):
         request = dummy_request

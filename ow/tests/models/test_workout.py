@@ -59,6 +59,13 @@ class TestWorkoutModels(object):
     def test_workout_id(self, root):
         assert root['john']['1'].workout_id == '1'
 
+    def test_owner(self, root):
+        # workout with owner
+        assert root['john']['1'].owner == root['john']
+        # workout without owner
+        w = Workout()
+        assert w.owner is None
+
     def test_end(self, root):
         # workout without duration, it has no end
         workout = Workout()

@@ -61,6 +61,10 @@ class Workout(Folder):
         return self.__name__
 
     @property
+    def owner(self):
+        return self.__parent__
+
+    @property
     def end(self):
         if not self.duration:
             return None

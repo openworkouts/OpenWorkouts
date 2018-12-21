@@ -163,6 +163,24 @@ class TestWorkoutViews(object):
         # Only one required field in this case, the tracking file
         assert len(response['form'].form.errors) == 1
 
+    def test_add_workout_post_invalid_bytes(self, dummy_request):
+        """
+        POST request to add a workout, without uploading a tracking file,
+        which sends an empty bytes object (b'')
+        """
+        request = dummy_request
+        user = request.root['john']
+        request.method = 'POST'
+        request.POST = MultiDict({
+            'tracking_file': b'',
+            'submit': True,
+            })
+        assert len(request.root['john'].workouts()) == 1
+        response = workout_views.add_workout(user, request)
+        assert 'form' in response
+        # Only one required field in this case, the tracking file
+        assert len(response['form'].form.errors) == 1
+
     @pytest.mark.parametrize('filename', gpx_filenames)
     def test_add_workout_post_valid(self, filename, dummy_request):
         """
@@ -250,6 +268,24 @@ class TestWorkoutViews(object):
         workout = user.workouts()[0]
         request.method = 'POST'
         request.POST = MultiDict({'submit': True})
+        response = workout_views.update_workout_from_file(workout, request)
+        assert 'form' in response
+        # Only one required field in this case, the tracking file
+        assert len(response['form'].form.errors) == 1
+
+    def test_update_workout_from_file_post_invalid_bytes(self, dummy_request):
+        """
+        POST request to update a workout, without uploading a tracking file,
+        which sends an empty bytes object (b'')
+        """
+        request = dummy_request
+        user = request.root['john']
+        workout = user.workouts()[0]
+        request.method = 'POST'
+        request.POST = MultiDict({
+            'tracking_file': b'',
+            'submit': True,
+            })
         response = workout_views.update_workout_from_file(workout, request)
         assert 'form' in response
         # Only one required field in this case, the tracking file

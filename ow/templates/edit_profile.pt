@@ -98,6 +98,17 @@
             </p>
         </fieldset>
 
+        <fieldset>
+            <p>
+                <label for="timezone" i18n:translate="">Timezone:</label>
+                <small i18n:translate="">
+                    All dates and times will be formatted for this timezone
+                </small>
+                ${form.errorlist('timezone')}
+                ${form.select('timezone', timezones)}
+            </p>
+        </fieldset>
+
         <p>
             ${form.submit("submit", "Save",  **{'class':"button button-normal"})}
             <a href="" class="button button-important"

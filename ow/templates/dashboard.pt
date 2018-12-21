@@ -37,7 +37,7 @@
 
             <ul class="workout-info">
               <li>
-                <tal:c tal:content="workout.start"></tal:c>
+                <tal:c tal:content="workout.start_in_timezone(context.timezone)"></tal:c>
               </li>
               <li>
                 <tal:c tal:content="workout.duration"></tal:c>

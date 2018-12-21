@@ -26,7 +26,8 @@ requires = [
     'pyramid_simpleform==0.7dev0',  # version needed for python3
     'unidecode',
     'gpxpy',
-    'lxml'
+    'lxml',
+    'pytz'
 ]
 
 tests_require = [

@@ -77,14 +77,14 @@
       </h4>
 
       <ul id="" tal:attributes="id 'workout-' + context.workout_id + '-details'"
-          tal:define="hr context.hr; cad context.cad">
+          tal:define="hr context.hr; cad context.cad; timezone context.owner.timezone">
         <li>
           <tal:t i18n:translate="">Start:</tal:t>
-          <tal:c tal:content="context.start"></tal:c>
+          <tal:c tal:content="context.start_in_timezone(timezone)"></tal:c>
         </li>
         <li>
           <tal:t i18n:translate="">End:</tal:t>
-          <tal:c tal:content="context.end"></tal:c>
+          <tal:c tal:content="context.end_in_timezone(timezone)"></tal:c>
         </li>
         <li>
           <tal:t i18n:translate="">Duration:</tal:t>

@@ -32,6 +32,7 @@ class User(Folder):
         self.weight = kw.get('weight', None)
         self.gender = kw.get('gender', 'female')
         self.picture = kw.get('picture', None)  # blob
+        self.timezone = kw.get('timezone', 'UTC')
         self.__password = None
         self.last_workout_id = 0
         super(User, self).__init__()

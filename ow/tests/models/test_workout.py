@@ -77,6 +77,23 @@ class TestWorkoutModels(object):
         workout = Workout(start=start_date)
         assert workout.start_time == start_date.strftime('%H:%M')
 
+    def test_start_in_timezone(self):
+        start_date = datetime.now(tz=timezone.utc)
+        str_start_date = start_date.strftime('%d/%m/%Y %H:%M (%Z)')
+        workout = Workout(start=start_date)
+        assert workout.start_in_timezone('UTC') == str_start_date
+        assert workout.start_in_timezone('Europe/Madrid') != str_start_date
+        assert workout.start_in_timezone('America/Vancouver') != str_start_date
+
+    def test_end_in_timezone(self):
+        start_date = datetime.now(tz=timezone.utc)
+        end_date = start_date + timedelta(minutes=60)
+        str_end_date = end_date.strftime('%d/%m/%Y %H:%M (%Z)')
+        workout = Workout(start=start_date, duration=timedelta(minutes=60))
+        assert workout.end_in_timezone('UTC') == str_end_date
+        assert workout.end_in_timezone('Europe/Madrid') != str_end_date
+        assert workout.end_in_timezone('America/Vancouver') != str_end_date
+
     def test_split_duration(self):
         # return the same hours, minutes, seconds we provided when creating
         # the workout instance

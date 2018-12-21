@@ -2,6 +2,7 @@
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 
+import pytz
 import gpxpy
 from repoze.folder import Folder
 from pyramid.security import Allow, Everyone
@@ -72,6 +73,22 @@ class Workout(Folder):
     @property
     def start_time(self):
         return self.start.strftime('%H:%M')
+
+    def start_in_timezone(self, timezone):
+        """
+        Return a string representation of the start date and time,
+        localized into the given timezone
+        """
+        _start = self.start.astimezone(pytz.timezone(timezone))
+        return _start.strftime('%d/%m/%Y %H:%M (%Z)')
+
+    def end_in_timezone(self, timezone):
+        """
+        Return a string representation of the end date and time,
+        localized into the given timezone
+        """
+        _end = self.end.astimezone(pytz.timezone(timezone))
+        return _end.strftime('%d/%m/%Y %H:%M (%Z)')
 
     def split_duration(self):
         hours, remainder = divmod(int(self.duration.total_seconds()), 3600)

@@ -1,5 +1,6 @@
 from pyramid.i18n import TranslationStringFactory
 from formencode import Schema, validators
+from pytz import common_timezones
 
 from ow.schemas.blob import FieldStorageBlob
 
@@ -73,6 +74,7 @@ class UserProfileSchema(Schema):
     gender = validators.OneOf(('male', 'female'), not_empty=True)
     picture = FieldStorageBlob(if_emtpy=None, if_missing=None,
                                whitelist=['jpg', 'jpeg', 'png', 'gif'])
+    timezone = validators.OneOf(common_timezones, if_missing='UTC')
 
 
 class ChangePasswordSchema(Schema):

@@ -4,6 +4,7 @@ from pyramid.security import remember, forget
 from pyramid.response import Response
 from pyramid.i18n import TranslationStringFactory
 from pyramid_simpleform import Form, State
+from pytz import common_timezones
 
 from ..models.user import User
 from ..schemas.user import (
@@ -166,10 +167,13 @@ def edit_profile(context, request):
         request.root.reindex(context)
         # Saved, send the user to the public view of her profile
         return HTTPFound(location=request.resource_url(context, 'profile'))
+
     # prevent crashes on the form
     if 'picture' in form.data:
         del form.data['picture']
-    return {'form': OWFormRenderer(form)}
+
+    return {'form': OWFormRenderer(form),
+            'timezones': common_timezones}
 
 
 @view_config(

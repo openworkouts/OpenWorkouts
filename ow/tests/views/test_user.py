@@ -258,7 +258,7 @@ class TestUserViews(object):
         # the form carries along the proper data keys, taken from the
         # loaded user profile
         data = ['firstname', 'lastname', 'email', 'nickname', 'bio',
-                'birth_date', 'height', 'weight', 'gender']
+                'birth_date', 'height', 'weight', 'gender', 'timezone']
         assert list(response['form'].data.keys()) == data
         # and check the email to see data is properly loaded
         assert response['form'].data['email'] == 'john.doe@example.net'

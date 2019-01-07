@@ -77,7 +77,7 @@
       </h4>
 
       <ul id="" tal:attributes="id 'workout-' + context.workout_id + '-details'"
-          tal:define="hr context.hr; cad context.cad; timezone context.owner.timezone">
+          tal:define="hr context.hr; cad context.cad; atemp context.atemp; timezone context.owner.timezone">
         <li>
           <tal:t i18n:translate="">Start:</tal:t>
           <tal:c tal:content="context.start_in_timezone(timezone)"></tal:c>
@@ -113,6 +113,16 @@
           <tal:t i18n:translate="">Max.</tal:t>
           <tal:c tal:content="cad['max']"></tal:c>
         </li>
+        <li tal:condition="atemp">
+          <tal:t i18n:translate="">Temperature:</tal:t>
+          <tal:t i18n:translate="">Min.</tal:t>
+          <tal:c tal:content="atemp['min']"></tal:c> |
+          <tal:t i18n:translate="">Avg.</tal:t>
+          <tal:c tal:content="atemp['avg']"></tal:c> |
+          <tal:t i18n:translate="">Max.</tal:t>
+          <tal:c tal:content="atemp['max']"></tal:c>
+        </li>
+
       </ul>
       <div id="" tal:content="context.notes"
            tal:attributes="id 'workout-' + context.workout_id + '-notes'">

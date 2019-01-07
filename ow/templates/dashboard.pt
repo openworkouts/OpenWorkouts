@@ -40,7 +40,8 @@
                 <tal:c tal:content="workout.start_in_timezone(context.timezone)"></tal:c>
               </li>
               <li>
-                <tal:c tal:content="workout.duration"></tal:c>
+                <!--! use the properly formatted duration instead of the timedelta object -->
+                <tal:c tal:content="workout._duration"></tal:c>
               </li>
               <li tal:condition="workout.distance">
                 <tal:c tal:content="workout.rounded_distance"></tal:c> km

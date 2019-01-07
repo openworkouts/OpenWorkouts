@@ -88,7 +88,8 @@
         </li>
         <li>
           <tal:t i18n:translate="">Duration:</tal:t>
-          <tal:c tal:content="context.duration"></tal:c>
+          <!--! use the properly formatted duration instead of the timedelta object -->
+          <tal:c tal:content="context._duration"></tal:c>
         </li>
         <li tal:condition="context.distance">
           <tal:t i18n:translate="">Distance:</tal:t>

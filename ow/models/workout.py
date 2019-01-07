@@ -112,6 +112,12 @@ class Workout(Folder):
         return str(self.split_duration()[2]).zfill(2)
 
     @property
+    def _duration(self):
+        return ':'.join(
+            [self.duration_hours, self.duration_minutes, self.duration_seconds]
+        )
+
+    @property
     def rounded_distance(self):
         """
         Return rounded value for distance, '-' if the workout has no distance

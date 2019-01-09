@@ -1,8 +1,11 @@
 import re
-import datetime
+from datetime import datetime
+from decimal import Decimal
+from shutil import copyfileobj
+
 from unidecode import unidecode
 from xml.dom import minidom
-from decimal import Decimal
+from ZODB.blob import Blob
 
 
 def slugify(text, delim=u'-'):
@@ -78,10 +81,10 @@ class GPXMinidomParser(object):
 
                 rfc3339 = trkpt.getElementsByTagName('time')[0].firstChild.data
                 try:
-                    t = datetime.datetime.strptime(
+                    t = datetime.strptime(
                         rfc3339, '%Y-%m-%dT%H:%M:%S.%fZ')
                 except ValueError:
-                    t = datetime.datetime.strptime(
+                    t = datetime.strptime(
                         rfc3339, '%Y-%m-%dT%H:%M:%SZ')
 
                 hr = None
@@ -112,3 +115,71 @@ class GPXMinidomParser(object):
                     'hr': hr,
                     'cad': cad,
                     'atemp': atemp})
+
+
+def semicircles_to_degrees(semicircles):
+    return semicircles * (180 / pow(2, 31))
+
+
+def degrees_to_semicircles(degrees):
+    return degrees * (pow(2, 31) / 180)
+
+
+def miles_to_kms(miles):
+    factor = 0.62137119
+    return miles / factor
+
+
+def kms_to_miles(kms):
+    factor = 0.62137119
+    return kms * factor
+
+
+def meters_to_kms(meters):
+    return meters / 1000
+
+
+def kms_to_meters(kms):
+    return kms * 1000
+
+
+def mps_to_kmph(mps):
+    """
+    Transform a value from meters-per-second to kilometers-per-hour
+    """
+    return mps * 3.6
+
+
+def kmph_to_mps(kmph):
+    """
+    Transform a value from kilometers-per-hour to meters-per-second
+    """
+    return kmph * 0.277778
+
+
+def copy_blob(blob):
+    """
+    Create a copy of a blob object, returning another blob object that is
+    the copy of the given blob file.
+    """
+    new_blob = Blob()
+    if getattr(blob, 'file_extension', None):
+        new_blob.file_extension = blob.file_extension
+    with blob.open('r') as orig_blob, new_blob.open('w') as dest_blob:
+        orig_blob.seek(0)
+        copyfileobj(orig_blob, dest_blob)
+    return new_blob
+
+
+def create_blob(data, file_extension):
+    """
+    Create a ZODB blob file from some data, return the blob object
+    """
+    blob = Blob()
+    blob.file_extension = file_extension
+    with blob.open('w') as open_blob:
+        # use .encode() to convert the string to bytes if needed
+        if not isinstance(data, bytes):
+            data = data.encode('utf-8')
+        open_blob.write(data)
+    return blob

@@ -2,7 +2,7 @@ import os
 from io import BytesIO
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 
 import pytest
 from pyramid.security import Allow, Everyone
@@ -194,6 +194,19 @@ class TestWorkoutModels(object):
         assert workout.atemp['min'] == 0
         assert workout.atemp['max'] == 12
         assert workout.atemp['avg'] == 5
+
+    def test_tracking_file_path(self):
+        workout = Workout()
+        # no tracking file, path is None
+        assert workout.tracking_file_path is None
+        # workout still not saved to the db
+        workout.tracking_file = Mock()
+        workout.tracking_file._p_blob_uncommitted = '/tmp/blobtempfile'
+        workout.tracking_file._p_blob_committed = None
+        assert workout.tracking_file_path == '/tmp/blobtempfile'
+        workout.tracking_file._p_blob_uncommitted = None
+        workout.tracking_file._p_blob_committed = '/var/db/blobs/blobfile'
+        assert workout.tracking_file_path == '/var/db/blobs/blobfile'
 
     def test_load_from_file_invalid(self):
         workout = Workout()

@@ -27,7 +27,8 @@ requires = [
     'unidecode',
     'gpxpy',
     'lxml',
-    'pytz'
+    'pytz',
+    'fitparse'
 ]
 
 tests_require = [

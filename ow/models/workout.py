@@ -6,7 +6,14 @@ import pytz
 import gpxpy
 from repoze.folder import Folder
 from pyramid.security import Allow, Everyone
-from ow.utilities import GPXMinidomParser
+
+from ow.utilities import (
+    GPXMinidomParser,
+    copy_blob,
+    create_blob,
+)
+
+from ow.fit import Fit
 
 
 class Workout(Folder):
@@ -55,6 +62,10 @@ class Workout(Folder):
         self.atemp_avg = kw.get('atemp_avg', None)
         self.tracking_file = kw.get('tracking_file', None)  # Blob
         self.tracking_filetype = ''  # unicode string
+        # attr to store ANT fit files. For now this file is used to
+        # generate a gpx-encoded tracking file we then use through
+        # the whole app
+        self.fit_file = kw.get('fit_file', None)  # Blob
 
     @property
     def workout_id(self):
@@ -187,6 +198,40 @@ class Workout(Folder):
                     'avg': round(self.atemp_avg)}
         return None
 
+    @property
+    def tracking_file_path(self):
+        """
+        Get the path to the blob file attached as a tracking file.
+
+        First check if the file was not committed to the db yet (new workout
+        not saved yet) and use the path to the temporary file on the fs.
+        If none is found there, go for the real blob file in the blobs
+        directory
+        """
+        path = None
+        if self.tracking_file:
+            path = self.tracking_file._p_blob_uncommitted
+            if path is None:
+                path = self.tracking_file._p_blob_committed
+        return path
+
+    @property
+    def fit_file_path(self):
+        """
+        Get the path to the blob file attached as a fit file.
+
+        First check if the file was not committed to the db yet (new workout
+        not saved yet) and use the path to the temporary file on the fs.
+        If none is found there, go for the real blob file in the blobs
+        directory
+        """
+        path = None
+        if self.fit_file:
+            path = self.fit_file._p_blob_uncommitted
+            if path is None:
+                path = self.fit_file._p_blob_committed
+        return path
+
     def load_from_file(self):
         """
         Check which kind of tracking file we have for this workout, then call
@@ -194,6 +239,8 @@ class Workout(Folder):
         """
         if self.tracking_filetype == 'gpx':
             self.load_from_gpx()
+        elif self.tracking_filetype == 'fit':
+            self.load_from_fit()
 
     def load_from_gpx(self):
         """
@@ -282,6 +329,67 @@ class Workout(Folder):
         parser.parse_tracks()
         return parser.tracks
 
+    def load_from_fit(self):
+        """
+        Try to load data from an ANT-compatible .fit file (if any has been
+        added to this workout).
+
+        "Load data" means:
+
+        1. Copy over the uploaded fit file to self.fit_file, so we can keep
+           that copy around for future use
+
+        2. generate a gpx object from the fit file
+
+        3. save the gpx object as the tracking_file, which then will be used
+           by the current code to display and gather data to be displayed/shown
+           to the user.
+
+        4. Grab some basic info from the fit file and store it in the Workout
+        """
+        # backup the fit file
+        self.fit_file = copy_blob(self.tracking_file)
+
+        # create an instance of our Fit class
+        fit = Fit(self.fit_file_path)
+        fit.load()
+
+        # fit -> gpx and store that as the main tracking file
+        self.tracking_file = create_blob(fit.gpx, 'gpx')
+        self.tracking_filetype = 'gpx'
+
+        # grab the needed data from the fit file, update the workout
+        self.start = fit.data['start']
+        # ensure this datetime start object is timezone-aware
+        self.start = self.start.replace(tzinfo=timezone.utc)
+        # duration comes in seconds, store a timedelta
+        self.duration = timedelta(seconds=fit.data['duration'])
+        # distance comes in meters
+        self.distance = Decimal(fit.data['distance']) / Decimal(1000.00)
+        self.uphill = Decimal(fit.data['uphill'])
+        self.downhill = Decimal(fit.data['downhill'])
+        # If the user did not provide us with a title, build one from the
+        # info in the fit file
+        if not self.title:
+            self.title = fit.name
+
+        if fit.data['avg_hr']:
+            self.hr_avg = Decimal(fit.data['avg_hr'])
+            self.hr_min = Decimal(fit.data['min_hr'])
+            self.hr_max = Decimal(fit.data['max_hr'])
+
+        if fit.data['avg_cad']:
+            self.cad_avg = Decimal(fit.data['avg_cad'])
+            self.cad_min = Decimal(fit.data['min_cad'])
+            self.cad_max = Decimal(fit.data['max_cad'])
+
+        if fit.data['avg_atemp']:
+            self.atemp_avg = Decimal(fit.data['avg_atemp'])
+            self.atemp_min = Decimal(fit.data['min_atemp'])
+            self.atemp_max = Decimal(fit.data['max_atemp'])
+
+        return True
+
     @property
     def has_tracking_file(self):
         return self.tracking_file is not None
@@ -289,3 +397,7 @@ class Workout(Folder):
     @property
     def has_gpx(self):
         return self.has_tracking_file and self.tracking_filetype == 'gpx'
+
+    @property
+    def has_fit(self):
+        return self.fit_file is not None

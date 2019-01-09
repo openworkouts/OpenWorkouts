@@ -171,7 +171,7 @@ def copy_blob(blob):
     return new_blob
 
 
-def create_blob(data, file_extension):
+def create_blob(data, file_extension, binary=False):
     """
     Create a ZODB blob file from some data, return the blob object
     """
@@ -179,7 +179,7 @@ def create_blob(data, file_extension):
     blob.file_extension = file_extension
     with blob.open('w') as open_blob:
         # use .encode() to convert the string to bytes if needed
-        if not isinstance(data, bytes):
+        if not binary and not isinstance(data, bytes):
             data = data.encode('utf-8')
         open_blob.write(data)
     return blob

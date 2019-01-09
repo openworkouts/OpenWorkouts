@@ -4,7 +4,18 @@ from xml.dom.minidom import Element
 
 import pytest
 
-from ow.utilities import slugify, GPXMinidomParser
+from ow.utilities import (
+    slugify,
+    GPXMinidomParser,
+    semicircles_to_degrees,
+    degrees_to_semicircles,
+    miles_to_kms,
+    kms_to_miles,
+    meters_to_kms,
+    kms_to_meters,
+    mps_to_kmph,
+    kmph_to_mps,
+)
 
 
 class TestUtilities(object):
@@ -18,6 +29,30 @@ class TestUtilities(object):
     def test_slugify_special_chars(self):
         res = slugify(u'(r)-[i]\u00AE')
         assert res == u'r-i-r'
+
+    def test_semicircles_to_degrees(self):
+        assert semicircles_to_degrees(10) == 10 * (180 / pow(2, 31))
+
+    def test_degrees_to_semicircles(self):
+        assert degrees_to_semicircles(10) == 10 * (pow(2, 31) / 180)
+
+    def test_miles_to_kms(self):
+        assert miles_to_kms(100) == 100 / 0.62137119
+
+    def test_kms_to_miles(self):
+        assert kms_to_miles(100) == 100 * 0.62137119
+
+    def test_meters_to_kms(self):
+        assert meters_to_kms(1000) == 1
+
+    def test_kms_to_meters(self):
+        assert kms_to_meters(1) == 1000
+
+    def test_mps_to_kmph(self):
+        assert mps_to_kmph(5) == 5 * 3.6
+
+    def test_kmph_to_mps(self):
+        assert kmph_to_mps(30) == 30 * 0.277778
 
 
 class TestGPXParseMinidom(object):

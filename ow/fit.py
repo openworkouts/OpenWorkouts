@@ -2,12 +2,12 @@ from fitparse import FitFile
 import gpxpy
 import gpxpy.gpx
 
-try:
+try:  # pragma: no cover
     import lxml.etree as mod_etree  # Load LXML or fallback to cET or ET
-except:
+except ImportError:  # pragma: no cover
     try:
         import xml.etree.cElementTree as mod_etree
-    except:
+    except ImportError:
         import xml.etree.ElementTree as mod_etree
 
 from ow.utilities import semicircles_to_degrees

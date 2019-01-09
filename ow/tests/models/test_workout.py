@@ -10,6 +10,7 @@ from pyramid.security import Allow, Everyone
 from ow.models.workout import Workout
 from ow.models.user import User
 from ow.models.root import OpenWorkouts
+from ow.utilities import create_blob
 
 
 class TestWorkoutModels(object):
@@ -120,6 +121,13 @@ class TestWorkoutModels(object):
         assert workout.duration_minutes == '30'
         assert workout.duration_seconds == '15'
 
+    def test__duration(self):
+        # covering the property that shows the duration of a workout properly
+        # formatted in hours:minutes:seconds
+        duration = timedelta(hours=1, minutes=30, seconds=15)
+        workout = Workout(duration=duration)
+        assert workout._duration == '01:30:15'
+
     def test_rounded_distance_no_value(self):
         workout = Workout()
         assert workout.rounded_distance == '-'
@@ -208,6 +216,19 @@ class TestWorkoutModels(object):
         workout.tracking_file._p_blob_committed = '/var/db/blobs/blobfile'
         assert workout.tracking_file_path == '/var/db/blobs/blobfile'
 
+    def test_fit_file_path(self):
+        workout = Workout()
+        # no tracking file, path is None
+        assert workout.fit_file_path is None
+        # workout still not saved to the db
+        workout.fit_file = Mock()
+        workout.fit_file._p_blob_uncommitted = '/tmp/blobtempfile'
+        workout.fit_file._p_blob_committed = None
+        assert workout.fit_file_path == '/tmp/blobtempfile'
+        workout.fit_file._p_blob_uncommitted = None
+        workout.fit_file._p_blob_committed = '/var/db/blobs/blobfile'
+        assert workout.fit_file_path == '/var/db/blobs/blobfile'
+
     def test_load_from_file_invalid(self):
         workout = Workout()
         workout.tracking_filetype = 'alf'
@@ -221,6 +242,13 @@ class TestWorkoutModels(object):
         with patch.object(workout, 'load_from_gpx') as lfg:
             workout.load_from_file()
             assert lfg.called
+
+    def test_load_from_file_fit(self):
+        workout = Workout()
+        workout.tracking_filetype = 'fit'
+        with patch.object(workout, 'load_from_fit') as lff:
+            workout.load_from_file()
+            assert lff.called
 
     gpx_params = (
         # GPX 1.0 file, no extensions
@@ -370,6 +398,117 @@ class TestWorkoutModels(object):
         workout = Workout()
         res = workout.parse_gpx()
         assert res == {}
+
+    fit_params = (
+        # complete fit file from a garmin 520 device
+        ('fixtures/20181230_101115.fit', {
+            'start': datetime(2018, 12, 30, 9, 11, 15, tzinfo=timezone.utc),
+            'duration': timedelta(0, 13872, 45000),
+            'distance': Decimal('103.4981999999999970896169543'),
+            'title': 'Synapse cycling',
+            'hr': {'min': 93, 'max': 170, 'avg': 144},
+            'cad': {'min': 0, 'max': 121, 'avg': 87},
+            'atemp': {'min': -4, 'max': 15, 'avg': 2},
+            'gpx_file': 'fixtures/20181230_101115.gpx'}),
+        # fit file from a garmin 520 without heart rate or cadence data
+        ('fixtures/20181231_110728.fit', {
+            'start': datetime(2018, 12, 31, 10, 7, 28, tzinfo=timezone.utc),
+            'duration': timedelta(0, 2373, 142000),
+            'distance': Decimal('6.094909999999999854480847716'),
+            'title': 'Synapse cycling',
+            'hr': None,
+            'cad': None,
+            'atemp': {'min': -1, 'max': 11, 'avg': 1},
+            'gpx_file': 'fixtures/20181231_110728.gpx'}),
+    )
+
+    @pytest.mark.parametrize(('filename', 'expected'), fit_params)
+    def test_load_from_fit(self, filename, expected):
+        """
+        Load a fit file located in tests/fixtures using the load_from_fit()
+        method of the Workout model, then check that certain attrs on the
+        workout are updated correctly.
+
+        Ensure also that the proper gpx file is created automatically from
+        the fit file, with the proper contents (we have a matching gpx file
+        in tests/fixtures for each fit file)
+        """
+        # expected values
+        start = expected['start']
+        duration = expected['duration']
+        distance = expected['distance']
+        title = expected['title']
+        hr = expected['hr']
+        cad = expected['cad']
+        atemp = expected['atemp']
+        # gpx_file = expected['gpx_file']
+
+        workout = Workout()
+
+        # Check the values are different by default
+        assert workout.start != start
+        assert workout.duration != duration
+        assert workout.distance != distance
+
+        # by default no tracking file and no fit file are associated with this
+        # workout.
+        assert workout.tracking_file is None
+        assert workout.fit_file is None
+        assert not workout.has_tracking_file
+        assert not workout.has_gpx
+        assert not workout.has_fit
+
+        fit_file_path = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)), filename)
+
+        # gpx_file_path = os.path.join(
+        #     os.path.dirname(os.path.dirname(__file__)), gpx_file)
+
+        # add the fit file as a blob to tracking_file
+        with open(fit_file_path, 'rb') as fit_file:
+            fit_blob = create_blob(fit_file.read(), file_extension='fit',
+                                   binary=True)
+        workout.tracking_file = fit_blob
+        workout.tracking_filetype = 'fit'
+
+        res = workout.load_from_fit()
+
+        assert res is True
+        assert workout.start == start
+        assert workout.duration == duration
+        assert isinstance(workout.distance, Decimal)
+        assert round(workout.distance) == round(distance)
+        # The title of the workout is taken from the gpx file
+        assert workout.title == title
+
+        if hr is not None:
+            for k in hr.keys():
+                # We use 'fail' as the fallback in the getattr call
+                # because None is one of the posible values, and we
+                # want to be sure those attrs are there
+                value = getattr(workout, 'hr_' + k, 'fail')
+                # Use round() to avoid problems when comparing long
+                # Decimal objects
+                assert round(hr[k]) == round(value)
+
+        if cad is not None:
+            for k in cad.keys():
+                value = getattr(workout, 'cad_' + k, 'fail')
+                assert round(cad[k]) == round(value)
+
+        if atemp is not None:
+            for k in atemp.keys():
+                value = getattr(workout, 'atemp_' + k, 'fail')
+                assert round(atemp[k]) == round(value)
+
+        assert workout.tracking_file is not None
+        # the tracking file type is set back to gpx, as we have
+        # automatically generated the gpx version
+        assert workout.tracking_filetype == 'gpx'
+        assert workout.fit_file is not None
+        assert workout.has_tracking_file
+        assert workout.has_gpx
+        assert workout.has_fit
 
     def test_has_tracking_file(self, root):
         workout = root['john']['1']

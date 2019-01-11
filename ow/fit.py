@@ -115,6 +115,7 @@ class Fit(object):
         #
         # The schema namespaces info is very important, in order to support
         # all the data we will extract from the fit file.
+
         gpx = gpxpy.gpx.GPX()
         gpx.creator = 'OpenWorkouts'
         gpx.schema_locations = [
@@ -201,14 +202,18 @@ class Fit(object):
                 track_point = gpxpy.gpx.GPXTrackPoint(
                     latitude=semicircles_to_degrees(values['position_lat']),
                     longitude=semicircles_to_degrees(values['position_long']),
-                    elevation=values['enhanced_altitude'],
-                    speed=values['enhanced_speed'],
                     time=values['timestamp']
                 )
 
-            track_point.extensions.append(extensions_root)
+                if 'enhanced_altitude' in values.keys():
+                    track_point.elevation = values['enhanced_altitude']
 
-            gpx_segment.points.append(track_point)
+                if 'enhanced_speed' in values.keys():
+                    track_point.speed = values['enhanced_speed']
+
+                track_point.extensions.append(extensions_root)
+
+                gpx_segment.points.append(track_point)
 
         # if the fit file has temperature data, calculate the avg
         if self.data['atemp']:

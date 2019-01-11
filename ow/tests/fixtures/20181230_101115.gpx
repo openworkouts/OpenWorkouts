@@ -58268,27 +58268,6 @@
             <gpxtpx:hr>140</gpxtpx:hr>
             <gpxtpx:cad>0</gpxtpx:cad>
           </gpxtpx:TrackPointExtension>
-          <gpxtpx:TrackPointExtension>
-            <gpxtpx:atemp>3</gpxtpx:atemp>
-            <gpxtpx:hr>139</gpxtpx:hr>
-            <gpxtpx:cad>0</gpxtpx:cad>
-          </gpxtpx:TrackPointExtension>
-        </extensions>
-      </trkpt>
-      <trkpt lat="43.02351839840412" lon="-7.338556135073304">
-        <ele>726.0</ele>
-        <time>2018-12-30T11:48:21Z</time>
-        <extensions>
-          <gpxtpx:TrackPointExtension>
-            <gpxtpx:atemp>3</gpxtpx:atemp>
-            <gpxtpx:hr>140</gpxtpx:hr>
-            <gpxtpx:cad>0</gpxtpx:cad>
-          </gpxtpx:TrackPointExtension>
-          <gpxtpx:TrackPointExtension>
-            <gpxtpx:atemp>3</gpxtpx:atemp>
-            <gpxtpx:hr>139</gpxtpx:hr>
-            <gpxtpx:cad>0</gpxtpx:cad>
-          </gpxtpx:TrackPointExtension>
         </extensions>
       </trkpt>
       <trkpt lat="43.023326536640525" lon="-7.339023090898991">

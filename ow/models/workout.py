@@ -359,15 +359,19 @@ class Workout(Folder):
         self.tracking_filetype = 'gpx'
 
         # grab the needed data from the fit file, update the workout
+        self.sport = fit.data['sport']
         self.start = fit.data['start']
         # ensure this datetime start object is timezone-aware
         self.start = self.start.replace(tzinfo=timezone.utc)
         # duration comes in seconds, store a timedelta
         self.duration = timedelta(seconds=fit.data['duration'])
-        # distance comes in meters
-        self.distance = Decimal(fit.data['distance']) / Decimal(1000.00)
-        self.uphill = Decimal(fit.data['uphill'])
-        self.downhill = Decimal(fit.data['downhill'])
+        if fit.data['distance']:
+            # distance comes in meters
+            self.distance = Decimal(fit.data['distance']) / Decimal(1000.00)
+        if fit.data['uphill']:
+            self.uphill = Decimal(fit.data['uphill'])
+        if fit.data['downhill']:
+            self.downhill = Decimal(fit.data['downhill'])
         # If the user did not provide us with a title, build one from the
         # info in the fit file
         if not self.title:

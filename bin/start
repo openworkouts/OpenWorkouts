@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+# Script to start OpenWorkouts
+#
+
+# Full path to where we run the script from
+current=`pwd`
+# Full path to the env
+env_path=${current}/env
+
+. ${env_path}/bin/activate
+pserve --reload development.ini

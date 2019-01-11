@@ -1,0 +1,82 @@
+#!/bin/sh
+#
+# Script to install OpenWorkouts for development
+#
+
+# Full path to where we run the script from
+current=`pwd`
+# Full path to the main python binary (will be set by check_python3())
+python_bin=''
+# Full path to the env
+env_path=${current}/env
+
+check_python3() {
+    # if python3 is not installed, exit with an error
+    if command -v python3 > /dev/null; then
+        # ok
+        python_bin=`command -v python3`
+        return
+    else
+        # no python3 binary, look for python
+        if command -v python > /dev/null; then
+            # python found, check if it is 3.x
+            if `command -v python` -c "import sys; exit(0) if sys.version.startswith('3.') else exit(1)"; then
+                python_bin=`command -v python`
+                return
+            else
+                # no python binary, error
+                echo "Error: could not find a suitable python version installed, please install python 3.x"
+                exit 1
+            fi
+        else
+            # no python binary, error
+            echo "Error: could not find a suitable python version installed, please install python 3.x"
+            exit 1
+        fi
+    fi
+}
+
+create_venv() {
+    # create a new virtual environment
+    ${python_bin} -m venv ${env_path}
+}
+
+upgrade_pip_setuptools() {
+    . ${env_path}/bin/activate
+    yes | pip install --upgrade setuptools pip
+    deactivate
+}
+
+install_openworkouts() {
+    . ${env_path}/bin/activate
+    yes | pip install --upgrade --process-dependency-links -e ${current}[testing]
+    deactivate
+}
+
+install_js_deps() {
+    chmod +x ${current}/bin/js_deps
+    ${current}/bin/js_deps
+}
+
+setup_start_stop() {
+    chmod +x ${current}/bin/start
+    echo "OpenWorkouts successfully installed in ${env_path}"
+    echo ""
+    echo "You can now start the OpenWorkouts service calling:"
+    echo ""
+    echo "  cd ${current} && ./bin/start"
+    echo ""
+    # echo "You can stop any running OpenWorkouts instances calling:"
+    # echo ""
+    # echo "  ${current}/bin/stop"
+    # echo ""
+}
+
+check_python3
+create_venv
+upgrade_pip_setuptools
+install_openworkouts
+install_js_deps
+setup_start_stop
+
+echo ${python_bin}

@@ -555,7 +555,8 @@ body {
 	background-color:rgba(255,255,255,.95);
 	right:-1px;
 	border:1px solid #e1e1e1;
-	width:153px
+	width:153px;
+        z-index:10;
 }
 
 .add-workout ul li {
@@ -767,4 +768,3 @@ body {
 
 
 }
-

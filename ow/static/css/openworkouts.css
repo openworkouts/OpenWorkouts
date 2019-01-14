@@ -1,6 +1,7 @@
 
 #map {
     height: 360px;
+    z-index: 0;
 }
 
 #ow-analysis {

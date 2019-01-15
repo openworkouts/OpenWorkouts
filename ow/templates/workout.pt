@@ -163,9 +163,9 @@
          longitude: ${start_point['longitude']},
          zoom: 11,
          gpx_url: '${request.resource_url(context, 'gpx')}',
-         start_icon: '${request.static_url('ow:static/leaflet-gpx/pin-icon-start.png')}',
-         end_icon: '${request.static_url('ow:static/leaflet-gpx/pin-icon-end.png')}',
-         shadow: '${request.static_url('ow:static/leaflet-gpx/pin-shadow.png')}',
+         start_icon: '${request.static_url('ow:static/components/leaflet-gpx/pin-icon-start.png')}',
+         end_icon: '${request.static_url('ow:static/components/leaflet-gpx/pin-icon-end.png')}',
+         shadow: '${request.static_url('ow:static/components/leaflet-gpx/pin-shadow.png')}',
      });
      workout_map.render();
     </script>

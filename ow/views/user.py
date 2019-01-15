@@ -100,7 +100,7 @@ def signup(context, request):
     context=OpenWorkouts,
     name='forgot-password',
     renderer='ow:templates/forgot_password.pt')
-def recover_password(context, request):
+def recover_password(context, request):  # pragma: no cover
     # WIP
     Form(request)
 

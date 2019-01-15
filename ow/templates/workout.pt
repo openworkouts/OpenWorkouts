@@ -17,15 +17,6 @@
           href="${request.static_url('ow:static/components/Leaflet/leaflet.css')}" />
     <link rel="stylesheet" tal:condition="context.has_gpx"
           href="${request.static_url('ow:static/components/Leaflet.Elevation/dist/leaflet.elevation-0.0.4.css')}" />
-
-    <!--!
-    <link rel="stylesheet" tal:condition="context.has_gpx"
-          href="${request.static_url('ow:static/leaflet-elevation/leaflet.elevation.css')}" />
-
-    <link rel="stylesheet" tal:condition="context.has_gpx"
-          href="${request.static_url('ow:static/leaflet-openworkouts/leaflet.openworkouts.css')}" />
-    -->
-
   </metal:css>
 
   <metal:title metal:fill-slot="title">
@@ -148,12 +139,6 @@
     <script src="${request.static_url('ow:static/components/Leaflet.Elevation/dist/leaflet.elevation-0.0.4.min.js')}"
             tal:condition="context.has_gpx"></script>
 
-    <!--!
-    <script src="${request.static_url('ow:static/leaflet-elevation/leaflet.elevation.min.js')}"
-            tal:condition="context.has_gpx"></script>
-    <script src="${request.static_url('ow:static/leaflet-openworkouts/leaflet.openworkouts.src.js')}"
-            tal:condition="context.has_gpx"></script>
-    -->
     <script src="${request.static_url('ow:static/js/ow.js')}"
             tal:condition="context.has_gpx"></script>
 

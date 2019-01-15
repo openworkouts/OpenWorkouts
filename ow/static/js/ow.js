@@ -72,8 +72,8 @@ owjs.map = function(spec) {
         });
 
         var ele_container = elevation.addTo(map);
-        document.getElementById('ow-analysis').appendChild(
-            ele_container._container);
+        /* document.getElementById('ow-analysis').appendChild(
+            ele_container._container); */
     };
 
     var load_gpx = function load_gpx(gpx_url) {

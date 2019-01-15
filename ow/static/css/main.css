@@ -759,6 +759,73 @@ body {
 	width:100%
 }
 
+.workout-activity-tree {
+    padding:0;
+    list-style-type: none;
+    transition:all 250ms ease-in-out
+    list-style-type:none;
+    font-size:13px;
+    font-size:.8125rem;
+    color: #959595;
+}
+
+.workout-activity-tree a {
+    text-decoration: none;
+    background-color: transparent;
+    outline: 0;
+    color: #959595;
+}
+
+
+.workout-activity-tree li a.viewing-year {
+    font-size: 17px;
+    color: #151515;
+}
+
+.workout-activity-tree ul.hidden {
+    display: none;
+}
+
+.workout-activity-tree-year {
+    list-style-type: none;
+    padding: 0;
+    padding-left: 15px;
+    font-size:13px;
+    font-size:.8125rem;
+    color: #959595;
+}
+
+.workout-activity-tree-year a {
+    text-decoration: none;
+    background-color: transparent;
+    outline: 0;
+    color: #959595;
+}
+
+
+.workout-activity-tree-year li a.viewing-month {
+    font-size: 17px;
+    color: #151515;
+}
+
+.workout-activity-tree-month {
+    list-style-type: none;
+    padding: 0;
+    padding-left: 15px;
+    font-size:13px;
+    font-size:.8125rem
+    color: #959595;
+}
+
+.workout-activity-tree-month a {
+    text-decoration: none;
+    background-color: transparent;
+    outline: 0;
+    color: #959595;
+}
+
+
+
 @media (min-width:800px) {
 	.workout-aside {
 	max-width:300px;

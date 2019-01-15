@@ -1,3 +1,5 @@
+from calendar import month_name
+
 from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
 from pyramid.security import remember, forget
@@ -111,8 +113,40 @@ def dashboard(context, request):
     """
     Render a dashboard for the current user
     """
-    # Add here some logic
-    return {}
+    # Look at the year we are viewing, if none is passed in the request,
+    # pick up the latest/newer available with activity
+    viewing_year = request.GET.get('year', None)
+    if viewing_year is None:
+        available_years = context.activity_years
+        if available_years:
+            viewing_year = available_years[0]
+    else:
+        # ensure this is an integer
+        viewing_year = int(viewing_year)
+
+    # Same for the month, if there is a year set
+    viewing_month = None
+    if viewing_year:
+        viewing_month = request.GET.get('month', None)
+        if viewing_month is None:
+            available_months = context.activity_months(viewing_year)
+            if available_months:
+                # we pick up the latest month available for the year,
+                # which means the current month in the current year
+                viewing_month = available_months[-1]
+        else:
+            # ensure this is an integer
+            viewing_month = int(viewing_month)
+
+    # pick up the workouts to be shown in the dashboard
+    workouts = context.workouts(viewing_year, viewing_month)
+
+    return {
+        'month_name': month_name,
+        'viewing_year': viewing_year,
+        'viewing_month': viewing_month,
+        'workouts': workouts
+    }
 
 
 @view_config(

@@ -74,11 +74,16 @@ class User(Folder):
         self[workout_id] = workout
         reindex_object(catalog, workout)
 
-    def workouts(self):
+    def workouts(self, year=None, month=None):
         """
         Return this user workouts, sorted by date, from newer to older
         """
-        workouts = sorted(self.values(), key=attrgetter('start'))
+        workouts = self.values()
+        if year:
+            workouts = [w for w in workouts if w.start.year == year]
+        if month:
+            workouts = [w for w in workouts if w.start.month == month]
+        workouts = sorted(workouts, key=attrgetter('start'))
         workouts.reverse()
         return workouts
 
@@ -88,3 +93,45 @@ class User(Folder):
     @property
     def num_workouts(self):
         return len(self.workout_ids())
+
+    @property
+    def activity_years(self):
+        return sorted(list(set(w.start.year for w in self.workouts())),
+                      reverse=True)
+
+    def activity_months(self, year):
+        months = set(
+            w.start.month for w in self.workouts() if w.start.year == year)
+        return sorted(list(months))
+
+    @property
+    def activity_dates_tree(self):
+        """
+        Return a dict containing information about the activity for this
+        user.
+
+        Example:
+
+        {
+            2019: {
+                1: {'cycling': 12, 'running': 1}
+            },
+            2018: {
+                1: {'cycling': 10, 'running': 3},
+                2: {'cycling': 14, 'swimming': 5}
+            }
+        }
+        """
+        tree = {}
+        for workout in self.workouts():
+            year = workout.start.year
+            month = workout.start.month
+            sport = workout.sport
+            if year not in tree:
+                tree[year] = {}
+            if month not in tree[year]:
+                tree[year][month] = {}
+            if sport not in tree[year][month]:
+                tree[year][month][sport] = 0
+            tree[year][month][sport] += 1
+        return tree

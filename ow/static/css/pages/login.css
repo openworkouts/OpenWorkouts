@@ -1,32 +1,6 @@
-
-/* logo
----------------------------------------------------------------------- */
-.logo {
-    font-size: 24px;
-    line-height: 1em;
-    font-weight: 800;
-    text-transform: uppercase;
-    margin: 0;
-    span{
-        transition: all 250ms ease-in-out;
-    }
-    &:hover{
-        span{
-            color: var(--color-app);
-        }
-    }
-}
-.logo-open {
-    display: block;
-    color: var(--color-app);
-}
-.logo-work,
-.logo-outs {
-    color: var(--color-app-light);
-}
-
-
-
+/* ==========================================================================
+   Login page
+   ========================================================================== */
 
 .login-content {
     background-image: url("../../media/img/back-01.jpg");
@@ -34,66 +8,51 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 85vh;
+    min-height: calc(100vh - 98px);
     padding: 1em 0;
-    /*
-    background-blend-mode: multiply;
-    background-color: var(--color-app);
-    */
 }
 
-    /* Provisional */
-    .message {
-        padding: .5em;
-        margin: 0;
-        text-align: center;
-        font-size: 13;
-        &.message-error{
-            color: white;
-            background-color: red;
-        }
-    }
-    form{
-        width: 100%;
-        max-width: 350px;
-    }
+.login-content form {
+    max-width: 380px;
+    background-color: rgba(0,0,0,0.8);
+    border-radius: 6px;
+    padding: 2em  1.5em;
+}
 
-    legend {
-        display: none;
-    }
 
-    fieldset {
-        border: none;
-        background-color: var(--color-main-medium);
-        border-radius: 6px;
-        padding: 2em;
-        >div {
-            margin-bottom: 1.5em;
-        }
-    }
-    input {
-        width: 100%;
-        padding: .5em .75em;
-        border: 1px solid transparent;
-        border-radius: 2px;
-        &:focus{
-            border-color: var(--color-app);
-        }
-    }
+.login-content label {
+    color: white;
+}
 
-    label {
-        display: block;
-        font-size: 14;
-        color: white;
-        margin-bottom: .25em;
-    }
-    .button {
-        transition: all 500ms ease-in-out;
-        background-color: var(--color-app);
-        color: white;
-        margin-bottom: 1em;
-        text-transform: uppercase;
-        &:hover {
-            background-color: darken(var(--color-app), 10%);
-        }
-    }
+.login-content a {
+    color: var(--color-main-light);
+    font-size: 13px;
+    text-decoration: none;
+    margin-right: .75em;
+}
+
+.login-content a:hover {
+    color: white;
+}
+
+
+
+
+
+
+
+
+/* Provisional */
+.message {
+    padding: .5em;
+    margin: 0;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 13px;
+}
+
+.message.message-error{
+    background-color: var(--color-app-dark);
+    color: white;
+    margin-bottom: .5em;
+}

@@ -3,10 +3,11 @@
     /* colors */
     --color-main: #151515;
     --color-main-dark: #454545;
-    --color-main-medium: #666;
+    --color-main-medium: #999;
     --color-main-light: #ccc;
     --color-main-xtralight: #f5f5f5;
 
+    --color-app-dark: #e81029;
     --color-app: #EE4056;
     --color-app-medium: #ee0000;
     --color-app-light: #ee9999;

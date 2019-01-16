@@ -1,0 +1,27 @@
+.button {
+    box-sizing: border-box;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 1px solid transparent;
+    text-decoration: none;
+    font-style: normal;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+    font-size: 1em;
+    line-height: 1.25rem;
+    max-width: 100%;
+}
+
+.button.button-action {
+    background: var(--color-app);
+    color: white;
+}
+
+.button.button-action:hover {
+    background-color: var(--color-app-dark);
+}

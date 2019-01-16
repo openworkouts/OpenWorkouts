@@ -11,7 +11,7 @@
 
       <!-- Login -->
 
-      <div class="signup-content">
+      <div class="login-content">
 
         <form method="post" name="signup" action="">
 
@@ -56,7 +56,7 @@
             </div>
           </fieldset>
 
-          <input class="button" type="submit" name="submit" value="Sign up!">
+          <input class="button button-action" type="submit" name="submit" value="Sign up!">
 
         </form>
 

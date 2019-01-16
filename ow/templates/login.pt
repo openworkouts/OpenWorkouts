@@ -33,9 +33,11 @@
               <input placeholder="Your password..." name="password"
                      type="password" i18n:attributes="placeholder">
             </div>
-            <input class="button" type="submit" name="submit" value="Login">
+            <div>
+              <input class="button button-action" type="submit" name="submit" value="Login">
+            </div>
             <a class="login-remember" href="#" i18n:translate="">
-              Forgot your password?</a> |
+              Forgot your password?</a>
             <a class="join-now" href="" i18n:translate=""
                tal:attributes="href request.resource_url(context, 'signup')">
               Join now!</a>

@@ -24,7 +24,7 @@
     <title>OpenWorkouts - tracking your workouts openly</title>
 
     <link rel="stylesheet"
-          href="${request.static_url('ow:static/css/main.min.css')}" />
+          href="${request.static_url('ow:static/css/main.css')}" />
 
   </head>
 
@@ -36,7 +36,7 @@
         <h1 class="logo">
           <a href="#" tal:attributes="href request.resource_url(request.root)">
             <span class="logo-open">Open</span><span class="logo-work">work</span><span class="logo-outs">outs</span>
-        </a>
+          </a>
         </h1>
         <p class="description">tracking your workouts openly</p>
       </header>

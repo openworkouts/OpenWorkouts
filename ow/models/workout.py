@@ -349,8 +349,13 @@ class Workout(Folder):
 
         4. Grab some basic info from the fit file and store it in the Workout
         """
-        # backup the fit file
-        self.fit_file = copy_blob(self.tracking_file)
+
+        # we can call load_from_fit afterwards for updates. In such case, check
+        # if the tracking file is a fit file uploaded to override the previous
+        # one. If not, just reuse the existing fit file
+        if self.tracking_filetype == 'fit':
+            # backup the fit file
+            self.fit_file = copy_blob(self.tracking_file)
 
         # create an instance of our Fit class
         fit = Fit(self.fit_file_path)

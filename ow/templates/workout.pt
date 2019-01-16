@@ -86,6 +86,13 @@
           <tal:t i18n:translate="">Distance:</tal:t>
           <tal:c tal:content="context.rounded_distance"></tal:c> km
         </li>
+        <li tal:condition="context.speed">
+          <tal:t i18n:translate="">Speed:</tal:t>
+          <tal:t i18n:translate="">Avg.</tal:t>
+          <tal:c tal:content="round(context.speed['avg'], 1)"></tal:c> km/h |
+          <tal:t i18n:translate="">Max.</tal:t>
+          <tal:c tal:content="round(context.speed['max'], 1)"></tal:c> km/h
+        </li>
         <li tal:condition="hr">
           <tal:t i18n:translate="">Heart Rate:</tal:t>
           <tal:t i18n:translate="">Min.</tal:t>

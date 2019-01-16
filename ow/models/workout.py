@@ -11,6 +11,7 @@ from ow.utilities import (
     GPXMinidomParser,
     copy_blob,
     create_blob,
+    mps_to_kmph
 )
 
 from ow.fit import Fit
@@ -49,6 +50,7 @@ class Workout(Folder):
         self.notes = kw.get('notes', '')  # unicode string
         self.duration = kw.get('duration', None)  # a timedelta object
         self.distance = kw.get('distance', None)  # kilometers, Decimal
+        self.speed = kw.get('speed', {})
         self.hr_min = kw.get('hr_min', None)  # bpm, Decimal
         self.hr_max = kw.get('hr_max', None)  # bpm, Decimal
         self.hr_avg = kw.get('hr_avg', None)  # bpm, Decimal
@@ -376,6 +378,12 @@ class Workout(Folder):
         # info in the fit file
         if not self.title:
             self.title = fit.name
+
+        if fit.data['max_speed']:
+            self.speed['max'] = mps_to_kmph(fit.data['max_speed'])
+
+        if fit.data['avg_speed']:
+            self.speed['avg'] = mps_to_kmph(fit.data['avg_speed'])
 
         if fit.data['avg_hr']:
             self.hr_avg = Decimal(fit.data['avg_hr'])

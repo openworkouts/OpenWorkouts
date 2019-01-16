@@ -151,7 +151,98 @@ class TestUserViews(object):
         """
         request = dummy_request
         response = user_views.dashboard(john, request)
-        assert response == {}
+        assert len(response) == 4
+        assert 'month_name' in response.keys()
+        # this user has a single workout, in 2015
+        assert response['viewing_year'] == 2015
+        assert response['viewing_month'] == 6
+        assert response['workouts'] == [w for w in john.workouts()]
+
+    def test_dashboard_year(self, dummy_request, john):
+        """
+        Renders the user dashboard for a chosen year.
+        """
+        request = dummy_request
+        # first test the year for which we know there is a workout
+        request.GET['year'] = 2015
+        response = user_views.dashboard(john, request)
+        assert len(response) == 4
+        assert 'month_name' in response.keys()
+        # this user has a single workout, in 2015
+        assert response['viewing_year'] == 2015
+        assert response['viewing_month'] == 6
+        assert response['workouts'] == [w for w in john.workouts()]
+        # now, a year we know there is no workout info
+        request.GET['year'] = 2000
+        response = user_views.dashboard(john, request)
+        assert len(response) == 4
+        assert 'month_name' in response.keys()
+        # this user has a single workout, in 2015
+        assert response['viewing_year'] == 2000
+        # we have no data for that year and we didn't ask for a certain month,
+        # so the passing value for that is None
+        assert response['viewing_month'] is None
+        assert response['workouts'] == []
+
+    def test_dashboard_year_month(self, dummy_request, john):
+        """
+        Renders the user dashboard for a chosen year and month.
+        """
+        request = dummy_request
+        # first test the year/month for which we know there is a workout
+        request.GET['year'] = 2015
+        request.GET['month'] = 6
+        response = user_views.dashboard(john, request)
+        assert len(response) == 4
+        assert 'month_name' in response.keys()
+        # this user has a single workout, in 2015
+        assert response['viewing_year'] == 2015
+        assert response['viewing_month'] == 6
+        assert response['workouts'] == [w for w in john.workouts()]
+        # now, change month to one without values
+        request.GET['month'] = 2
+        response = user_views.dashboard(john, request)
+        assert len(response) == 4
+        assert 'month_name' in response.keys()
+        # this user has a single workout, in 2015
+        assert response['viewing_year'] == 2015
+        assert response['viewing_month'] == 2
+        assert response['workouts'] == []
+        # now the month with data, but in a different year
+        request.GET['year'] = 2010
+        request.GET['month'] = 6
+        response = user_views.dashboard(john, request)
+        assert len(response) == 4
+        assert 'month_name' in response.keys()
+        # this user has a single workout, in 2015
+        assert response['viewing_year'] == 2010
+        assert response['viewing_month'] == 6
+        assert response['workouts'] == []
+
+    def test_dashboard_month(self, dummy_request, john):
+        """
+        Passing a month without a year when rendering the dashboard. The last
+        year for which workout data is available is assumed
+        """
+        request = dummy_request
+        # Set a month without workout data
+        request.GET['month'] = 5
+        response = user_views.dashboard(john, request)
+        assert len(response) == 4
+        assert 'month_name' in response.keys()
+        # this user has a single workout, in 2015
+        assert response['viewing_year'] == 2015
+        assert response['viewing_month'] == 5
+        assert response['workouts'] == []
+        # now a month with data
+        request.GET['month'] = 6
+        response = user_views.dashboard(john, request)
+        assert len(response) == 4
+        assert 'month_name' in response.keys()
+        # this user has a single workout, in 2015
+        assert response['viewing_year'] == 2015
+        assert response['viewing_month'] == 6
+        assert response['workouts'] == [w for w in john.workouts()]
 
     def test_profile(self, dummy_request, john):
         """

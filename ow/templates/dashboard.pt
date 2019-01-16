@@ -26,7 +26,25 @@
 
         <h2 tal:content="context.fullname"></h2>
 
-        <tal:r tal:repeat="workout context.workouts()">
+        <h3>
+            (<tal:n tal:content="len(workouts)"></tal:n>/<tal:n tal:content="context.num_workouts"></tal:n>) <tal:t i18n:translate="">workouts</tal:t>
+        </h3>
+
+        <tal:no-workouts tal:condition="context.num_workouts == 0">
+            <div class="warning">
+                <p i18n:translate="">You haven't added any workouts yet</p>
+                <p>
+                    <a href="" i18n:translate=""
+                       tal:attributes="href request.resource_url(context, 'add-workout')">
+                        Upload one</a> |
+                    <a href="" i18n:translate=""
+                       tal:attributes="href request.resource_url(context, 'add-workout-manually')">
+                        Add one manually</a>
+                </p>
+            </div>
+        </tal:no-workouts>
+
+        <tal:r tal:repeat="workout workouts">
 
           <article class="workout-resume">
 
@@ -84,7 +102,38 @@
       </section>
 
       <aside class="workout-aside">
-        <h2>...</h2>
+          <tal:activity_tree tal:condition="context.num_workouts > 0">
+              <ul class="workout-activity-tree" tal:define="tree context.activity_dates_tree">
+                  <tal:years tal:repeat="year sorted(tree.keys(), reverse=True )">
+                      <li tal:define="is_viewing_year year == viewing_year">
+                          <a href="" tal:content="year"
+                             tal:attributes="href request.resource_url(context, query={'year': year});
+                                             class 'js-year viewing-year' if is_viewing_year  else 'js-year'">
+                          </a>
+                          <ul class="workout-activity-tree-year"
+                              tal:attributes="class 'workout-activity-tree-year' if is_viewing_year  else 'workout-activity-tree-year hidden'">
+                              <tal:months tal:repeat="month sorted(tree[year].keys())">
+                                  <li tal:define="is_viewing_month is_viewing_year and month == viewing_month">
+                                      <a href="" tal:content="month_name[month]"
+                                         tal:attributes="href request.resource_url(context, query={'year': year, 'month': month});
+                                                         class 'viewing-month' if is_viewing_month else ''">
+                                      </a>
+                                      <ul class="workout-activity-tree-month">
+                                          <tal:sports tal:repeat="sport sorted(tree[year][month].keys())">
+                                              <li>
+                                                  <a href="#">
+                                                      <tal:sport tal:content="sport"></tal:sport> (<tal:workouts tal:content="tree[year][month][sport]"></tal:workouts>)
+                                                  </a>
+                                              </li>
+                                          </tal:sports>
+                                      </ul>
+                                  </li>
+                              </tal:months>
+                          </ul>
+                      </li>
+                  </tal:years>
+              </ul>
+          </tal:activity_tree>
       </aside>
 
     </div>

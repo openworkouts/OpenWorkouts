@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta, timezone
+
 import pytest
 from pyramid.security import Allow
 
@@ -67,3 +69,51 @@ class TestUser(object):
         assert list(root['john'].workouts()) == workouts
         assert list(root['john'].workout_ids()) == ['1', '2', '3']
         assert root['john'].num_workouts == len(workouts)
+
+    def test_activity_dates_tree(self, root):
+        # first an empty test
+        assert root['john'].activity_dates_tree == {}
+        # now add a cycling workout in a given date (25/11/2018)
+        workout = Workout(
+            start=datetime(2018, 11, 25, 10, 00, tzinfo=timezone.utc),
+            duration=timedelta(minutes=(60*4)),
+            distance=115,
+            sport='cycling')
+        root['john'].add_workout(workout)
+        assert root['john'].activity_dates_tree == {
+            2018: {11: {'cycling': 1}}
+        }
+        # add a running workout on the same date
+        workout = Workout(
+            start=datetime(2018, 11, 25, 16, 30, tzinfo=timezone.utc),
+            duration=timedelta(minutes=60),
+            distance=12,
+            sport='running')
+        root['john'].add_workout(workout)
+        assert root['john'].activity_dates_tree == {
+            2018: {11: {'cycling': 1, 'running': 1}}
+        }
+        # add a swimming workout on a different date, same year
+        workout = Workout(
+            start=datetime(2018, 8, 15, 11, 30, tzinfo=timezone.utc),
+            duration=timedelta(minutes=30),
+            distance=2,
+            sport='swimming')
+        root['john'].add_workout(workout)
+        assert root['john'].activity_dates_tree == {
+            2018: {8: {'swimming': 1},
+                   11: {'cycling': 1, 'running': 1}}
+        }
+        # now add some more cycling in a different year
+        # add a swimming workout on a different date, same year
+        workout = Workout(
+            start=datetime(2017, 4, 15, 15, 00, tzinfo=timezone.utc),
+            duration=timedelta(minutes=(60*3)),
+            distance=78,
+            sport='cycling')
+        root['john'].add_workout(workout)
+        assert root['john'].activity_dates_tree == {
+            2017: {4: {'cycling': 1}},
+            2018: {8: {'swimming': 1},
+                   11: {'cycling': 1, 'running': 1}}
+        }

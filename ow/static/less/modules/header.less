@@ -1,0 +1,154 @@
+.header-content {
+    padding:1em 1.5em;
+    a{
+        text-decoration: none;
+    }
+    .description{
+        margin: 0;
+    }
+}
+
+
+/* logo ----------------------------------------------------------------------*/
+.logo {
+    .font-size(24);
+    line-height: 1em;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin: 0;
+    display: inline-block;
+    span{
+        transition: all 250ms ease-in-out;
+    }
+    &:hover{
+        span{
+            color: @color-app;
+        }
+    }
+}
+.logo-open {
+    display: block;
+    color: @color-app;
+}
+.logo-work,
+.logo-outs {
+    color: @color-app-light;
+}
+
+/* menu navigation -----------------------------------------------------------*/
+.nav-site{
+    .font-size (13);
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    li{
+        border-left: 1px solid @color-main-light;
+        flex-grow: 1;
+        text-align: center;
+    }
+    a{
+        color: @color-main-medium;
+        padding: 1.25em;
+        display: block;
+        &:hover {
+            color: @color-main;
+        }
+    }
+    .is-active {
+        a {
+            color: @color-main;
+        }
+    }
+}
+
+/* Add workout button with submenu -------------------------------------------*/
+.add-workout {
+    position: relative;
+    >a{
+        color: @color-app;
+        &:before{
+            content: "+";
+            font-weight: 800;
+            .font-size(32);
+            line-height: 0;
+            position: relative;
+            top: 8px;
+        }
+        span{
+            display: none;
+        }
+        &:hover{
+            background-color: @color-app;
+            color:white;
+        }
+    }
+    &:hover{
+        &:after{
+            content: "";
+            position: absolute;
+            background-color: white;
+            bottom: -1px;
+            width: 100%;
+            height: 1px;
+            display: block;
+            z-index: 20;
+        }
+        ul{
+            display: inline-block;
+        }
+    }
+
+    /* submenu -------------------------------------------------------------- */
+    ul{
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        background-color: fade(white, 95%);
+        right: -1px;
+        border: 1px solid @color-main-light;
+        width: 153px;
+        li{
+            border-left:transparent;
+            text-align: left;
+        }
+        a{
+            &:hover{
+                background-color: @color-main-xtralight;
+            }
+        }
+    }
+}
+
+/* description ---------------------------------------------------------------*/
+.description {
+    .font-size(14);
+    font-weight: 300;
+    letter-spacing: .025em;
+    color: @color-main-medium;
+}
+
+
+/* ------------------------------ STATES ------------------------------------ */
+
+/* when user is login --------------------------------------------------------*/
+.is-login {
+    .header-content {
+        border-bottom: 1px solid @color-main-light;
+        display: flex;
+        padding: 0em 1.5em;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .description {
+        .hide;
+    }
+    .logo-open {
+        display: inline-block;
+    }
+}

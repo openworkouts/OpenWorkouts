@@ -209,11 +209,11 @@ class TestWorkoutModels(object):
         assert workout.tracking_file_path is None
         # workout still not saved to the db
         workout.tracking_file = Mock()
-        workout.tracking_file._p_blob_uncommitted = '/tmp/blobtempfile'
-        workout.tracking_file._p_blob_committed = None
+        workout.tracking_file._uncommitted.return_value = '/tmp/blobtempfile'
+        workout.tracking_file.committed.return_value = None
         assert workout.tracking_file_path == '/tmp/blobtempfile'
-        workout.tracking_file._p_blob_uncommitted = None
-        workout.tracking_file._p_blob_committed = '/var/db/blobs/blobfile'
+        workout.tracking_file._uncommitted.return_value = None
+        workout.tracking_file.committed.return_value = '/var/db/blobs/blobfile'
         assert workout.tracking_file_path == '/var/db/blobs/blobfile'
 
     def test_fit_file_path(self):
@@ -222,11 +222,11 @@ class TestWorkoutModels(object):
         assert workout.fit_file_path is None
         # workout still not saved to the db
         workout.fit_file = Mock()
-        workout.fit_file._p_blob_uncommitted = '/tmp/blobtempfile'
-        workout.fit_file._p_blob_committed = None
+        workout.fit_file._uncommitted.return_value = '/tmp/blobtempfile'
+        workout.fit_file.committed.return_value = None
         assert workout.fit_file_path == '/tmp/blobtempfile'
-        workout.fit_file._p_blob_uncommitted = None
-        workout.fit_file._p_blob_committed = '/var/db/blobs/blobfile'
+        workout.fit_file._uncommitted.return_value = None
+        workout.fit_file.committed.return_value = '/var/db/blobs/blobfile'
         assert workout.fit_file_path == '/var/db/blobs/blobfile'
 
     def test_load_from_file_invalid(self):

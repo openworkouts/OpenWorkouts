@@ -212,9 +212,9 @@ class Workout(Folder):
         """
         path = None
         if self.tracking_file:
-            path = self.tracking_file._p_blob_uncommitted
+            path = self.tracking_file._uncommitted()
             if path is None:
-                path = self.tracking_file._p_blob_committed
+                path = self.tracking_file.committed()
         return path
 
     @property
@@ -229,9 +229,9 @@ class Workout(Folder):
         """
         path = None
         if self.fit_file:
-            path = self.fit_file._p_blob_uncommitted
+            path = self.fit_file._uncommitted()
             if path is None:
-                path = self.fit_file._p_blob_committed
+                path = self.fit_file.committed()
         return path
 
     def load_from_file(self):

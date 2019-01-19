@@ -15,6 +15,7 @@ owjs.map = function(spec) {
     "use strict";
 
     // parameters provided when creating an "instance" of a map
+    var map_id = spec.map_id;
     var latitude = spec.latitude;
     var longitude = spec.longitude;
     var zoom = spec.zoom;
@@ -22,6 +23,7 @@ owjs.map = function(spec) {
     var start_icon = spec.start_icon;
     var end_icon = spec.end_icon;
     var shadow = spec.shadow;
+    var elevation = spec.elevation;
 
     // OpenStreetMap urls and references
     var openstreetmap_url = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
@@ -35,7 +37,7 @@ owjs.map = function(spec) {
 
     var create_map = function create_map(latitude, longitude, zoom) {
         /* Create a Leaflet map, set center point and add tiles */
-        map = L.map('map');
+        map = L.map(map_id, {preferCanvas: true});
         map.setView([latitude, longitude], zoom);
         var tile_layer = L.tileLayer(openstreetmap_url, {
             attribution: openstreetmap_attr
@@ -89,17 +91,27 @@ owjs.map = function(spec) {
                 shadowUrl: shadow,
             },
         });
-        gpx.on("addline",function(e){
-            elevation.addData(e.line);
-            // ow_charts.addData(e.line);
-        });
+
+        gpx.on('loaded', function(e) {
+	    map.fitBounds(e.target.getBounds());
+	});
+
+        if (elevation) {
+            gpx.on("addline",function(e){
+                elevation.addData(e.line);
+                // ow_charts.addData(e.line);
+            });
+        };
+
         gpx.addTo(map);
     };
 
     var render = function render() {
         // create the map, add elevation, load gpx
         create_map(latitude, longitude, zoom);
-        add_elevation_chart();
+        if (elevation) {
+            add_elevation_chart();
+        }
         // add_ow_charts();
         load_gpx(gpx_url);
     };

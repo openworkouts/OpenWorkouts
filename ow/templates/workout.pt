@@ -151,6 +151,7 @@
 
     <script type="text/javascript" tal:condition="context.has_gpx">
      var workout_map = owjs.map({
+         map_id: 'map',
          latitude: ${start_point['latitude']},
          longitude: ${start_point['longitude']},
          zoom: 11,
@@ -158,6 +159,7 @@
          start_icon: '${request.static_url('ow:static/components/leaflet-gpx/pin-icon-start.png')}',
          end_icon: '${request.static_url('ow:static/components/leaflet-gpx/pin-icon-end.png')}',
          shadow: '${request.static_url('ow:static/components/leaflet-gpx/pin-shadow.png')}',
+         elevation: true
      });
      workout_map.render();
     </script>

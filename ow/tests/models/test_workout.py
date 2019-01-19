@@ -513,22 +513,42 @@ class TestWorkoutModels(object):
     def test_has_tracking_file(self, root):
         workout = root['john']['1']
         # without tracking file
-        assert workout.has_tracking_file is False
+        assert not workout.has_tracking_file
         # with tracking file
         workout.tracking_file = 'faked tracking file'
-        assert workout.has_tracking_file is True
+        assert workout.has_tracking_file
 
     def test_has_gpx(self, root):
         workout = root['john']['1']
         # without tracking file
-        assert workout.has_gpx is False
+        assert not workout.has_gpx
         workout.tracking_filetype = 'fit'
-        assert workout.has_gpx is False
+        assert not workout.has_gpx
         # with non-gpx tracking file
         workout.tracking_file = 'faked tracking file'
         workout.tracking_filetype = 'fit'
-        assert workout.has_gpx is False
+        assert not workout.has_gpx
         # with gpx tracking file
         workout.tracking_file = 'faked tracking file'
         workout.tracking_filetype = 'gpx'
-        assert workout.has_gpx is True
+        assert workout.has_gpx
+
+    def test_has_fit(self, root):
+        workout = root['john']['1']
+        # without tracking file
+        assert not workout.has_fit
+        # tracking_file is a fit, this should not happen, as uploading a fit
+        # puts the fit file into .fit_file and generates a gpx for
+        # .tracking_file
+        workout.tracking_file = 'faked tracking file'
+        workout.tracking_filetype = 'fit'
+        assert not workout.has_fit
+        # now, having a fit file returns true
+        workout.fit_file = 'faked fit file'
+        assert workout.has_fit
+        # no matter what we have in tracking_file
+        workout.tracking_filetype = 'gpx'
+        assert workout.has_fit
+        workout.tracking_file = None
+        workout.tracking_filetype = None
+        assert workout.has_fit

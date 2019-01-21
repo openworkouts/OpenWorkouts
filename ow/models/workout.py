@@ -1,4 +1,4 @@
-
+import os
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 
@@ -11,7 +11,8 @@ from ow.utilities import (
     GPXMinidomParser,
     copy_blob,
     create_blob,
-    mps_to_kmph
+    mps_to_kmph,
+    save_map_screenshot
 )
 
 from ow.fit import Fit
@@ -418,3 +419,27 @@ class Workout(Folder):
     @property
     def has_fit(self):
         return self.fit_file is not None
+
+    @property
+    def map_screenshot(self):
+        """
+        Return the static path to the screenshot image of the map for
+        this workout (works only for workouts with gps tracking)
+        """
+        if not self.has_gpx:
+            return None
+
+        current_path = os.path.abspath(os.path.dirname(__file__))
+        screenshot_path = os.path.join(
+            current_path, '../static/maps',
+            str(self.owner.uid), str(self.workout_id)) + '.png'
+
+        if not os.path.exists(screenshot_path):
+            # screenshot does not exist, generate it
+            save_map_screenshot(self)
+
+        # the value returned is relative to the static files served
+        # by the app, so we can use request.static_url() with it
+        static_path = os.path.join('static/maps', str(self.owner.uid),
+                                   str(self.workout_id))
+        return 'ow:' + static_path + '.png'

@@ -159,7 +159,8 @@
          start_icon: '${request.static_url('ow:static/components/leaflet-gpx/pin-icon-start.png')}',
          end_icon: '${request.static_url('ow:static/components/leaflet-gpx/pin-icon-end.png')}',
          shadow: '${request.static_url('ow:static/components/leaflet-gpx/pin-shadow.png')}',
-         elevation: true
+         elevation: true,
+         zoom_control: true
      });
      workout_map.render();
     </script>

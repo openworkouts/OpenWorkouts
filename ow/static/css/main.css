@@ -751,6 +751,10 @@ body {
     color:#151515
 }
 
+.workout-map img {
+    width: 100%;
+}
+
 .owo-del a:hover {
     color:red
 }

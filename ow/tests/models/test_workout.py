@@ -12,6 +12,8 @@ from ow.models.user import User
 from ow.models.root import OpenWorkouts
 from ow.utilities import create_blob
 
+from ow.tests.helpers import join
+
 
 class TestWorkoutModels(object):
 
@@ -552,3 +554,64 @@ class TestWorkoutModels(object):
         workout.tracking_file = None
         workout.tracking_filetype = None
         assert workout.has_fit
+
+    @patch('ow.models.workout.os')
+    @patch('ow.models.workout.save_map_screenshot')
+    def test_map_screenshot_no_gpx(self, sms, os, root):
+        workout = root['john']['1']
+        assert workout.map_screenshot is None
+        assert not os.path.abspath.called
+        assert not os.path.dirname.called
+        assert not os.path.join.called
+        assert not os.path.exists.called
+        assert not sms.called
+
+    @patch('ow.models.workout.os')
+    @patch('ow.models.workout.save_map_screenshot')
+    def test_map_screenshot_save(self, sms, os, root):
+        """
+        A workout with a tracking file has no map screenshot, one is
+        saved to the filesystem.
+        This test simply asserts the calls to the separate methods that
+        look for existing screenshots and save a new one
+        """
+        os.path.abspath.return_value = 'current_dir'
+        os.path.join.side_effect = join
+        # This forces the "save screenshot" code to be run
+        os.path.exists.return_value = False
+
+        workout = root['john']['1']
+        workout.tracking_file = 'faked gpx file'
+        workout.tracking_filetype = 'gpx'
+
+        uid = str(root['john'].uid)
+        assert workout.map_screenshot == 'ow:/static/maps/' + uid + '/1.png'
+        assert os.path.abspath.called
+        assert os.path.dirname.called
+        assert os.path.join.call_count == 2
+        assert os.path.exists.called
+        sms.assert_called_once_with(workout)
+
+    @patch('ow.models.workout.os')
+    @patch('ow.models.workout.save_map_screenshot')
+    def test_map_screenshot_do_not_save(self, sms, os, root):
+        """
+        A workout with a tracking file has a map screenshot, the path to that
+        is returned without doing anything else
+        """
+        os.path.abspath.return_value = 'current_dir'
+        os.path.join.side_effect = join
+        # This forces the "save screenshot" code NOT to be run
+        os.path.exists.return_value = True
+
+        workout = root['john']['1']
+        workout.tracking_file = 'faked gpx file'
+        workout.tracking_filetype = 'gpx'
+
+        uid = str(root['john'].uid)
+        assert workout.map_screenshot == 'ow:/static/maps/' + uid + '/1.png'
+        assert os.path.abspath.called
+        assert os.path.dirname.called
+        assert os.path.join.call_count == 2
+        assert os.path.exists.called
+        assert not sms.called

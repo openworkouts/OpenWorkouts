@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+# Make a screenshot of a workout map
+#
+
+uid=$1
+wid=$2
+dest=$3
+dummy=$4
+
+# make a dummy screenshot image first, that way if chrome fails, we still have an image
+cp ${dummy} screenshot.png
+
+# Make the screenshot with chrome headless
+`which chrome` --headless --disable-gpu --window-size="1300x436" --screenshot http://localhost:9999/${uid}/${wid}/map --virtual-time-budget=10000
+
+# crop it
+# `which convert` screenshot.png -chop 100x0 ${dest}
+
+# resize, 70% of the original image is enough.
+# we do this instead of setting a lower resolution/window size on the browser
+# because with smaller window size, the resulting images appear corrupted
+# randomly (like if the screenshot was taking before the map was finished
+# loading tiles)
+# `which convert` ${dest} -resize 70% ${dest}
+
+# remove leftover
+# rm screenshot.png
+mv screenshot.png ${dest}

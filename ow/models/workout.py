@@ -1,4 +1,4 @@
-
+import os
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 
@@ -11,6 +11,8 @@ from ow.utilities import (
     GPXMinidomParser,
     copy_blob,
     create_blob,
+    mps_to_kmph,
+    save_map_screenshot
 )
 
 from ow.fit import Fit
@@ -49,6 +51,7 @@ class Workout(Folder):
         self.notes = kw.get('notes', '')  # unicode string
         self.duration = kw.get('duration', None)  # a timedelta object
         self.distance = kw.get('distance', None)  # kilometers, Decimal
+        self.speed = kw.get('speed', {})
         self.hr_min = kw.get('hr_min', None)  # bpm, Decimal
         self.hr_max = kw.get('hr_max', None)  # bpm, Decimal
         self.hr_avg = kw.get('hr_avg', None)  # bpm, Decimal
@@ -210,9 +213,9 @@ class Workout(Folder):
         """
         path = None
         if self.tracking_file:
-            path = self.tracking_file._p_blob_uncommitted
+            path = self.tracking_file._uncommitted()
             if path is None:
-                path = self.tracking_file._p_blob_committed
+                path = self.tracking_file.committed()
         return path
 
     @property
@@ -227,9 +230,9 @@ class Workout(Folder):
         """
         path = None
         if self.fit_file:
-            path = self.fit_file._p_blob_uncommitted
+            path = self.fit_file._uncommitted()
             if path is None:
-                path = self.fit_file._p_blob_committed
+                path = self.fit_file.committed()
         return path
 
     def load_from_file(self):
@@ -347,8 +350,13 @@ class Workout(Folder):
 
         4. Grab some basic info from the fit file and store it in the Workout
         """
-        # backup the fit file
-        self.fit_file = copy_blob(self.tracking_file)
+
+        # we can call load_from_fit afterwards for updates. In such case, check
+        # if the tracking file is a fit file uploaded to override the previous
+        # one. If not, just reuse the existing fit file
+        if self.tracking_filetype == 'fit':
+            # backup the fit file
+            self.fit_file = copy_blob(self.tracking_file)
 
         # create an instance of our Fit class
         fit = Fit(self.fit_file_path)
@@ -376,6 +384,12 @@ class Workout(Folder):
         # info in the fit file
         if not self.title:
             self.title = fit.name
+
+        if fit.data['max_speed']:
+            self.speed['max'] = mps_to_kmph(fit.data['max_speed'])
+
+        if fit.data['avg_speed']:
+            self.speed['avg'] = mps_to_kmph(fit.data['avg_speed'])
 
         if fit.data['avg_hr']:
             self.hr_avg = Decimal(fit.data['avg_hr'])
@@ -405,3 +419,27 @@ class Workout(Folder):
     @property
     def has_fit(self):
         return self.fit_file is not None
+
+    @property
+    def map_screenshot(self):
+        """
+        Return the static path to the screenshot image of the map for
+        this workout (works only for workouts with gps tracking)
+        """
+        if not self.has_gpx:
+            return None
+
+        current_path = os.path.abspath(os.path.dirname(__file__))
+        screenshot_path = os.path.join(
+            current_path, '../static/maps',
+            str(self.owner.uid), str(self.workout_id)) + '.png'
+
+        if not os.path.exists(screenshot_path):
+            # screenshot does not exist, generate it
+            save_map_screenshot(self)
+
+        # the value returned is relative to the static files served
+        # by the app, so we can use request.static_url() with it
+        static_path = os.path.join('static/maps', str(self.owner.uid),
+                                   str(self.workout_id))
+        return 'ow:' + static_path + '.png'

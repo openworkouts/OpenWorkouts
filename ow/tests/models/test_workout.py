@@ -12,6 +12,8 @@ from ow.models.user import User
 from ow.models.root import OpenWorkouts
 from ow.utilities import create_blob
 
+from ow.tests.helpers import join
+
 
 class TestWorkoutModels(object):
 
@@ -209,11 +211,11 @@ class TestWorkoutModels(object):
         assert workout.tracking_file_path is None
         # workout still not saved to the db
         workout.tracking_file = Mock()
-        workout.tracking_file._p_blob_uncommitted = '/tmp/blobtempfile'
-        workout.tracking_file._p_blob_committed = None
+        workout.tracking_file._uncommitted.return_value = '/tmp/blobtempfile'
+        workout.tracking_file.committed.return_value = None
         assert workout.tracking_file_path == '/tmp/blobtempfile'
-        workout.tracking_file._p_blob_uncommitted = None
-        workout.tracking_file._p_blob_committed = '/var/db/blobs/blobfile'
+        workout.tracking_file._uncommitted.return_value = None
+        workout.tracking_file.committed.return_value = '/var/db/blobs/blobfile'
         assert workout.tracking_file_path == '/var/db/blobs/blobfile'
 
     def test_fit_file_path(self):
@@ -222,11 +224,11 @@ class TestWorkoutModels(object):
         assert workout.fit_file_path is None
         # workout still not saved to the db
         workout.fit_file = Mock()
-        workout.fit_file._p_blob_uncommitted = '/tmp/blobtempfile'
-        workout.fit_file._p_blob_committed = None
+        workout.fit_file._uncommitted.return_value = '/tmp/blobtempfile'
+        workout.fit_file.committed.return_value = None
         assert workout.fit_file_path == '/tmp/blobtempfile'
-        workout.fit_file._p_blob_uncommitted = None
-        workout.fit_file._p_blob_committed = '/var/db/blobs/blobfile'
+        workout.fit_file._uncommitted.return_value = None
+        workout.fit_file.committed.return_value = '/var/db/blobs/blobfile'
         assert workout.fit_file_path == '/var/db/blobs/blobfile'
 
     def test_load_from_file_invalid(self):
@@ -513,22 +515,103 @@ class TestWorkoutModels(object):
     def test_has_tracking_file(self, root):
         workout = root['john']['1']
         # without tracking file
-        assert workout.has_tracking_file is False
+        assert not workout.has_tracking_file
         # with tracking file
         workout.tracking_file = 'faked tracking file'
-        assert workout.has_tracking_file is True
+        assert workout.has_tracking_file
 
     def test_has_gpx(self, root):
         workout = root['john']['1']
         # without tracking file
-        assert workout.has_gpx is False
+        assert not workout.has_gpx
         workout.tracking_filetype = 'fit'
-        assert workout.has_gpx is False
+        assert not workout.has_gpx
         # with non-gpx tracking file
         workout.tracking_file = 'faked tracking file'
         workout.tracking_filetype = 'fit'
-        assert workout.has_gpx is False
+        assert not workout.has_gpx
         # with gpx tracking file
         workout.tracking_file = 'faked tracking file'
         workout.tracking_filetype = 'gpx'
-        assert workout.has_gpx is True
+        assert workout.has_gpx
+
+    def test_has_fit(self, root):
+        workout = root['john']['1']
+        # without tracking file
+        assert not workout.has_fit
+        # tracking_file is a fit, this should not happen, as uploading a fit
+        # puts the fit file into .fit_file and generates a gpx for
+        # .tracking_file
+        workout.tracking_file = 'faked tracking file'
+        workout.tracking_filetype = 'fit'
+        assert not workout.has_fit
+        # now, having a fit file returns true
+        workout.fit_file = 'faked fit file'
+        assert workout.has_fit
+        # no matter what we have in tracking_file
+        workout.tracking_filetype = 'gpx'
+        assert workout.has_fit
+        workout.tracking_file = None
+        workout.tracking_filetype = None
+        assert workout.has_fit
+
+    @patch('ow.models.workout.os')
+    @patch('ow.models.workout.save_map_screenshot')
+    def test_map_screenshot_no_gpx(self, sms, os, root):
+        workout = root['john']['1']
+        assert workout.map_screenshot is None
+        assert not os.path.abspath.called
+        assert not os.path.dirname.called
+        assert not os.path.join.called
+        assert not os.path.exists.called
+        assert not sms.called
+
+    @patch('ow.models.workout.os')
+    @patch('ow.models.workout.save_map_screenshot')
+    def test_map_screenshot_save(self, sms, os, root):
+        """
+        A workout with a tracking file has no map screenshot, one is
+        saved to the filesystem.
+        This test simply asserts the calls to the separate methods that
+        look for existing screenshots and save a new one
+        """
+        os.path.abspath.return_value = 'current_dir'
+        os.path.join.side_effect = join
+        # This forces the "save screenshot" code to be run
+        os.path.exists.return_value = False
+
+        workout = root['john']['1']
+        workout.tracking_file = 'faked gpx file'
+        workout.tracking_filetype = 'gpx'
+
+        uid = str(root['john'].uid)
+        assert workout.map_screenshot == 'ow:/static/maps/' + uid + '/1.png'
+        assert os.path.abspath.called
+        assert os.path.dirname.called
+        assert os.path.join.call_count == 2
+        assert os.path.exists.called
+        sms.assert_called_once_with(workout)
+
+    @patch('ow.models.workout.os')
+    @patch('ow.models.workout.save_map_screenshot')
+    def test_map_screenshot_do_not_save(self, sms, os, root):
+        """
+        A workout with a tracking file has a map screenshot, the path to that
+        is returned without doing anything else
+        """
+        os.path.abspath.return_value = 'current_dir'
+        os.path.join.side_effect = join
+        # This forces the "save screenshot" code NOT to be run
+        os.path.exists.return_value = True
+
+        workout = root['john']['1']
+        workout.tracking_file = 'faked gpx file'
+        workout.tracking_filetype = 'gpx'
+
+        uid = str(root['john'].uid)
+        assert workout.map_screenshot == 'ow:/static/maps/' + uid + '/1.png'
+        assert os.path.abspath.called
+        assert os.path.dirname.called
+        assert os.path.join.call_count == 2
+        assert os.path.exists.called
+        assert not sms.called

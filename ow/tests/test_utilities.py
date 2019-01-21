@@ -1,8 +1,14 @@
 import os
+from datetime import timedelta
+from unittest.mock import patch
 from pyexpat import ExpatError
 from xml.dom.minidom import Element
 
 import pytest
+
+from ow.models.root import OpenWorkouts
+from ow.models.user import User
+from ow.models.workout import Workout
 
 from ow.utilities import (
     slugify,
@@ -15,10 +21,30 @@ from ow.utilities import (
     kms_to_meters,
     mps_to_kmph,
     kmph_to_mps,
+    save_map_screenshot
 )
+
+from ow.tests.helpers import join
 
 
 class TestUtilities(object):
+
+    @pytest.fixture
+    def john(self):
+        john = User(firstname='John', lastname='Doe',
+                    email='john.doe@example.net')
+        john.password = 's3cr3t'
+        return john
+
+    @pytest.fixture
+    def root(self, john):
+        root = OpenWorkouts()
+        root.add_user(john)
+        john['1'] = Workout(
+            duration=timedelta(minutes=60),
+            distance=30
+        )
+        return root
 
     def test_slugify(self):
         res = slugify(u'long story SHORT      ')
@@ -53,6 +79,70 @@ class TestUtilities(object):
 
     def test_kmph_to_mps(self):
         assert kmph_to_mps(30) == 30 * 0.277778
+
+    @patch('ow.utilities.os')
+    @patch('ow.utilities.subprocess')
+    def test_save_map_screenshot_no_gpx(self, subprocess, os, root, john):
+        saved = save_map_screenshot(john['1'])
+        assert not saved
+        assert not os.path.abspath.called
+        assert not os.path.dirname.called
+        assert not os.path.join.called
+        assert not os.path.exists.called
+        assert not os.makedirs.called
+        assert not subprocess.run.called
+        # even having a fit tracking file, nothing is done
+        john['1'].tracking_file = 'faked fit file'
+        john['1'].tracking_filetype = 'fit'
+        saved = save_map_screenshot(john['1'])
+        assert not saved
+        assert not os.path.abspath.called
+        assert not os.path.dirname.called
+        assert not os.path.join.called
+        assert not os.path.exists.called
+        assert not os.makedirs.called
+        assert not subprocess.run.called
+
+    @patch('ow.utilities.os')
+    @patch('ow.utilities.subprocess')
+    def test_save_map_screenshot_with_gpx(self, subprocess, os, root, john):
+        os.path.abspath.return_value = 'current_dir'
+        os.path.join.side_effect = join
+        # This mimics what happens when the directory for this user map
+        # screenshots does not exist, which means we don'have to create one
+        # (calling os.makedirs)
+        os.path.exists.return_value = False
+
+        john['1'].tracking_file = 'faked gpx content'
+        john['1'].tracking_filetype = 'gpx'
+        saved = save_map_screenshot(john['1'])
+        assert saved
+        os.path.abspath.assert_called_once
+        assert os.path.dirname.called
+        assert os.path.join.call_count == 3
+        assert os.path.exists.called
+        assert os.makedirs.called
+        subprocess.run.assert_called_once
+
+    @patch('ow.utilities.os')
+    @patch('ow.utilities.subprocess')
+    def test_save_map_screenshot_with_gpx_makedirs(
+            self, subprocess, os, root, john):
+        os.path.abspath.return_value = 'current_dir'
+        os.path.join.side_effect = join
+        # If os.path.exists returns True, makedirs is not called
+        os.path.exists.return_value = True
+
+        john['1'].tracking_file = 'faked gpx content'
+        john['1'].tracking_filetype = 'gpx'
+        saved = save_map_screenshot(john['1'])
+        assert saved
+        os.path.abspath.assert_called_once
+        assert os.path.dirname.called
+        assert os.path.join.call_count == 3
+        assert os.path.exists.called
+        assert not os.makedirs.called
+        subprocess.run.assert_called_once
 
 
 class TestGPXParseMinidom(object):

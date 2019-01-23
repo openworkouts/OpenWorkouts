@@ -707,6 +707,12 @@ input {
   content: "";
   margin: 0;
 }
+.workout-map {
+  margin-top: 1em;
+}
+.workout-map img {
+  width: 100%;
+}
 .workout-intro {
   font-size: 13px;
   font-size: 0.8125rem;

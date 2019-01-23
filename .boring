@@ -137,3 +137,4 @@ var/zeo/Data.*
 var/db/blobs/*
 ow.egg-info/*
 ow/static/components
+ow/static/maps

@@ -1,4 +1,7 @@
 import re
+import os
+import logging
+import subprocess
 from datetime import datetime
 from decimal import Decimal
 from shutil import copyfileobj
@@ -6,6 +9,8 @@ from shutil import copyfileobj
 from unidecode import unidecode
 from xml.dom import minidom
 from ZODB.blob import Blob
+
+log = logging.getLogger(__name__)
 
 
 def slugify(text, delim=u'-'):
@@ -183,3 +188,26 @@ def create_blob(data, file_extension, binary=False):
             data = data.encode('utf-8')
         open_blob.write(data)
     return blob
+
+
+def save_map_screenshot(workout):
+    if workout.has_gpx:
+        current_path = os.path.abspath(os.path.dirname(__file__))
+        tool_path = os.path.join(current_path, '../bin/screenshot_map')
+
+        screenshots_path = os.path.join(
+            current_path, 'static/maps', str(workout.owner.uid))
+        if not os.path.exists(screenshots_path):
+            os.makedirs(screenshots_path)
+
+        screenshot_path = os.path.join(
+            screenshots_path, str(workout.workout_id))
+        screenshot_path += '.png'
+
+        subprocess.run(
+            [tool_path, str(workout.owner.uid), str(workout.workout_id),
+             screenshot_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        return True
+
+    return False

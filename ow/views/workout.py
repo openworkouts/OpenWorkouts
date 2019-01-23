@@ -213,3 +213,26 @@ def workout_gpx(context, request):
         content_type='application/xml',
         content_disposition='attachment; filename="%s"' % gpx_slug,
         body_file=context.tracking_file.open())
+
+
+@view_config(
+    context=Workout,
+    name='map',
+    renderer='ow:templates/workout-map.pt')
+def workout_map(context, request):
+    """
+    Render a page that has only a map with tracking info
+    """
+    start_point = {}
+    if context.has_gpx:
+        with context.tracking_file.open() as gpx_file:
+            gpx_contents = gpx_file.read()
+            gpx_contents = gpx_contents.decode('utf-8')
+            gpx = gpxpy.parse(gpx_contents)
+            if gpx.tracks:
+                track = gpx.tracks[0]
+                center_point = track.get_center()
+                start_point = {'latitude': center_point.latitude,
+                               'longitude': center_point.longitude,
+                               'elevation': center_point.elevation}
+    return {'start_point': start_point}

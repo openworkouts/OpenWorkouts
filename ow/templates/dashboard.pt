@@ -87,6 +87,13 @@
 
             <div class="workout-intro" tal:content="workout.notes"></div>
 
+            <div class="workout-map" tal:condition="workout.has_gpx">
+                <a href="" tal:attributes="href request.resource_url(workout)">
+                    <img src="" tal:attributes="src request.static_url(workout.map_screenshot);
+                              alt workout.title; title workout.title">
+                </a>
+            </div>
+
             <ul class="workout-options">
               <li class="owo-edit"><a href="" i18n:translate="" tal:attributes="href request.resource_url(workout, 'edit')"><span>edit</span></a></li>
               <li class="owo-update"><a href="" i18n:translate="" tal:attributes="href request.resource_url(workout, 'update-from-file')"><span>update with tracking file</span></a></li>

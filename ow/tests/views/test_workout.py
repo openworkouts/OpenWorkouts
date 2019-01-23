@@ -428,3 +428,31 @@ class TestWorkoutViews(object):
                 assert response.status_code == 200
                 assert response.content_type == 'application/xml'
                 assert expected_body in response.body
+
+    def test_workout_map_no_gpx(self, dummy_request):
+        request = dummy_request
+        user = request.root['john']
+        workout = user.workouts()[0]
+        response = workout_views.workout_map(workout, request)
+        assert response == {'start_point': {}}
+
+    def test_workout_map(self, dummy_request):
+        request = dummy_request
+        user = request.root['john']
+        workout = user.workouts()[0]
+        # to ensure has_gpx returns true
+        workout.tracking_filetype = 'gpx'
+        gpx_file_path = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)),
+            'fixtures/20131013.gpx')
+        with patch.object(workout, 'tracking_file') as tf:
+            with open(gpx_file_path, 'r') as gpx_file:
+                tf.open.return_value = BytesIO(gpx_file.read().encode('utf-8'))
+                response = workout_views.workout_map(workout, request)
+                assert response == {
+                    'start_point': {
+                        'elevation': None,
+                        'latitude': 37.108735040304566,
+                        'longitude': 25.472489344630546
+                    }
+                }

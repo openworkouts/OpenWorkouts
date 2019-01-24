@@ -1,4 +1,5 @@
 import os
+import json
 from datetime import datetime, timedelta, timezone
 from shutil import copyfileobj
 from unittest.mock import Mock, patch
@@ -582,3 +583,52 @@ class TestUserViews(object):
         assert response['form'].errors_for('email') == [error]
         assert 'jack.black@example.net' not in request.root.emails
         assert 'JackBlack' not in request.root.all_nicknames
+
+    def test_week_stats_no_stats(self, dummy_request, john):
+        response = user_views.week_stats(john, dummy_request)
+        assert isinstance(response, Response)
+        assert response.content_type == 'application/json'
+        # the body is a valid json-encoded stream
+        obj = json.loads(response.body)
+        assert obj == [
+            {'distance': 0, 'elevation': 0, 'name': 'Mon',
+             'time': '00', 'workouts': 0},
+            {'distance': 0, 'elevation': 0, 'name': 'Tue',
+             'time': '00', 'workouts': 0},
+            {'distance': 0, 'elevation': 0, 'name': 'Wed',
+             'time': '00', 'workouts': 0},
+            {'distance': 0, 'elevation': 0, 'name': 'Thu',
+             'time': '00', 'workouts': 0},
+            {'distance': 0, 'elevation': 0, 'name': 'Fri',
+             'time': '00', 'workouts': 0},
+            {'distance': 0, 'elevation': 0, 'name': 'Sat',
+             'time': '00', 'workouts': 0},
+            {'distance': 0, 'elevation': 0, 'name': 'Sun',
+             'time': '00', 'workouts': 0}
+        ]
+
+    def test_week_stats(self, dummy_request, john):
+        workout = Workout(
+            start=datetime.now(timezone.utc),
+            duration=timedelta(minutes=60),
+            distance=30,
+            elevation=540
+        )
+        john.add_workout(workout)
+        response = user_views.week_stats(john, dummy_request)
+        assert isinstance(response, Response)
+        assert response.content_type == 'application/json'
+        # the body is a valid json-encoded stream
+        obj = json.loads(response.body)
+        assert len(obj) == 7
+        for day in obj:
+            if datetime.now(timezone.utc).strftime('%a') == day['name']:
+                day['distance'] == 30
+                day['elevation'] == 540
+                day['time'] == '01'
+                day['workouts'] == 1
+            else:
+                day['distance'] == 0
+                day['elevation'] == 0
+                day['time'] == '00'
+                day['workouts'] == 0

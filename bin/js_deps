@@ -226,6 +226,31 @@ pickadate() {
     fi
 }
 
+d3() {
+    NAME="d3"
+    VERSION=5.7.0
+    URL=https://github.com/${NAME}/${NAME}/releases/download/v${VERSION}/${NAME}.zip
+    check_cache ${NAME} ${VERSION}
+    in_cache=$?
+    if [ ${in_cache} -eq 0 -a ${REINSTALL} -eq 1 ]; then
+        echo "${NAME}-${VERSION} $ALREADY_INSTALLED"
+    else
+        echo "> Installing ${NAME} ${VERSION}"
+        if [ -d ${COMPONENTS}/${NAME} ]; then
+            # Clean up, delete previous install before installing
+            rm -r ${COMPONENTS}/${NAME}
+        fi
+        cd ${TMP}
+        ${GET} ${URL}
+        ${UNZIP} ${NAME}.zip -d ${NAME}
+        cd ${CURRENT}
+        mv ${TMP}/${NAME} ${COMPONENTS}/
+        echo "${NAME}-${VERSION}" >> ${CACHE}
+        echo "< Installed ${NAME} ${VERSION}"
+    fi
+}
+
+
 echo "Installing JS dependencies in ${COMPONENTS}"
 
 jquery
@@ -234,6 +259,8 @@ leaflet
 leaflet_gpx
 leaflet_elevation
 pickadate
+d3
+
 
 # Clean up, remove the tmp directory
 echo "Cleaning up temp storage"

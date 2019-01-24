@@ -2,7 +2,7 @@ import re
 import os
 import logging
 import subprocess
-from datetime import datetime
+from datetime import datetime, timedelta
 from decimal import Decimal
 from shutil import copyfileobj
 
@@ -211,3 +211,25 @@ def save_map_screenshot(workout):
         return True
 
     return False
+
+
+def timedelta_to_hms(value):
+    """
+    Return hours, minutes, seconds from a timedelta object
+    """
+    hours, remainder = divmod(int(value.total_seconds()), 3600)
+    minutes, seconds = divmod(remainder, 60)
+    return hours, minutes, seconds
+
+
+def get_week_days(day, start_day=1):
+    """
+    Return a list of datetime objects for the days of the week "day" is in.
+
+    day is a datetime object (like in datetime.now() for "today")
+
+    start_day can be used to set if week starts on monday (1) or sunday (0)
+    """
+    first_day = day - timedelta(days=day.isoweekday() - start_day)
+    week_days = [first_day + timedelta(days=i) for i in range(7)]
+    return week_days

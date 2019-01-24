@@ -12,7 +12,8 @@ from ow.utilities import (
     copy_blob,
     create_blob,
     mps_to_kmph,
-    save_map_screenshot
+    save_map_screenshot,
+    timedelta_to_hms
 )
 
 from ow.fit import Fit
@@ -109,9 +110,7 @@ class Workout(Folder):
         return _end.strftime('%d/%m/%Y %H:%M (%Z)')
 
     def split_duration(self):
-        hours, remainder = divmod(int(self.duration.total_seconds()), 3600)
-        minutes, seconds = divmod(remainder, 60)
-        return hours, minutes, seconds
+        return timedelta_to_hms(self.duration)
 
     @property
     def duration_hours(self):

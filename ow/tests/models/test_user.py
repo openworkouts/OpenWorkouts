@@ -1,3 +1,4 @@
+from decimal import Decimal
 from datetime import datetime, timedelta, timezone
 
 import pytest
@@ -116,4 +117,223 @@ class TestUser(object):
             2017: {4: {'cycling': 1}},
             2018: {8: {'swimming': 1},
                    11: {'cycling': 1, 'running': 1}}
+        }
+
+    def test_stats(self, root):
+        expected_no_stats = {
+            'workouts': 0,
+            'time': timedelta(seconds=0),
+            'distance': Decimal(0),
+            'elevation': Decimal(0),
+            'sports': {}
+        }
+        # no stats
+        assert root['john'].stats() == expected_no_stats
+        # add a cycling workout
+        workout = Workout(
+            start=datetime(2018, 11, 25, 10, 00, tzinfo=timezone.utc),
+            duration=timedelta(minutes=(60*4)),
+            distance=115,
+            sport='cycling')
+        root['john'].add_workout(workout)
+        # asking for a different year, future
+        assert root['john'].stats(2019) == expected_no_stats
+        # asking for a different year, past
+        assert root['john'].stats(2016) == expected_no_stats
+        # asking fot the year the workout is in
+        assert root['john'].stats(2018) == {
+            'workouts': 1,
+            'time': timedelta(minutes=(60*4)),
+            'distance': Decimal(115),
+            'elevation': Decimal(0),
+            'sports': {
+                'cycling': {
+                    'workouts': 1,
+                    'time': timedelta(minutes=(60*4)),
+                    'distance': Decimal(115),
+                    'elevation': Decimal(0),
+                }
+            }
+        }
+        # add a second cycling workout
+        workout = Workout(
+            start=datetime(2018, 11, 26, 10, 00, tzinfo=timezone.utc),
+            duration=timedelta(minutes=(60*3)),
+            distance=100,
+            sport='cycling')
+        root['john'].add_workout(workout)
+        assert root['john'].stats(2018) == {
+            'workouts': 2,
+            'time': timedelta(minutes=(60*7)),
+            'distance': Decimal(215),
+            'elevation': Decimal(0),
+            'sports': {
+                'cycling': {
+                    'workouts': 2,
+                    'time': timedelta(minutes=(60*7)),
+                    'distance': Decimal(215),
+                    'elevation': Decimal(0),
+                }
+            }
+        }
+        # add a running workout
+        workout = Workout(
+            start=datetime(2018, 11, 26, 16, 00, tzinfo=timezone.utc),
+            duration=timedelta(minutes=(60)),
+            distance=10,
+            sport='running')
+        root['john'].add_workout(workout)
+        assert root['john'].stats(2018) == {
+            'workouts': 3,
+            'time': timedelta(minutes=(60*8)),
+            'distance': Decimal(225),
+            'elevation': Decimal(0),
+            'sports': {
+                'cycling': {
+                    'workouts': 2,
+                    'time': timedelta(minutes=(60*7)),
+                    'distance': Decimal(215),
+                    'elevation': Decimal(0),
+                },
+                'running': {
+                    'workouts': 1,
+                    'time': timedelta(minutes=(60)),
+                    'distance': Decimal(10),
+                    'elevation': Decimal(0),
+                }
+            }
+        }
+        # ensure the stats for future/past years did not change after
+        # adding those workouts
+        assert root['john'].stats(2019) == expected_no_stats
+        assert root['john'].stats(2016) == expected_no_stats
+
+    def test_get_week_stats(self, root):
+        expected_no_stats_per_day = {
+            'workouts': 0,
+            'time': timedelta(0),
+            'distance': Decimal(0),
+            'elevation': Decimal(0),
+            'sports': {}
+        }
+
+        expected_no_stats = {}
+        for i in range(19, 26):
+            day = datetime(2018, 11, i, 10, 00, tzinfo=timezone.utc)
+            expected_no_stats[day] = expected_no_stats_per_day
+
+        day = datetime(2018, 11, 25, 10, 00, tzinfo=timezone.utc)
+        assert root['john'].get_week_stats(day) == expected_no_stats
+
+        # add a cycling workout
+        workout = Workout(
+            start=datetime(2018, 11, 25, 10, 00, tzinfo=timezone.utc),
+            duration=timedelta(minutes=(60*4)),
+            distance=115,
+            sport='cycling')
+        root['john'].add_workout(workout)
+
+        # check a week in the future
+        day = datetime(2019, 11, 25, 10, 00, tzinfo=timezone.utc)
+        week_stats = root['john'].get_week_stats(day)
+        for day in week_stats:
+            assert week_stats[day] == expected_no_stats_per_day
+
+        # check a week in the past
+        day = datetime(2017, 11, 25, 10, 00, tzinfo=timezone.utc)
+        week_stats = root['john'].get_week_stats(day)
+        for day in week_stats:
+            assert week_stats[day] == expected_no_stats_per_day
+
+        # Check the week where the workout is
+        day = datetime(2018, 11, 25, 10, 00, tzinfo=timezone.utc)
+        week_stats = root['john'].get_week_stats(day)
+        for day in week_stats:
+            if day.day == 25:
+                # this is the day where we have a workout
+                assert week_stats[day] == {
+                    'workouts': 1,
+                    'time': timedelta(minutes=(60*4)),
+                    'distance': Decimal(115),
+                    'elevation': Decimal(0),
+                    'sports': {
+                        'cycling': {
+                            'workouts': 1,
+                            'time': timedelta(minutes=(60*4)),
+                            'distance': Decimal(115),
+                            'elevation': Decimal(0)
+                        }
+                    }
+                }
+            else:
+                # day without workout
+                assert week_stats[day] == expected_no_stats_per_day
+
+        # add a second cycling workout
+        workout = Workout(
+            start=datetime(2018, 11, 23, 10, 00, tzinfo=timezone.utc),
+            duration=timedelta(minutes=(60*3)),
+            distance=100,
+            sport='cycling')
+        root['john'].add_workout(workout)
+        day = datetime(2018, 11, 25, 10, 00, tzinfo=timezone.utc)
+        week_stats = root['john'].get_week_stats(day)
+        for day in week_stats:
+            if day.day == 25:
+                # this is the day where we have a workout
+                assert week_stats[day] == {
+                    'workouts': 1,
+                    'time': timedelta(minutes=(60*4)),
+                    'distance': Decimal(115),
+                    'elevation': Decimal(0),
+                    'sports': {
+                        'cycling': {
+                            'workouts': 1,
+                            'time': timedelta(minutes=(60*4)),
+                            'distance': Decimal(115),
+                            'elevation': Decimal(0)
+                        }
+                    }
+                }
+            elif day.day == 23:
+                # this is the day where we have a workout
+                assert week_stats[day] == {
+                    'workouts': 1,
+                    'time': timedelta(minutes=(60*3)),
+                    'distance': Decimal(100),
+                    'elevation': Decimal(0),
+                    'sports': {
+                        'cycling': {
+                            'workouts': 1,
+                            'time': timedelta(minutes=(60*3)),
+                            'distance': Decimal(100),
+                            'elevation': Decimal(0)
+                        }
+                    }
+                }
+            else:
+                # day without workout
+                assert week_stats[day] == expected_no_stats_per_day
+
+    def test_week_stats(self, root):
+        expected_no_stats_per_day = {
+            'workouts': 0,
+            'time': timedelta(0),
+            'distance': Decimal(0),
+            'elevation': Decimal(0),
+            'sports': {}
+        }
+
+        # no workouts for the current week (this tests is for coverage
+        # purposes mostly, as the main logic is tested in test_get_week_stats)
+        day = datetime.now(timezone.utc)
+        week_stats = root['john'].get_week_stats(day)
+        for day in week_stats:
+            assert week_stats[day] == expected_no_stats_per_day
+
+    def test_week_totals(self, root):
+        # no data, empty totals
+        assert root['john'].week_totals == {
+            'distance': Decimal(0),
+            'time': timedelta(0)
         }

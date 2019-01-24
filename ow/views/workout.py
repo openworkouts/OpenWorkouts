@@ -1,3 +1,4 @@
+from decimal import Decimal
 from datetime import datetime, timedelta, time, timezone
 
 import gpxpy
@@ -120,6 +121,8 @@ def edit_workout(context, request):
         start = datetime.combine(form.data['start_date'], start_time,
                                  tzinfo=timezone.utc)
         context.start = start
+        # ensure distance is a decimal
+        context.distance = Decimal(context.distance)
         catalog = get_catalog(context)
         reindex_object(catalog, context)
         return HTTPFound(location=request.resource_url(context))

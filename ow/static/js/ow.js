@@ -122,3 +122,107 @@ owjs.map = function(spec) {
     return that
 
 };
+
+
+owjs.week_chart = function(spec) {
+
+    "use strict";
+
+    // parameters provided when creating an "instance" of the chart
+    var chart_selector = spec.chart_selector,
+        url = spec.url,
+        current_day_name = spec.current_day_name
+
+    // Helpers
+    function select_x_axis_label(d) {
+        /* Given a value, return the label associated with it */
+        return d3.select('.x-axis')
+    	    .selectAll('text')
+    	    .filter(function(x) { return x == d.name; });
+    }
+
+    // Methods
+    var render = function render() {
+        /*
+           Build a d3 bar chart, populated with data from the given url.
+         */
+        var chart = d3.select("svg"),
+            margin = {top: 20, right: 20, bottom: 30, left: 50},
+            width = +chart.attr("width") - margin.left - margin.right,
+            height = +chart.attr("height") - margin.top - margin.bottom,
+            g = chart.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")"),
+            x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
+            y = d3.scaleLinear().rangeRound([height, 0]);
+
+        d3.json(url).then(function (data) {
+	    x.domain(data.map(function (d) {
+	        return d.name;
+	    }));
+
+	    y.domain([0, d3.max(data, function (d) {
+	        return Number(d.distance);
+	    })]);
+
+	    g.append("g")
+                .attr('class', 'x-axis')
+	        .attr("transform", "translate(0," + height + ")")
+	        .call(d3.axisBottom(x))
+
+	    g.selectAll(".bar")
+	        .data(data)
+	        .enter().append("rect")
+                .attr("class", function(d) {
+                    if (d.name == current_day_name){
+                        select_x_axis_label(d).attr('style', "font-weight: bold;");
+                        return 'bar current'
+                    }
+                    else {
+                        return 'bar'
+                    }
+                })
+	        .attr("x", function (d) {
+		    return x(d.name);
+	        })
+	        .attr("y", function (d) {
+		    return y(Number(d.distance));
+	        })
+	        .attr("width", x.bandwidth())
+	        .attr("height", function (d) {
+		    return height - y(Number(d.distance));
+	        })
+                .on('mouseover', function(d) {
+                    if (d.name != current_day_name){
+                        select_x_axis_label(d).attr('style', "font-weight: bold;");
+                    }
+  		})
+  		.on('mouseout', function(d) {
+                    if (d.name != current_day_name){
+        	        select_x_axis_label(d).attr('style', "font-weight: regular;");
+                    }
+                });
+
+            g.selectAll(".text")
+                .data(data)
+                .enter()
+                .append("text")
+                .attr("class","label")
+	        .attr("x", function (d) {
+		    return x(d.name) + x.bandwidth()/2;
+	        })
+	        .attr("y", function (d) {
+                    return y(Number(d.distance) + 5);
+	        })
+                .text(function(d) {
+                    if (Number(d.distance) > 0) {
+                        return d.distance;
+                    }
+                });
+
+        });
+    };
+
+    var that = {}
+    that.render = render;
+    return that
+
+};

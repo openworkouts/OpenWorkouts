@@ -1,5 +1,5 @@
 import os
-from datetime import timedelta
+from datetime import timedelta, datetime
 from unittest.mock import patch
 from pyexpat import ExpatError
 from xml.dom.minidom import Element
@@ -21,7 +21,9 @@ from ow.utilities import (
     kms_to_meters,
     mps_to_kmph,
     kmph_to_mps,
-    save_map_screenshot
+    save_map_screenshot,
+    timedelta_to_hms,
+    get_week_days
 )
 
 from ow.tests.helpers import join
@@ -143,6 +145,67 @@ class TestUtilities(object):
         assert os.path.exists.called
         assert not os.makedirs.called
         subprocess.run.assert_called_once
+
+    def test_timedelta_to_hms(self):
+        value = timedelta(seconds=0)
+        assert timedelta_to_hms(value) == (0, 0, 0)
+        value = timedelta(seconds=3600)
+        assert timedelta_to_hms(value) == (1, 0, 0)
+        value = timedelta(seconds=3900)
+        assert timedelta_to_hms(value) == (1, 5, 0)
+        value = timedelta(seconds=3940)
+        assert timedelta_to_hms(value) == (1, 5, 40)
+        value = timedelta(seconds=4)
+        assert timedelta_to_hms(value) == (0, 0, 4)
+        value = timedelta(seconds=150)
+        assert timedelta_to_hms(value) == (0, 2, 30)
+        # try now something that is not a timedelta
+        with pytest.raises(AttributeError):
+            timedelta_to_hms('not a timedelta')
+
+    def test_week_days(self):
+        # get days from a monday, week starting on monday
+        days = get_week_days(datetime(2019, 1, 21))
+        assert len(days) == 7
+        matches = [
+            [days[0], datetime(2019, 1, 21)],
+            [days[1], datetime(2019, 1, 22)],
+            [days[2], datetime(2019, 1, 23)],
+            [days[3], datetime(2019, 1, 24)],
+            [days[4], datetime(2019, 1, 25)],
+            [days[5], datetime(2019, 1, 26)],
+            [days[6], datetime(2019, 1, 27)]
+        ]
+        for m in matches:
+            assert m[0] == m[1]
+        # get days from a wednesday, week starting on monday
+        days = get_week_days(datetime(2019, 1, 23))
+        assert len(days) == 7
+        matches = [
+            [days[0], datetime(2019, 1, 21)],
+            [days[1], datetime(2019, 1, 22)],
+            [days[2], datetime(2019, 1, 23)],
+            [days[3], datetime(2019, 1, 24)],
+            [days[4], datetime(2019, 1, 25)],
+            [days[5], datetime(2019, 1, 26)],
+            [days[6], datetime(2019, 1, 27)]
+        ]
+        for m in matches:
+            assert m[0] == m[1]
+        # get days from a monday, but week starting on sunday now
+        days = get_week_days(datetime(2019, 1, 21), start_day=0)
+        assert len(days) == 7
+        matches = [
+            [days[0], datetime(2019, 1, 20)],
+            [days[1], datetime(2019, 1, 21)],
+            [days[2], datetime(2019, 1, 22)],
+            [days[3], datetime(2019, 1, 23)],
+            [days[4], datetime(2019, 1, 24)],
+            [days[5], datetime(2019, 1, 25)],
+            [days[6], datetime(2019, 1, 26)]
+        ]
+        for m in matches:
+            assert m[0] == m[1]
 
 
 class TestGPXParseMinidom(object):

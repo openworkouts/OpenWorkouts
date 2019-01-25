@@ -144,10 +144,82 @@
                   </tal:years>
               </ul>
           </tal:activity_tree>
+
+          <tal:stats>
+
+            <div class="week-stats js-week-stats">
+              <h3><tal:t i18n:translate="">This week</tal:t></h3>
+              <h4 tal:define="totals context.week_totals">
+                <span class="week_totals_left">
+                  <tal:d tal:content="round(totals['distance'])"></tal:d>
+                  <tal:t i18n:translate="">kms</tal:t>
+                </span>
+                <span class="week_totals_right">
+                  <tal:hms tal:define="hms timedelta_to_hms(totals['time'])">
+                    <tal:h tal:content="str(hms[0]).zfill(2)"></tal:h>
+                    <tal:t i18n:translate="">hours</tal:t>,
+                    <tal:h tal:content="str(hms[1]).zfill(2)"></tal:h>
+                    <tal:t i18n:translate="">min.</tal:t>
+                  </tal:hms>
+                </span>
+              </h4>
+              <svg width="300" height="200"></svg>
+              <style>
+
+              </style>
+            </div>
+
+            <div class="user-stats">
+              <tal:year-stats tal:repeat="year context.activity_years">
+                <h3><a href="" tal:content="year"></a></h3>
+                <ul tal:define="stats context.stats(year)">
+                  <li>
+                    <span i18n:translate="">Workouts:</span>
+                    <span tal:content="stats['workouts']"></span>
+                  </li>
+                  <li>
+                    <span i18n:translate="">Distance:</span>
+                    <span tal:content="round(stats['distance'])"></span> kms
+                  </li>
+                  <li>
+                    <span i18n:translate="">Time:</span>
+                    <tal:hms tal:define="hms timedelta_to_hms(stats['time'])">
+                      <span>
+                        <tal:h tal:content="str(hms[0]).zfill(2)"></tal:h>
+                        <tal:t i18n:translate="">hours</tal:t>,
+                        <tal:h tal:content="str(hms[1]).zfill(2)"></tal:h>
+                        <tal:t i18n:translate="">min.</tal:t>
+                      </span>
+                    </tal:hms>
+                  </li>
+                  <li>
+                    <span i18n:translate="">Elevation:</span>
+                    <span tal:content="stats['elevation']"></span> m
+                  </li>
+                </ul>
+              </tal:year-stats>
+            </div>
+          </tal:stats>
+
       </aside>
 
     </div>
 
   </metal:content>
+
+  <metal:body-js metal:fill-slot="body-js">
+    <script src="${request.static_url('ow:static/components/d3/d3.min.js')}"></script>
+    <script src="${request.static_url('ow:static/js/ow.js')}"></script>
+
+    <script type="text/javascript">
+     var week_chart = owjs.week_chart({
+         chart_selector: 'div.js-week-stats',
+         url: "${request.resource_url(context, 'week')}",
+         current_day_name: "${current_day_name}"
+     });
+     week_chart.render();
+    </script>
+
+  </metal:body-js>
 
 </html>

@@ -1,4 +1,5 @@
-
+from decimal import Decimal
+from datetime import datetime, timedelta, timezone
 from uuid import uuid1
 from operator import attrgetter
 
@@ -7,6 +8,7 @@ from repoze.folder import Folder
 from pyramid.security import Allow
 
 from ow.catalog import get_catalog, reindex_object
+from ow.utilities import get_week_days
 
 
 class User(Folder):
@@ -135,3 +137,99 @@ class User(Folder):
                 tree[year][month][sport] = 0
             tree[year][month][sport] += 1
         return tree
+
+    def stats(self, year=None, month=None):
+        year = year or datetime.now().year
+        stats = {
+            'workouts': 0,
+            'time': timedelta(seconds=0),
+            'distance': Decimal(0),
+            'elevation': Decimal(0),
+            'sports': {}
+        }
+
+        for workout in self.workouts(year=year, month=month):
+            stats['workouts'] += 1
+            stats['time'] += workout.duration or timedelta(seconds=0)
+            stats['distance'] += workout.distance or Decimal(0)
+            stats['elevation'] += workout.uphill or Decimal(0)
+
+            if workout.sport not in stats['sports']:
+                stats['sports'][workout.sport] = {
+                    'workouts': 0,
+                    'time': timedelta(seconds=0),
+                    'distance': Decimal(0),
+                    'elevation': Decimal(0),
+                }
+
+            stats['sports'][workout.sport]['workouts'] += 1
+            stats['sports'][workout.sport]['time'] += (
+                workout.duration or timedelta(0))
+            stats['sports'][workout.sport]['distance'] += (
+                workout.distance or Decimal(0))
+            stats['sports'][workout.sport]['elevation'] += (
+                workout.uphill or Decimal(0))
+
+        return stats
+
+    def get_week_stats(self, day):
+        """
+        Return some stats for the week the given day is in.
+        """
+        week = get_week_days(day)
+
+        # filter workouts
+        workouts = []
+        for workout in self.workouts():
+            if week[0].date() <= workout.start.date() <= week[-1].date():
+                workouts.append(workout)
+
+        # build stats
+        stats = {}
+        for week_day in week:
+            stats[week_day] = {
+                'workouts': 0,
+                'time': timedelta(0),
+                'distance': Decimal(0),
+                'elevation': Decimal(0),
+                'sports': {}
+            }
+            for workout in workouts:
+                if workout.start.date() == week_day.date():
+                    day = stats[week_day]  # less typing, avoid long lines
+                    day['workouts'] += 1
+                    day['time'] += workout.duration or timedelta(seconds=0)
+                    day['distance'] += workout.distance or Decimal(0)
+                    day['elevation'] += workout.uphill or Decimal(0)
+                    if workout.sport not in day['sports']:
+                        day['sports'][workout.sport] = {
+                            'workouts': 0,
+                            'time': timedelta(seconds=0),
+                            'distance': Decimal(0),
+                            'elevation': Decimal(0),
+                        }
+                    day['sports'][workout.sport]['workouts'] += 1
+                    day['sports'][workout.sport]['time'] += (
+                        workout.duration or timedelta(0))
+                    day['sports'][workout.sport]['distance'] += (
+                        workout.distance or Decimal(0))
+                    day['sports'][workout.sport]['elevation'] += (
+                        workout.uphill or Decimal(0))
+
+        return stats
+
+    @property
+    def week_stats(self):
+        """
+        Helper that returns the week stats for the current week
+        """
+        return self.get_week_stats(datetime.now(timezone.utc))
+
+    @property
+    def week_totals(self):
+        week_stats = self.week_stats
+        return {
+            'distance': sum([week_stats[t]['distance'] for t in week_stats]),
+            'time': sum([week_stats[t]['time'] for t in week_stats],
+                        timedelta())
+        }

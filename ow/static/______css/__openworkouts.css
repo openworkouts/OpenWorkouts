@@ -11,3 +11,36 @@
     font-size: 0.8em;
     background-color: #eeeeee;
 }
+
+/* dashboard, weekly stats */
+
+span.week_totals_left {
+    padding-right: 5px;
+    border-right: 1px solid #e1e1e1;
+}
+
+span.week_totals_right {
+    padding-left: 5px;
+}
+
+.x-axis path, .x-axis line {
+    fill: none;
+    stroke: none;
+}
+
+.bar {
+    fill: #f8b5be;
+}
+
+.bar:hover {
+    fill: #ee4056;
+}
+
+.current {
+    fill: #ee4056;
+}
+
+text.label {
+    font-size: 0.6em;
+    text-anchor: middle;
+}

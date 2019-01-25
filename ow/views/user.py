@@ -1,4 +1,6 @@
+import json
 from calendar import month_name
+from datetime import datetime
 
 from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
@@ -16,6 +18,7 @@ from ..schemas.user import (
 )
 from ..models.root import OpenWorkouts
 from ..views.renderers import OWFormRenderer
+from ..utilities import timedelta_to_hms
 
 _ = TranslationStringFactory('OpenWorkouts')
 
@@ -142,6 +145,8 @@ def dashboard(context, request):
     workouts = context.workouts(viewing_year, viewing_month)
 
     return {
+        'current_year': datetime.now().year,
+        'current_day_name': datetime.now().strftime('%a'),
         'month_name': month_name,
         'viewing_year': viewing_year,
         'viewing_month': viewing_month,
@@ -222,3 +227,25 @@ def change_password(context, request):
         context.password = form.data['password']
         return HTTPFound(location=request.resource_url(context, 'profile'))
     return {'form': OWFormRenderer(form)}
+
+
+@view_config(
+    context=User,
+    permission='view',
+    name='week')
+def week_stats(context, request):
+    stats = context.week_stats
+    json_stats = []
+    for day in stats:
+        hms = timedelta_to_hms(stats[day]['time'])
+        day_stats = {
+            'name': day.strftime('%a'),
+            'time': str(hms[0]).zfill(2),
+            'distance': int(round(stats[day]['distance'])),
+            'elevation': int(stats[day]['elevation']),
+            'workouts': stats[day]['workouts']
+        }
+        json_stats.append(day_stats)
+    return Response(content_type='application/json',
+                    charset='utf-8',
+                    body=json.dumps(json_stats))

@@ -1,4 +1,5 @@
 import os
+import json
 from datetime import datetime, timedelta, timezone
 from shutil import copyfileobj
 from unittest.mock import Mock, patch
@@ -151,8 +152,10 @@ class TestUserViews(object):
         """
         request = dummy_request
         response = user_views.dashboard(john, request)
-        assert len(response) == 4
+        assert len(response) == 6
         assert 'month_name' in response.keys()
+        assert response['current_year'] == datetime.now().year
+        assert response['current_day_name'] == datetime.now().strftime('%a')
         # this user has a single workout, in 2015
         assert response['viewing_year'] == 2015
         assert response['viewing_month'] == 6
@@ -166,8 +169,10 @@ class TestUserViews(object):
         # first test the year for which we know there is a workout
         request.GET['year'] = 2015
         response = user_views.dashboard(john, request)
-        assert len(response) == 4
+        assert len(response) == 6
         assert 'month_name' in response.keys()
+        assert response['current_year'] == datetime.now().year
+        assert response['current_day_name'] == datetime.now().strftime('%a')
         # this user has a single workout, in 2015
         assert response['viewing_year'] == 2015
         assert response['viewing_month'] == 6
@@ -175,8 +180,10 @@ class TestUserViews(object):
         # now, a year we know there is no workout info
         request.GET['year'] = 2000
         response = user_views.dashboard(john, request)
-        assert len(response) == 4
+        assert len(response) == 6
         assert 'month_name' in response.keys()
+        assert response['current_year'] == datetime.now().year
+        assert response['current_day_name'] == datetime.now().strftime('%a')
         # this user has a single workout, in 2015
         assert response['viewing_year'] == 2000
         # we have no data for that year and we didn't ask for a certain month,
@@ -193,8 +200,10 @@ class TestUserViews(object):
         request.GET['year'] = 2015
         request.GET['month'] = 6
         response = user_views.dashboard(john, request)
-        assert len(response) == 4
+        assert len(response) == 6
         assert 'month_name' in response.keys()
+        assert response['current_year'] == datetime.now().year
+        assert response['current_day_name'] == datetime.now().strftime('%a')
         # this user has a single workout, in 2015
         assert response['viewing_year'] == 2015
         assert response['viewing_month'] == 6
@@ -202,8 +211,10 @@ class TestUserViews(object):
         # now, change month to one without values
         request.GET['month'] = 2
         response = user_views.dashboard(john, request)
-        assert len(response) == 4
+        assert len(response) == 6
         assert 'month_name' in response.keys()
+        assert response['current_year'] == datetime.now().year
+        assert response['current_day_name'] == datetime.now().strftime('%a')
         # this user has a single workout, in 2015
         assert response['viewing_year'] == 2015
         assert response['viewing_month'] == 2
@@ -212,8 +223,10 @@ class TestUserViews(object):
         request.GET['year'] = 2010
         request.GET['month'] = 6
         response = user_views.dashboard(john, request)
-        assert len(response) == 4
+        assert len(response) == 6
         assert 'month_name' in response.keys()
+        assert response['current_year'] == datetime.now().year
+        assert response['current_day_name'] == datetime.now().strftime('%a')
         # this user has a single workout, in 2015
         assert response['viewing_year'] == 2010
         assert response['viewing_month'] == 6
@@ -228,8 +241,10 @@ class TestUserViews(object):
         # Set a month without workout data
         request.GET['month'] = 5
         response = user_views.dashboard(john, request)
-        assert len(response) == 4
+        assert len(response) == 6
         assert 'month_name' in response.keys()
+        assert response['current_year'] == datetime.now().year
+        assert response['current_day_name'] == datetime.now().strftime('%a')
         # this user has a single workout, in 2015
         assert response['viewing_year'] == 2015
         assert response['viewing_month'] == 5
@@ -237,8 +252,10 @@ class TestUserViews(object):
         # now a month with data
         request.GET['month'] = 6
         response = user_views.dashboard(john, request)
-        assert len(response) == 4
+        assert len(response) == 6
         assert 'month_name' in response.keys()
+        assert response['current_year'] == datetime.now().year
+        assert response['current_day_name'] == datetime.now().strftime('%a')
         # this user has a single workout, in 2015
         assert response['viewing_year'] == 2015
         assert response['viewing_month'] == 6
@@ -582,3 +599,52 @@ class TestUserViews(object):
         assert response['form'].errors_for('email') == [error]
         assert 'jack.black@example.net' not in request.root.emails
         assert 'JackBlack' not in request.root.all_nicknames
+
+    def test_week_stats_no_stats(self, dummy_request, john):
+        response = user_views.week_stats(john, dummy_request)
+        assert isinstance(response, Response)
+        assert response.content_type == 'application/json'
+        # the body is a valid json-encoded stream
+        obj = json.loads(response.body)
+        assert obj == [
+            {'distance': 0, 'elevation': 0, 'name': 'Mon',
+             'time': '00', 'workouts': 0},
+            {'distance': 0, 'elevation': 0, 'name': 'Tue',
+             'time': '00', 'workouts': 0},
+            {'distance': 0, 'elevation': 0, 'name': 'Wed',
+             'time': '00', 'workouts': 0},
+            {'distance': 0, 'elevation': 0, 'name': 'Thu',
+             'time': '00', 'workouts': 0},
+            {'distance': 0, 'elevation': 0, 'name': 'Fri',
+             'time': '00', 'workouts': 0},
+            {'distance': 0, 'elevation': 0, 'name': 'Sat',
+             'time': '00', 'workouts': 0},
+            {'distance': 0, 'elevation': 0, 'name': 'Sun',
+             'time': '00', 'workouts': 0}
+        ]
+
+    def test_week_stats(self, dummy_request, john):
+        workout = Workout(
+            start=datetime.now(timezone.utc),
+            duration=timedelta(minutes=60),
+            distance=30,
+            elevation=540
+        )
+        john.add_workout(workout)
+        response = user_views.week_stats(john, dummy_request)
+        assert isinstance(response, Response)
+        assert response.content_type == 'application/json'
+        # the body is a valid json-encoded stream
+        obj = json.loads(response.body)
+        assert len(obj) == 7
+        for day in obj:
+            if datetime.now(timezone.utc).strftime('%a') == day['name']:
+                day['distance'] == 30
+                day['elevation'] == 540
+                day['time'] == '01'
+                day['workouts'] == 1
+            else:
+                day['distance'] == 0
+                day['elevation'] == 0
+                day['time'] == '00'
+                day['workouts'] == 0

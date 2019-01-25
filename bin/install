@@ -10,6 +10,14 @@ python_bin=''
 # Full path to the env
 env_path=${current}/env
 
+
+set_scripts_permissions() {
+    # ensure the shell scripts we will need have proper permissions
+    chmod u+x ${current}/bin/js_deps
+    chmod u+x ${current}/bin/start
+    chmod u+x ${current}/bin/screenshot_map
+}
+
 check_python3() {
     # if python3 is not installed, exit with an error
     if command -v python3 > /dev/null; then
@@ -54,12 +62,10 @@ install_openworkouts() {
 }
 
 install_js_deps() {
-    chmod +x ${current}/bin/js_deps
     ${current}/bin/js_deps
 }
 
 setup_start_stop() {
-    chmod +x ${current}/bin/start
     echo "OpenWorkouts successfully installed in ${env_path}"
     echo ""
     echo "You can now start the OpenWorkouts service calling:"
@@ -72,6 +78,7 @@ setup_start_stop() {
     # echo ""
 }
 
+set_script_permissions
 check_python3
 create_venv
 upgrade_pip_setuptools

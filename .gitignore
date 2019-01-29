@@ -41,3 +41,4 @@ var/db/blobs
 
 # JS static external components and libraries
 ow/static/components
+ow/static/maps

@@ -30,7 +30,7 @@ owjs.map = function(spec) {
     var openstreetmap_url = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
     var openstreetmap_attr = 'Map data &copy; <a href="http://www.osm.org">OpenStreetMap</a>';
 
-    // Some constants reused through the code
+    // Some vars reused through the code
     var map;
     var gpx;
     var elevation;
@@ -146,7 +146,7 @@ owjs.week_chart = function(spec) {
         /*
            Build a d3 bar chart, populated with data from the given url.
          */
-        var chart = d3.select("svg"),
+        var chart = d3.select(chart_selector),
             margin = {top: 20, right: 20, bottom: 30, left: 50},
             width = +chart.attr("width") - margin.left - margin.right,
             height = +chart.attr("height") - margin.top - margin.bottom,

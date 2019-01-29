@@ -14,29 +14,24 @@
   <metal:content metal:fill-slot="content">
 
     <div class="user-profile">
-      <tal:c tal:condition="getattr(context, 'picture', None)">
-        <img tal:attributes="src request.resource_path(context, 'picture')"
-             width="450" />
-      </tal:c>
-      <h2>
-          <tal:fullname tal:content="context.fullname"></tal:fullname>
-      </h2>
-      <p>
-        <tal:has-nickname tal:condition="context.nickname">
-            <tal:nickname tal:content="context.nickname"></tal:nickname>
-        </tal:has-nickname> (<tal:email tal:content="context.email"></tal:email>)
-      </p>
-      <ul class="workout-options">
-        <li><a href=""
-           tal:attributes="href request.resource_url(context, 'edit')"
-           i18n:translate="">edit profile</a></li>
-        <li><a href=""
-           tal:attributes="href request.resource_url(context, 'passwd')"
-           i18n:translate="">change password</a></li>
-      </ul>
+      <div class="user-profile-account">
+        <tal:c tal:condition="getattr(context, 'picture', None)">
+          <img tal:attributes="src request.resource_path(context, 'picture')"
+               width="450" />
+        </tal:c>
+        <h2>
+            <tal:fullname tal:content="context.fullname"></tal:fullname>
+        </h2>
+        <p>
+          <tal:has-nickname tal:condition="context.nickname">
+              <tal:nickname tal:content="context.nickname"></tal:nickname>
+          </tal:has-nickname> | 
+          <span><tal:email tal:content="context.email"></tal:email></span>
+        </p>
 
-      <div class="profile-info">
-        <ul>
+        <div class="profile-bio" tal:content="getattr(context, 'bio', '')"></div>
+
+        <ul class="profile-data">
           <li>
             <tal:t i18n:translate="">Gender:</tal:t>
             <tal:c tal:content="getattr(context, 'gender', '-')"></tal:c>
@@ -56,37 +51,47 @@
             <tal:c tal:content="getattr(context, 'weight', '-')"></tal:c> kg
           </li>
         </ul>
-      </div>
+        <ul class="workout-options">
+          <li><a href=""
+             tal:attributes="href request.resource_url(context, 'edit')"
+             i18n:translate="">edit profile</a></li>
+          <li><a href=""
+             tal:attributes="href request.resource_url(context, 'passwd')"
+             i18n:translate="">change password</a></li>
+        </ul>
 
-      <div class="profile-bio" tal:content="getattr(context, 'bio', '')">
-      </div>
-
-      <div class="workouts">
-        <tal:t i18n:translate="">Total number of workouts</tal:t>:
-        <tal:w tal:replace="context.num_workouts"></tal:w>
-      </div>
-
-      <div class="latest-workouts">
-        <p i18n:translate="">Latest workouts</p>
-        <tal:r tal:repeat="workout context.workouts()[:5]">
-          <div class="workout">
-            <tal:c tal:content="workout.sport"></tal:c> -
-            <a href="" tal:content="workout.title"
-               tal:attributes="href request.resource_url(workout)"></a>
-            (<tal:c tal:content="workout.start"></tal:c>,
-            <tal:c tal:content="workout.duration"></tal:c>,
-            <tal:c tal:content="workout.rounded_distance"></tal:c> km)
-          </div>
-        </tal:r>
+        <div class="workouts">
+          <tal:w tal:replace="context.num_workouts"></tal:w>
+          <tal:t i18n:translate="">Workouts</tal:t>
+        </div>
       </div>
 
       <div class="month-stats js-month-stats">
-        <svg width="600" height="300"></svg>
-        <ul class="filters js-filters">
-          <li><a href="#" class="js-distance" i18n:translate="">distance</a></li>
+        <div class="svg-cotent">
+          <svg width="600" height="300" viewBox="0 0 600 300"></svg>
+        </div>
+        <ul class="workout-options filters js-filters">
+          <li><a href="#" class="js-distance is-active" i18n:translate="">distance</a></li>
           <li><a href="#" class="js-time" i18n:translate="">time</a></li>
           <li><a href="#" class="js-elevation" i18n:translate="">elevation</a></li>
         </ul>
+      </div>
+
+      <div class="latest-workouts">
+        <h3 i18n:translate="">Latest workouts</h3>
+        <tal:r tal:repeat="workout context.workouts()[:5]">
+          <div class="workout">
+            <h4>
+              <a href="" tal:content="workout.title"
+               tal:attributes="href request.resource_url(workout)"></a>
+            </h4>
+            <span><tal:c tal:content="workout.sport"></tal:c></span>
+            <p><tal:c tal:content="workout.start"></tal:c>,
+            <tal:c tal:content="workout.duration"></tal:c>,
+            <tal:c tal:content="workout.rounded_distance"></tal:c> km
+            </p>
+          </div>
+        </tal:r>
       </div>
 
     </div>

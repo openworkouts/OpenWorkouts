@@ -679,6 +679,10 @@ input {
 .workout-options a:hover {
   color: #151515;
 }
+.workout-options a.is-active {
+  background-color: #959595;
+  color: white;
+}
 .owo-del a:hover {
   color: red;
 }
@@ -897,21 +901,76 @@ input {
 }
 <a class="login-remember" href="#">Forgot your password?</a>
 */
-.user-profile {
-  padding: 2em  1em;
-}
-@media (min-width: 480px) {
-  .user-profile {
-    padding: 2em 6em;
-  }
-}
 .user-profile img {
   width: 140px;
   height: 140px;
   object-fit: cover;
   border-radius: 50%;
+  margin-bottom: 0.5em;
 }
 .user-profile .workout-options {
+  font-size: 13px;
+  font-size: 0.8125rem;
+}
+.user-profile-account {
+  background-color: #fbfbfb;
+  padding: 2em  1em;
+}
+@media (min-width: 480px) {
+  .user-profile-account {
+    padding: 2em 6em;
+  }
+}
+.user-profile-account h2 {
+  margin: 0 0 0.15em 0;
+  font-size: 21px;
+  font-size: 1.3125rem;
+}
+.user-profile-account p {
+  color: #555555;
+  font-size: 14px;
+  font-size: 0.875rem;
+  margin: 0;
+}
+.user-profile-account p span {
+  color: #959595;
+}
+.user-profile-account .workouts {
+  font-size: 18px;
+  font-size: 1.125rem;
+  font-weight: bold;
+}
+.profile-data {
+  list-style-type: none;
+  padding: 0;
+  font-size: 14px;
+  font-size: 0.875rem;
+}
+.profile-data li {
+  margin-bottom: 0.25em;
+}
+.profile-bio {
+  margin: 1em 0;
+}
+.month-stats,
+.latest-workouts {
+  max-width: 40vw;
+  margin: 0 auto;
+}
+.latest-workouts h4 {
+  margin: 0;
+}
+.latest-workouts h4 a {
+  color: #151515;
+  text-decoration: none;
+}
+.latest-workouts > span {
+  font-size: 13px;
+  font-size: 0.8125rem;
+}
+.latest-workouts p {
+  margin-top: 0.25em;
+  color: #959595;
   font-size: 13px;
   font-size: 0.8125rem;
 }

@@ -1,15 +1,73 @@
 .user-profile {
-    padding: 2em  1em;
-    @media (min-width: @screen-s){
-        padding: 2em 6em;
-    }
     img {
         width: 140px;
         height: 140px;
         object-fit: cover;
         border-radius: 50%;
+        margin-bottom: .5em;
     }
     .workout-options {
     	.font-size(13);
     }
+}
+
+.user-profile-account {
+	background-color: @color-main-xtralight;
+    padding: 2em  1em;
+    @media (min-width: @screen-s){
+        padding: 2em 6em;
+    }
+	h2 {
+		margin: 0 0 .15em 0;
+		.font-size(21);
+	}
+	p{
+		color: @color-main-dark;
+		.font-size(14);
+		margin: 0;
+		span {
+			color: @color-main-medium;
+		}
+	}
+	.workouts {
+		.font-size(18);
+		font-weight: bold;
+	}
+}
+
+.profile-data {
+	list-style-type: none;
+	padding: 0;
+	.font-size(14);
+	li {
+		margin-bottom: .25em;
+	}
+}
+
+.profile-bio {
+	margin: 1em 0;
+}
+
+.month-stats,
+.latest-workouts {
+	max-width: 40vw;
+	margin: 0 auto;
+}
+
+.latest-workouts {
+	h4 {
+		margin:0;
+		a {
+			color: @color-main;
+			text-decoration: none;
+		}
+	}
+	>span {
+		.font-size(13);
+	}
+	p {
+		margin-top: .25em;
+		color: @color-main-medium;
+		.font-size(13);
+	}
 }

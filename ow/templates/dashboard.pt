@@ -107,18 +107,39 @@
       </section>
 
       <aside class="workout-aside">
-      <div class="aside-profile">
-        <tal:c tal:condition="getattr(context, 'picture', None)">
-          <img tal:attributes="src request.resource_path(context, 'picture')"
-               width="450" />
-        </tal:c>
-        <h2 tal:content="context.fullname"></h2>
-        <ul>
-          <Li>
-            <tal:n tal:content="context.num_workouts"></tal:n> <tal:t i18n:translate="">workouts</tal:t>
-          </Li>
-        </ul>
-      </div>
+        <div class="aside-profile">
+          <tal:c tal:condition="getattr(context, 'picture', None)">
+            <img tal:attributes="src request.resource_path(context, 'picture')"
+                 width="450" />
+          </tal:c>
+          <h2 tal:content="context.fullname"></h2>
+          <ul>
+            <Li>
+              <tal:n tal:content="context.num_workouts"></tal:n> <tal:t i18n:translate="">workouts</tal:t>
+            </Li>
+          </ul>
+        </div>
+          <div class="week-stats js-week-stats">
+            <h3><tal:t i18n:translate="">This week</tal:t></h3>
+            <p tal:define="totals context.week_totals">
+              <span class="week-stats-distance">
+                <tal:d tal:content="round(totals['distance'])"></tal:d>
+                <tal:t i18n:translate="">kms</tal:t>
+              </span>
+              <span class="week-stats-time">
+                <tal:hms tal:define="hms timedelta_to_hms(totals['time'])">
+                  <tal:h tal:content="str(hms[0]).zfill(2)"></tal:h>
+                  <tal:t i18n:translate="">hours</tal:t>,
+                  <tal:h tal:content="str(hms[1]).zfill(2)"></tal:h>
+                  <tal:t i18n:translate="">min.</tal:t>
+                </tal:hms>
+              </span>
+            </p>
+            <div class="svg-cotent">
+              <svg width="300" height="200" viewBox="0 0 300 200"></svg>
+            </div>
+          </div>
+
           <tal:activity_tree tal:condition="context.num_workouts > 0">
               <ul class="workout-activity-tree" tal:define="tree context.activity_dates_tree">
                   <tal:years tal:repeat="year sorted(tree.keys(), reverse=True )">
@@ -127,6 +148,31 @@
                              tal:attributes="href request.resource_url(context, query={'year': year});
                                              class 'js-year viewing-year' if is_viewing_year  else 'js-year'">
                           </a>
+                          <ul tal:define="stats context.stats(year)" tal:attributes="class 'workout-activity-summary' if is_viewing_year  else 'workout-activity-summary hidden'">
+                            <li>
+                              <span i18n:translate="">Workouts:</span>
+                              <span tal:content="stats['workouts']"></span>
+                            </li>
+                            <li>
+                              <span i18n:translate="">Distance:</span>
+                              <span> <tal:kms tal:content="round(stats['distance'])"></tal:kms> km</span>
+                            </li>
+                            <li>
+                              <span i18n:translate="">Time:</span>
+                              <tal:hms tal:define="hms timedelta_to_hms(stats['time'])">
+                                <span>
+                                  <tal:h tal:content="str(hms[0]).zfill(2)"></tal:h>
+                                  <tal:t i18n:translate="">hours</tal:t>,
+                                  <tal:h tal:content="str(hms[1]).zfill(2)"></tal:h>
+                                  <tal:t i18n:translate="">min.</tal:t>
+                                </span>
+                              </tal:hms>
+                            </li>
+                            <li>
+                              <span i18n:translate="">Elevation:</span>
+                              <span> <tal:m tal:content="stats['elevation']"></tal:m> m</span>
+                            </li>
+                          </ul>
                           <ul class="workout-activity-tree-year"
                               tal:attributes="class 'workout-activity-tree-year' if is_viewing_year  else 'workout-activity-tree-year hidden'">
                               <tal:months tal:repeat="month sorted(tree[year].keys())">
@@ -144,62 +190,6 @@
                   </tal:years>
               </ul>
           </tal:activity_tree>
-
-          <tal:stats>
-
-            <div class="week-stats js-week-stats">
-              <h3><tal:t i18n:translate="">This week</tal:t></h3>
-              <h4 tal:define="totals context.week_totals">
-                <span class="week_totals_left">
-                  <tal:d tal:content="round(totals['distance'])"></tal:d>
-                  <tal:t i18n:translate="">kms</tal:t>
-                </span>
-                <span class="week_totals_right">
-                  <tal:hms tal:define="hms timedelta_to_hms(totals['time'])">
-                    <tal:h tal:content="str(hms[0]).zfill(2)"></tal:h>
-                    <tal:t i18n:translate="">hours</tal:t>,
-                    <tal:h tal:content="str(hms[1]).zfill(2)"></tal:h>
-                    <tal:t i18n:translate="">min.</tal:t>
-                  </tal:hms>
-                </span>
-              </h4>
-              <svg width="300" height="200"></svg>
-              <style>
-
-              </style>
-            </div>
-
-            <div class="user-stats">
-              <tal:year-stats tal:repeat="year context.activity_years">
-                <h3><a href="" tal:content="year"></a></h3>
-                <ul tal:define="stats context.stats(year)">
-                  <li>
-                    <span i18n:translate="">Workouts:</span>
-                    <span tal:content="stats['workouts']"></span>
-                  </li>
-                  <li>
-                    <span i18n:translate="">Distance:</span>
-                    <span tal:content="round(stats['distance'])"></span> kms
-                  </li>
-                  <li>
-                    <span i18n:translate="">Time:</span>
-                    <tal:hms tal:define="hms timedelta_to_hms(stats['time'])">
-                      <span>
-                        <tal:h tal:content="str(hms[0]).zfill(2)"></tal:h>
-                        <tal:t i18n:translate="">hours</tal:t>,
-                        <tal:h tal:content="str(hms[1]).zfill(2)"></tal:h>
-                        <tal:t i18n:translate="">min.</tal:t>
-                      </span>
-                    </tal:hms>
-                  </li>
-                  <li>
-                    <span i18n:translate="">Elevation:</span>
-                    <span tal:content="stats['elevation']"></span> m
-                  </li>
-                </ul>
-              </tal:year-stats>
-            </div>
-          </tal:stats>
 
       </aside>
 

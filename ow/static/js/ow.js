@@ -147,7 +147,7 @@ owjs.week_chart = function(spec) {
            Build a d3 bar chart, populated with data from the given url.
          */
         var chart = d3.select("svg"),
-            margin = {top: 20, right: 20, bottom: 30, left: 50},
+            margin = {top: 17, right: 0, bottom: 20, left: 0},
             width = +chart.attr("width") - margin.left - margin.right,
             height = +chart.attr("height") - margin.top - margin.bottom,
             g = chart.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")"),
@@ -210,8 +210,15 @@ owjs.week_chart = function(spec) {
 		    return x(d.name) + x.bandwidth()/2;
 	        })
 	        .attr("y", function (d) {
-                    return y(Number(d.distance) + 5);
-	        })
+                    /*
+                      Get the value for the current bar, then get the maximum
+                      value to be displayed in the bar, which is used to
+                      calculate the proper position of the label for this bar,
+                      relatively to its height (1% above the bar)
+                     */
+                    var max = y.domain()[1];
+                    return y(d.distance + y.domain()[1] * 0.02);
+            })
                 .text(function(d) {
                     if (Number(d.distance) > 0) {
                         return d.distance;

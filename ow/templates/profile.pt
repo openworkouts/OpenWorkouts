@@ -20,21 +20,21 @@
       </tal:c>
       <h2>
           <tal:fullname tal:content="context.fullname"></tal:fullname>
-          <tal:has-nickname tal:condition="context.nickname">
-              (<tal:nickname tal:content="context.nickname"></tal:nickname>)
-          </tal:has-nickname>
       </h2>
-      <h3>
-        <tal:email tal:content="context.email"></tal:email>
-      </h3>
-      <h4>
-        <a href=""
+      <p>
+        <tal:has-nickname tal:condition="context.nickname">
+            <tal:nickname tal:content="context.nickname"></tal:nickname>
+        </tal:has-nickname> (<tal:email tal:content="context.email"></tal:email>)
+      </p>
+      <ul class="workout-options">
+        <li><a href=""
            tal:attributes="href request.resource_url(context, 'edit')"
-           i18n:translate="">edit profile</a> |
-        <a href=""
+           i18n:translate="">edit profile</a></li>
+        <li><a href=""
            tal:attributes="href request.resource_url(context, 'passwd')"
-           i18n:translate="">change password</a>
-      </h4>
+           i18n:translate="">change password</a></li>
+      </ul>
+
       <div class="profile-info">
         <ul>
           <li>
@@ -82,11 +82,11 @@
 
       <div class="month-stats js-month-stats">
         <svg width="600" height="300"></svg>
-        <div class="filters js-filters">
-          <a href="#" class="js-distance" i18n:translate="">distance</a>
-          <a href="#" class="js-time" i18n:translate="">time</a>
-          <a href="#" class="js-elevation" i18n:translate="">elevation</a>
-        </div>
+        <ul class="filters js-filters">
+          <li><a href="#" class="js-distance" i18n:translate="">distance</a></li>
+          <li><a href="#" class="js-time" i18n:translate="">time</a></li>
+          <li><a href="#" class="js-elevation" i18n:translate="">elevation</a></li>
+        </ul>
       </div>
 
     </div>
@@ -106,8 +106,8 @@
      };
 
      var year_chart = owjs.year_chart({
-         chart_selector: 'div.js-month-stats svg',
-         filters_selector: 'div.js-month-stats div.js-filters a',
+         chart_selector: '.js-month-stats svg',
+         filters_selector: '.js-month-stats .js-filters a',
          url: "${request.resource_url(context, 'yearly')}",
          current_month: "${current_month}",
          y_axis_labels: y_axis_labels,

@@ -120,6 +120,7 @@
     border:1px solid @color-main-light;
     margin-bottom: 0;
     border-radius: 4px;
+    padding: 0;
     li{
         display: inline-block;
         border-right: 1px solid @color-main-light;
@@ -128,8 +129,10 @@
         }
     }
     a{
+        display: block;
         color: @color-main-medium;
         padding: .5em .75em;
+        text-decoration: none;
         &:hover{
             color: @color-main;
         }
@@ -180,7 +183,6 @@
 
 
 /* Week report */
-
 .svg-cotent {
     svg {
         width: 100%;
@@ -196,6 +198,26 @@
     }
 
 }
+
+/* dashboard graphics*/
+.x-axis path, .x-axis line {
+    fill: none;
+    stroke: none;
+}
+
+.bar {
+    fill: #f8b5be;
+    &:hover {
+        fill: #ee4056;
+    }
+}
+
+.current {
+    fill: #ee4056;
+}
+
+
+
 .week-stats {
     border: 1px solid @color-main-light;
     background-color: fade(@color-main-light, 10%);

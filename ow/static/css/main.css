@@ -407,68 +407,6 @@ input {
   line-height: 1.25;
   max-width: 100%;
 }
-.login-content {
-  background-image: url("../media/img/back-01.jpg");
-  background-size: cover;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: calc(100vh - 98px);
-  padding: 1em 0;
-}
-.login-content form {
-  max-width: 380px;
-  background-color: rgba(21, 21, 21, 0.6);
-  border-radius: 6px;
-  padding: 2em 1.5em;
-}
-.login-content form div {
-  margin-bottom: 1.5em;
-}
-.login-content label {
-  color: #e1e1e1;
-}
-.login-content a {
-  color: #e1e1e1;
-  font-size: 13px;
-  text-decoration: none;
-  margin-right: 0.75em;
-}
-.login-content a:hover {
-  color: white;
-}
-.login-content .button {
-  transition: all 500ms ease-in-out;
-  background-color: #EE4056;
-  color: white;
-  text-transform: uppercase;
-}
-.login-content .button:hover {
-  background-color: #e6152f;
-}
-.login-content .message {
-  padding: 0.5em;
-  margin: 0;
-  text-align: center;
-  font-size: 13px;
-  font-size: 0.8125rem;
-}
-.login-content .message.message-error {
-  color: white;
-  background-color: red;
-}
-/*
-.login-remember {
-    color: @color-main-medium;
-    .font-size(14);
-    text-decoration: none;
-    font-weight: 300;
-    &:hover{
-        color: @color-main-light;
-    }
-}
-<a class="login-remember" href="#">Forgot your password?</a>
-*/
 .header-content {
   padding: 1em 1.5em;
 }
@@ -723,6 +661,7 @@ input {
   border: 1px solid #e1e1e1;
   margin-bottom: 0;
   border-radius: 4px;
+  padding: 0;
 }
 .workout-options li {
   display: inline-block;
@@ -732,8 +671,10 @@ input {
   border-right: none;
 }
 .workout-options a {
+  display: block;
   color: #959595;
   padding: 0.5em 0.75em;
+  text-decoration: none;
 }
 .workout-options a:hover {
   color: #151515;
@@ -787,6 +728,21 @@ input {
 .svg-cotent .tick {
   font-size: 13px;
   font-size: 0.8125rem;
+}
+/* dashboard graphics*/
+.x-axis path,
+.x-axis line {
+  fill: none;
+  stroke: none;
+}
+.bar {
+  fill: #f8b5be;
+}
+.bar:hover {
+  fill: #ee4056;
+}
+.current {
+  fill: #ee4056;
 }
 .week-stats {
   border: 1px solid #e1e1e1;
@@ -879,22 +835,87 @@ input {
 .workout-activity-tree-year a:hover {
   background-color: #e1e1e1;
 }
+.login-content {
+  background-image: url("../media/img/back-01.jpg");
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 98px);
+  padding: 1em 0;
+}
+.login-content form {
+  max-width: 380px;
+  background-color: rgba(21, 21, 21, 0.6);
+  border-radius: 6px;
+  padding: 2em 1.5em;
+}
+.login-content form div {
+  margin-bottom: 1.5em;
+}
+.login-content label {
+  color: #e1e1e1;
+}
+.login-content a {
+  color: #e1e1e1;
+  font-size: 13px;
+  text-decoration: none;
+  margin-right: 0.75em;
+}
+.login-content a:hover {
+  color: white;
+}
+.login-content .button {
+  transition: all 500ms ease-in-out;
+  background-color: #EE4056;
+  color: white;
+  text-transform: uppercase;
+}
+.login-content .button:hover {
+  background-color: #e6152f;
+}
+.login-content .message {
+  padding: 0.5em;
+  margin: 0;
+  text-align: center;
+  font-size: 13px;
+  font-size: 0.8125rem;
+}
+.login-content .message.message-error {
+  color: white;
+  background-color: red;
+}
+/*
+.login-remember {
+    color: @color-main-medium;
+    .font-size(14);
+    text-decoration: none;
+    font-weight: 300;
+    &:hover{
+        color: @color-main-light;
+    }
+}
+<a class="login-remember" href="#">Forgot your password?</a>
+*/
+.user-profile {
+  padding: 2em  1em;
+}
+@media (min-width: 480px) {
+  .user-profile {
+    padding: 2em 6em;
+  }
+}
+.user-profile img {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.user-profile .workout-options {
+  font-size: 13px;
+  font-size: 0.8125rem;
+}
 /* Workout detail */
 #map {
   height: 50vh;
-}
-/* dashboard graphics*/
-.x-axis path,
-.x-axis line {
-  fill: none;
-  stroke: none;
-}
-.bar {
-  fill: #f8b5be;
-}
-.bar:hover {
-  fill: #ee4056;
-}
-.current {
-  fill: #ee4056;
 }

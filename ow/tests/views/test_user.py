@@ -267,7 +267,9 @@ class TestUserViews(object):
         """
         request = dummy_request
         response = user_views.profile(john, request)
-        assert response == {}
+        assert len(response.keys()) == 1
+        current_month = datetime.now(timezone.utc).strftime('%Y-%m')
+        assert response['current_month'] == current_month
 
     def test_login_get(self, dummy_request):
         """

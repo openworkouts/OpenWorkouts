@@ -233,3 +233,57 @@ class User(Folder):
             'time': sum([week_stats[t]['time'] for t in week_stats],
                         timedelta())
         }
+
+    @property
+    def yearly_stats(self):
+        """
+        Return per-month stats for the last 12 months
+        """
+        # set the boundaries for looking for workouts afterwards,
+        # we need the current date as the "end date" and one year
+        # ago from that date. Then we set the start at the first
+        # day of that month.
+        end = datetime.now(timezone.utc)
+        start = (end - timedelta(days=365)).replace(day=1)
+
+        # build the stats, populating first the dict with empty values
+        # for each month.
+        stats = {}
+        for days in range((end - start).days):
+            day = (start + timedelta(days=days)).date()
+            if (day.year, day.month) not in stats.keys():
+                stats[(day.year, day.month)] = {
+                    'workouts': 0,
+                    'time': timedelta(0),
+                    'distance': Decimal(0),
+                    'elevation': Decimal(0),
+                    'sports': {}
+                }
+
+        # now loop over workouts, filtering and then adding stats to the
+        # proper place
+        for workout in self.workouts():
+            if start.date() <= workout.start.date() <= end.date():
+                # less typing, avoid long lines
+                month = stats[
+                    (workout.start.date().year, workout.start.date().month)]
+                month['workouts'] += 1
+                month['time'] += workout.duration or timedelta(seconds=0)
+                month['distance'] += workout.distance or Decimal(0)
+                month['elevation'] += workout.uphill or Decimal(0)
+                if workout.sport not in month['sports']:
+                    month['sports'][workout.sport] = {
+                        'workouts': 0,
+                        'time': timedelta(seconds=0),
+                        'distance': Decimal(0),
+                        'elevation': Decimal(0),
+                    }
+                month['sports'][workout.sport]['workouts'] += 1
+                month['sports'][workout.sport]['time'] += (
+                    workout.duration or timedelta(0))
+                month['sports'][workout.sport]['distance'] += (
+                    workout.distance or Decimal(0))
+                month['sports'][workout.sport]['elevation'] += (
+                    workout.uphill or Decimal(0))
+
+        return stats

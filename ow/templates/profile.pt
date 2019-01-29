@@ -80,8 +80,42 @@
         </tal:r>
       </div>
 
+      <div class="month-stats js-month-stats">
+        <svg width="600" height="300"></svg>
+        <div class="filters js-filters">
+          <a href="#" class="js-distance" i18n:translate="">distance</a>
+          <a href="#" class="js-time" i18n:translate="">time</a>
+          <a href="#" class="js-elevation" i18n:translate="">elevation</a>
+        </div>
+      </div>
+
     </div>
 
   </metal:content>
+
+  <metal:body-js metal:fill-slot="body-js">
+
+    <script src="${request.static_url('ow:static/components/d3/d3.min.js')}"></script>
+    <script src="${request.static_url('ow:static/js/ow.js')}"></script>
+
+    <script type="text/javascript">
+     var y_axis_labels = {
+         "distance": "Kilometers",
+         "time": "Hours",
+         "elevation": "Meters"
+     };
+
+     var year_chart = owjs.year_chart({
+         chart_selector: 'div.js-month-stats svg',
+         filters_selector: 'div.js-month-stats div.js-filters a',
+         url: "${request.resource_url(context, 'yearly')}",
+         current_month: "${current_month}",
+         y_axis_labels: y_axis_labels,
+     });
+     year_chart.render("distance");
+     year_chart.filters_setup();
+    </script>
+
+  </metal:body-js>
 
 </html>

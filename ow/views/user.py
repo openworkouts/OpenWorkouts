@@ -1,6 +1,6 @@
 import json
 from calendar import month_name
-from datetime import datetime
+from datetime import datetime, timezone
 
 from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
@@ -145,8 +145,8 @@ def dashboard(context, request):
     workouts = context.workouts(viewing_year, viewing_month)
 
     return {
-        'current_year': datetime.now().year,
-        'current_day_name': datetime.now().strftime('%a'),
+        'current_year': datetime.now(timezone.utc).year,
+        'current_day_name': datetime.now(timezone.utc).strftime('%a'),
         'month_name': month_name,
         'viewing_year': viewing_year,
         'viewing_month': viewing_month,
@@ -164,7 +164,10 @@ def profile(context, request):
     "public" profile view, showing some workouts from this user, her
     basic info, stats, etc
     """
-    return {}
+    now = datetime.now(timezone.utc)
+    return {
+        'current_month': now.strftime('%Y-%m')
+    }
 
 
 @view_config(
@@ -246,6 +249,39 @@ def week_stats(context, request):
             'workouts': stats[day]['workouts']
         }
         json_stats.append(day_stats)
+    return Response(content_type='application/json',
+                    charset='utf-8',
+                    body=json.dumps(json_stats))
+
+
+@view_config(
+    context=User,
+    permission='view',
+    name='yearly')
+def last_months_stats(context, request):
+    """
+    Return a json-encoded stream with statistics for the last 12 months
+    """
+    stats = context.yearly_stats
+    # this sets which month is 2 times in the stats, once this year, once
+    # the previous year. We will show it a bit different in the UI (showing
+    # the year too to prevent confusion)
+    repeated_month = datetime.now(timezone.utc).date().month
+    json_stats = []
+    for month in stats:
+        hms = timedelta_to_hms(stats[month]['time'])
+        name = month_name[month[1]][:3]
+        if month[1] == repeated_month:
+            name += ' ' + str(month[0])
+        month_stats = {
+            'id': str(month[0]) + '-' + str(month[1]).zfill(2),
+            'name': name,
+            'time': str(hms[0]).zfill(2),
+            'distance': int(round(stats[month]['distance'])),
+            'elevation': int(stats[month]['elevation']),
+            'workouts': stats[month]['workouts']
+        }
+        json_stats.append(month_stats)
     return Response(content_type='application/json',
                     charset='utf-8',
                     body=json.dumps(json_stats))

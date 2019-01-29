@@ -145,8 +145,8 @@ def dashboard(context, request):
     workouts = context.workouts(viewing_year, viewing_month)
 
     return {
-        'current_year': datetime.now().year,
-        'current_day_name': datetime.now().strftime('%a'),
+        'current_year': datetime.now(timezone.utc).year,
+        'current_day_name': datetime.now(timezone.utc).strftime('%a'),
         'month_name': month_name,
         'viewing_year': viewing_year,
         'viewing_month': viewing_month,

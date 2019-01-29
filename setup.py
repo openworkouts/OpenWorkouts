@@ -20,7 +20,8 @@ requires = [
     'ZODB3',
     'waitress',
     'repoze.folder',
-    'repoze.catalog==0.8.4',
+    'repoze.catalog @ git+https://github.com/WuShell/repoze.catalog.git@0.8.4'
+    '#egg=repoze.catalog-0.8.4',
     'bcrypt',
     'FormEncode',
     'pyramid_simpleform==0.7dev0',  # version needed for python3
@@ -38,11 +39,6 @@ tests_require = [
     'pytest-flakes',
     'pytest-xdist',
     'pytest-codestyle',
-]
-
-dependency_links = [
-    'git+https://github.com/WuShell/repoze.catalog.git@0.8.4'
-    '#egg=repoze.catalog-0.8.4'
 ]
 
 setup(
@@ -63,7 +59,6 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
-    dependency_links=dependency_links,
     extras_require={
         'testing': tests_require,
     },

@@ -719,6 +719,67 @@ input {
   font-size: 0.8125rem;
   color: #555555;
 }
+/* Workout detail */
+#map {
+  height: 50vh;
+}
+.workout-detail {
+  padding: 2em  1em;
+}
+@media (min-width: 480px) {
+  .workout-detail {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+}
+@media (min-width: 800px) {
+  .workout-detail {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+.workout-detail-resume {
+  max-width: 500px;
+  margin-right: 6em;
+  margin-bottom: 2em;
+}
+.workout-detail-resume h3 {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+}
+.workout-detail-resume h3 + div {
+  font-size: 14px;
+  font-size: 0.875rem;
+  color: #959595;
+  line-height: 1.35em;
+}
+.workout-detail-resume .workout-options {
+  font-size: 13px;
+  font-size: 0.8125rem;
+}
+.workout-detail-info {
+  max-width: 600px;
+}
+.workout-detail-info ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  flex-flow: row wrap;
+}
+.workout-detail-info ul span {
+  display: block;
+  color: #959595;
+  font-size: 13px;
+  font-size: 0.8125rem;
+}
+.workout-detail-info li {
+  margin-bottom: 2em;
+  margin-right: 1em;
+  font-size: 16px;
+  font-size: 1rem;
+}
 /* Week report */
 .svg-cotent svg {
   width: 100%;
@@ -973,8 +1034,4 @@ input {
   color: #959595;
   font-size: 13px;
   font-size: 0.8125rem;
-}
-/* Workout detail */
-#map {
-  height: 50vh;
 }

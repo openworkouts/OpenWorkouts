@@ -186,6 +186,65 @@
 
 
 
+/* Workout detail */
+#map {
+    height: 50vh;
+}
+
+.workout-detail {
+    padding: 2em  1em;
+    @media (min-width: @screen-s){
+        max-width: 1280px;
+        margin: 0 auto;
+    }
+     @media (min-width: @screen-m){
+        display: flex;
+        justify-content:space-between;
+    }
+}
+
+.workout-detail-resume {
+    max-width: 500px;
+    margin-right: 6em;
+    margin-bottom: 2em;
+    h3 {
+        margin-top: 0;
+        margin-bottom: .5em;
+        & + div {
+            .font-size(14);
+            color: @color-main-medium;
+            line-height: 1.35em;
+        }
+    }
+    .workout-options {
+        .font-size(13);
+    }
+}
+
+.workout-detail-info {
+    max-width: 600px;
+    ul {
+        list-style-type: none;
+        padding:0;
+        margin: 0;
+        display: flex;
+        justify-content:space-between;
+        flex-flow: row wrap;
+        span {
+            display: block;
+            color: @color-main-medium;
+            .font-size(13);
+        }
+    }
+    li {
+        margin-bottom: 2em;
+        margin-right: 1em;
+        .font-size(16);
+    }
+}
+
+
+
 /* Week report */
 .svg-cotent {
     svg {

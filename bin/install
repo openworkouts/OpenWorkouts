@@ -57,7 +57,7 @@ upgrade_pip_setuptools() {
 
 install_openworkouts() {
     . ${env_path}/bin/activate
-    yes | pip install --upgrade --process-dependency-links -e ${current}[testing]
+    yes | pip install --upgrade -e ${current}[testing]
     deactivate
 }
 

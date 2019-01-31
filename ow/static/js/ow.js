@@ -334,6 +334,9 @@ owjs.year_chart = function(spec) {
                     if (d.id != current_month){
         	        select_x_axis_label(d).attr('style', "font-weight: regular;");
                     }
+                })
+                .on('click', function(d) {
+                    window.location.href = d.url;
                 });
 
             g.selectAll(".text")

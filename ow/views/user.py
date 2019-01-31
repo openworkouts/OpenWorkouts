@@ -165,8 +165,12 @@ def profile(context, request):
     basic info, stats, etc
     """
     now = datetime.now(timezone.utc)
+    year = int(request.GET.get('year', now.year))
+    month = int(request.GET.get('month', now.month))
     return {
-        'current_month': now.strftime('%Y-%m')
+        'workouts': context.workouts(year, month),
+        'current_month': '{year}-{month}'.format(
+            year=str(year), month=str(month).zfill(2))
     }
 
 
@@ -279,7 +283,11 @@ def last_months_stats(context, request):
             'time': str(hms[0]).zfill(2),
             'distance': int(round(stats[month]['distance'])),
             'elevation': int(stats[month]['elevation']),
-            'workouts': stats[month]['workouts']
+            'workouts': stats[month]['workouts'],
+            'url': request.resource_url(
+                context, 'profile',
+                query={'year': str(month[0]), 'month': str(month[1])},
+                anchor='workouts')
         }
         json_stats.append(month_stats)
     return Response(content_type='application/json',

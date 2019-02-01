@@ -188,11 +188,14 @@
 
 /* Workout detail */
 #map {
-    height: 50vh;
+    height: 400px;
+    @media (min-width: @screen-s){
+        height: calc(100vh - 380px);
+    }
 }
 
 .workout-detail {
-    padding: 2em  1em;
+    padding: 0em  1em;
     @media (min-width: @screen-s){
         max-width: 1280px;
         margin: 0 auto;
@@ -205,8 +208,11 @@
 
 .workout-detail-resume {
     max-width: 500px;
-    margin-right: 6em;
     margin-bottom: 2em;
+    padding-top: 2em;
+    @media (min-width: @screen-m){
+        margin-right: 6em;
+    }
     h3 {
         margin-top: 0;
         margin-bottom: .5em;
@@ -223,6 +229,11 @@
 
 .workout-detail-info {
     max-width: 600px;
+    @media (min-width: @screen-m){
+        border-right: 1px solid @color-main-light;
+        border-left: 1px solid @color-main-light;
+        padding:2em 1em 2em 2em;
+    }
     ul {
         list-style-type: none;
         padding:0;
@@ -232,14 +243,40 @@
         flex-flow: row wrap;
         span {
             display: block;
-            color: @color-main-medium;
             .font-size(13);
+            color: @color-main-medium;
+            margin-bottom: .25em;
+            &.min,
+            &.avg,
+            &.max {
+                display: inline-block;
+                color: white;
+                padding: .5em .85em;
+                border-radius: 3px;
+            }
+            &.max {
+                background-color: @color-app;
+            }
+            &.min {
+                background-color: #1395CA;
+                margin-right: .5em;
+            }
+
+            &.avg {
+                background-color: #17C898;
+                margin-right: .5em;
+            }
         }
     }
     li {
         margin-bottom: 2em;
         margin-right: 1em;
-        .font-size(16);
+        color: @color-main-medium;
+        .font-size(15);
+        &.important {
+            .font-size(21);
+            color: @color-main;
+        }
     }
 }
 

@@ -721,10 +721,15 @@ input {
 }
 /* Workout detail */
 #map {
-  height: 50vh;
+  height: 400px;
+}
+@media (min-width: 480px) {
+  #map {
+    height: calc(100vh - 380px);
+  }
 }
 .workout-detail {
-  padding: 2em  1em;
+  padding: 0em  1em;
 }
 @media (min-width: 480px) {
   .workout-detail {
@@ -740,8 +745,13 @@ input {
 }
 .workout-detail-resume {
   max-width: 500px;
-  margin-right: 6em;
   margin-bottom: 2em;
+  padding-top: 2em;
+}
+@media (min-width: 800px) {
+  .workout-detail-resume {
+    margin-right: 6em;
+  }
 }
 .workout-detail-resume h3 {
   margin-top: 0;
@@ -760,6 +770,13 @@ input {
 .workout-detail-info {
   max-width: 600px;
 }
+@media (min-width: 800px) {
+  .workout-detail-info {
+    border-right: 1px solid #e1e1e1;
+    border-left: 1px solid #e1e1e1;
+    padding: 2em 1em 2em 2em;
+  }
+}
 .workout-detail-info ul {
   list-style-type: none;
   padding: 0;
@@ -770,15 +787,41 @@ input {
 }
 .workout-detail-info ul span {
   display: block;
-  color: #959595;
   font-size: 13px;
   font-size: 0.8125rem;
+  color: #959595;
+  margin-bottom: 0.25em;
+}
+.workout-detail-info ul span.min,
+.workout-detail-info ul span.avg,
+.workout-detail-info ul span.max {
+  display: inline-block;
+  color: white;
+  padding: 0.5em 0.85em;
+  border-radius: 3px;
+}
+.workout-detail-info ul span.max {
+  background-color: #EE4056;
+}
+.workout-detail-info ul span.min {
+  background-color: #1395CA;
+  margin-right: 0.5em;
+}
+.workout-detail-info ul span.avg {
+  background-color: #17C898;
+  margin-right: 0.5em;
 }
 .workout-detail-info li {
   margin-bottom: 2em;
   margin-right: 1em;
-  font-size: 16px;
-  font-size: 1rem;
+  color: #959595;
+  font-size: 15px;
+  font-size: 0.9375rem;
+}
+.workout-detail-info li.important {
+  font-size: 21px;
+  font-size: 1.3125rem;
+  color: #151515;
 }
 /* Week report */
 .svg-cotent svg {

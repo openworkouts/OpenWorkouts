@@ -55,56 +55,48 @@
       <div class="workout-detail-info">
         <ul id="" tal:attributes="id 'workout-' + context.workout_id + '-details'"
             tal:define="hr context.hr; cad context.cad; atemp context.atemp; timezone context.owner.timezone">
-          <li tal:condition="context.distance">
+          <li class="important" tal:condition="context.distance">
             <span><tal:t i18n:translate="">Distance</tal:t></span>
             <tal:c tal:content="context.rounded_distance"></tal:c> km
           </li>
-          <li>
-            <span><tal:t i18n:translate="">Start</tal:t></span>
-            <tal:c tal:content="context.start_in_timezone(timezone)"></tal:c>
-          </li>
-          <li>
-            <span><tal:t i18n:translate="">End</tal:t></span>
-            <tal:c tal:content="context.end_in_timezone(timezone)"></tal:c>
-          </li>
-          <li>
+          <li class="important">
             <span><tal:t i18n:translate="">Duration</tal:t></span>
             <!--! use the properly formatted duration instead of the timedelta object -->
             <tal:c tal:content="context._duration"></tal:c>
           </li>
+          <li class="important">
+            <span><tal:t i18n:translate="">Start</tal:t></span>
+            <tal:c tal:content="context.start_in_timezone(timezone)"></tal:c>
+          </li>
           <li tal:condition="context.speed">
             <span><tal:t i18n:translate="">Speed</tal:t></span>
-            <tal:t i18n:translate="">Avg.</tal:t>
-            <tal:c tal:content="round(context.speed['avg'], 1)"></tal:c> km/h |
-            <tal:t i18n:translate="">Max.</tal:t>
-            <tal:c tal:content="round(context.speed['max'], 1)"></tal:c> km/h
+            <span class="avg"><tal:t i18n:translate="">Avg.</tal:t>
+            <tal:c tal:content="round(context.speed['avg'], 1)"></tal:c>km/h</span>
+            <span class="max"><tal:t i18n:translate="">Max.</tal:t>
+            <tal:c tal:content="round(context.speed['max'], 1)"></tal:c>km/h</span>
           </li>
           <li tal:condition="hr">
             <span><tal:t i18n:translate="">Heart Rate</tal:t></span>
-            <tal:t i18n:translate="">Min.</tal:t>
-            <tal:c tal:content="hr['min']"></tal:c> bpm |
-            <tal:t i18n:translate="">Avg.</tal:t>
-            <tal:c tal:content="hr['avg']"></tal:c> bpm |
-            <tal:t i18n:translate="">Max.</tal:t>
-            <tal:c tal:content="hr['max']"></tal:c> bpm
+            <span class="avg"><tal:t i18n:translate="">Avg.</tal:t>
+            <tal:c tal:content="hr['avg']"></tal:c>bpm</span>
+            <span class="max"><tal:t i18n:translate="">Max.</tal:t>
+            <tal:c tal:content="hr['max']"></tal:c> bpm</span>
           </li>
           <li tal:condition="cad">
             <span><tal:t i18n:translate="">Cadence</tal:t></span>
-            <tal:t i18n:translate="">Min.</tal:t>
-            <tal:c tal:content="cad['min']"></tal:c> |
-            <tal:t i18n:translate="">Avg.</tal:t>
-            <tal:c tal:content="cad['avg']"></tal:c> |
-            <tal:t i18n:translate="">Max.</tal:t>
-            <tal:c tal:content="cad['max']"></tal:c>
+            <span class="avg"><tal:t i18n:translate="">Avg.</tal:t>
+            <tal:c tal:content="cad['avg']"></tal:c></span>
+            <span class="max"><tal:t i18n:translate="">Max.</tal:t>
+            <tal:c tal:content="cad['max']"></tal:c></span>
           </li>
           <li tal:condition="atemp">
             <span><tal:t i18n:translate="">Temperature</tal:t></span>
-            <tal:t i18n:translate="">Min.</tal:t>
-            <tal:c tal:content="atemp['min']"></tal:c> |
-            <tal:t i18n:translate="">Avg.</tal:t>
-            <tal:c tal:content="atemp['avg']"></tal:c> |
-            <tal:t i18n:translate="">Max.</tal:t>
-            <tal:c tal:content="atemp['max']"></tal:c>
+            <span class="min"><tal:t i18n:translate="">Min.</tal:t>
+            <tal:c tal:content="atemp['min']"></tal:c>℃</span>
+            <span class="avg"><tal:t i18n:translate="">Avg.</tal:t>
+            <tal:c tal:content="atemp['avg']"></tal:c>℃</span>
+            <span class="max"><tal:t i18n:translate="">Max.</tal:t>
+            <tal:c tal:content="atemp['max']"></tal:c>℃</span>
           </li>
         </ul>
       </div>

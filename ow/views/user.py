@@ -288,8 +288,7 @@ def last_months_stats(context, request):
             'workouts': stats[month]['workouts'],
             'url': request.resource_url(
                 context, 'profile',
-                query={'year': str(month[0]), 'month': str(month[1])},
-                anchor='workouts')
+                query={'year': str(month[0]), 'month': str(month[1])})
         }
         json_stats.append(month_stats)
     return Response(content_type='application/json',

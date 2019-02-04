@@ -1,6 +1,7 @@
 import re
 import os
 import logging
+import calendar
 import subprocess
 from datetime import datetime, timedelta
 from decimal import Decimal
@@ -233,3 +234,15 @@ def get_week_days(day, start_day=1):
     first_day = day - timedelta(days=day.isoweekday() - start_day)
     week_days = [first_day + timedelta(days=i) for i in range(7)]
     return week_days
+
+
+def get_month_week_number(day):
+    """
+    Given a datetime object (day), return the number of week the day is
+    in the current month (week 1, 2, 3, etc)
+    """
+    weeks = calendar.monthcalendar(day.year, day.month)
+    for week in weeks:
+        if day.day in week:
+            return weeks.index(week)
+    return None

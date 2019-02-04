@@ -8,7 +8,7 @@ from repoze.folder import Folder
 from pyramid.security import Allow
 
 from ow.catalog import get_catalog, reindex_object
-from ow.utilities import get_week_days
+from ow.utilities import get_week_days, get_month_week_number
 
 
 class User(Folder):
@@ -288,6 +288,69 @@ class User(Folder):
                 month['sports'][workout.sport]['distance'] += (
                     workout.distance or Decimal(0))
                 month['sports'][workout.sport]['elevation'] += (
+                    workout.uphill or Decimal(0))
+
+        return stats
+
+    @property
+    def weekly_year_stats(self):
+        """
+        Return per-week stats for the last 12 months
+        """
+        # set the boundaries for looking for workouts afterwards,
+        # we need the current date as the "end date" and one year
+        # ago from that date. Then we set the start at the first
+        # day of that month.
+        end = datetime.now(timezone.utc)
+        start = (end - timedelta(days=365)).replace(day=1)
+
+        stats = {}
+
+        # first initialize the stats dict
+        for days in range((end - start).days):
+            day = (start + timedelta(days=days)).date()
+            week = day.isocalendar()[1]
+            month_week = get_month_week_number(day)
+            key = (day.year, day.month, week, month_week)
+            if key not in stats.keys():
+                stats[key] = {
+                    'workouts': 0,
+                    'time': timedelta(0),
+                    'distance': Decimal(0),
+                    'elevation': Decimal(0),
+                    'sports': {}
+                }
+
+        # now loop over the workouts, filtering and then adding stats
+        # to the proper place
+        for workout in self.workouts():
+            if start.date() <= workout.start.date() <= end.date():
+                # less typing, avoid long lines
+                start_date = workout.start.date()
+                week = start_date.isocalendar()[1]
+                month_week = get_month_week_number(start_date)
+                week = stats[(start_date.year,
+                              start_date.month,
+                              week,
+                              month_week)]
+
+                week['workouts'] += 1
+                week['time'] += workout.duration or timedelta(seconds=0)
+                week['distance'] += workout.distance or Decimal(0)
+                week['elevation'] += workout.uphill or Decimal(0)
+                if workout.sport not in week['sports']:
+                    week['sports'][workout.sport] = {
+                        'workouts': 0,
+                        'time': timedelta(seconds=0),
+                        'distance': Decimal(0),
+                        'elevation': Decimal(0),
+                    }
+                week['sports'][workout.sport]['workouts'] += 1
+                week['sports'][workout.sport]['time'] += (
+                    workout.duration or timedelta(0))
+                week['sports'][workout.sport]['distance'] += (
+                    workout.distance or Decimal(0))
+                week['sports'][workout.sport]['elevation'] += (
                     workout.uphill or Decimal(0))
 
         return stats

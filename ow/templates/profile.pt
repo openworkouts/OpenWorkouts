@@ -72,6 +72,10 @@
           <a href="#" class="js-time" i18n:translate="">time</a>
           <a href="#" class="js-elevation" i18n:translate="">elevation</a>
         </div>
+        <div class="switcher js-switcher">
+          <a href="#" class="js-weekly" i18n:translate="">weekly</a>
+          <a href="#" class="js-monthly" i18n:translate="">monthly</a>
+        </div>
       </div>
 
 
@@ -153,12 +157,18 @@
      var year_chart = owjs.year_chart({
          chart_selector: 'div.js-month-stats svg',
          filters_selector: 'div.js-month-stats div.js-filters a',
-         url: "${request.resource_url(context, 'yearly')}",
+         switcher_selector: 'div.js-month-stats div.js-switcher a',
+         urls: {"monthly": "${request.resource_url(context, 'monthly')}",
+                "weekly": "${request.resource_url(context, 'weekly')}"},
          current_month: "${current_month}",
+         current_week: "${current_week}",
          y_axis_labels: y_axis_labels,
+         filter_by: "distance",
+         url: "${'monthly' if current_week is None else 'weekly'}",
      });
-     year_chart.render("distance");
+     year_chart.render("distance", "${'monthly' if current_week is None else 'weekly'}");
      year_chart.filters_setup();
+     year_chart.switcher_setup();
     </script>
 
   </metal:body-js>

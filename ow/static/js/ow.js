@@ -235,9 +235,13 @@ owjs.year_chart = function(spec) {
     // parameters provided when creating an "instance" of the chart
     var chart_selector = spec.chart_selector,
         filters_selector = spec.filters_selector,
-        url = spec.url,
+        switcher_selector = spec.switcher_selector,
+        urls = spec.urls,
         current_month = spec.current_month,
-        y_axis_labels = spec.y_axis_labels;
+        current_week = spec.current_week,
+        y_axis_labels = spec.y_axis_labels,
+        filter_by = spec.filter_by,
+        url = spec.url;
 
     // Helpers
     function select_x_axis_label(d) {
@@ -255,19 +259,37 @@ owjs.year_chart = function(spec) {
         return y_axis_labels[filter_by];
     };
 
+    function get_name_for_x(d) {
+        if (d.week == undefined || d.week == 0) {
+            return d.name;
+        }
+        else {
+            return d.id.split('-')[2];
+        }
+    }
+
     // Methods
     var filters_setup = function filters_setup() {
         $(filters_selector).on('click', function(e) {
-            var filter_by = 'distance';
             e.preventDefault();
             filter_by = $(this).attr('class').split('-')[1]
             var chart = d3.select(chart_selector);
             chart.selectAll("*").remove();
-            render(filter_by);
+            render(filter_by, url);
         });
     };
 
-    var render = function render(filter_by) {
+    var switcher_setup = function switcher_setup() {
+        $(switcher_selector).on('click', function(e) {
+            e.preventDefault();
+            url = $(this).attr('class').split('-')[1]
+            var chart = d3.select(chart_selector);
+            chart.selectAll("*").remove();
+            render(filter_by, url);
+        });
+    };
+
+    var render = function render(filter_by, url) {
         /*
           Build a d3 bar chart, populated with data from the given url.
         */
@@ -279,9 +301,10 @@ owjs.year_chart = function(spec) {
             x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
             y = d3.scaleLinear().rangeRound([height, 0]);
 
-        d3.json(url).then(function (data) {
+        d3.json(urls[url]).then(function (data) {
 	    x.domain(data.map(function (d) {
-	        return d.name;
+                return get_name_for_x(d);
+	        // return d.name;
 	    }));
 
 	    y.domain([0, d3.max(data, function (d) {
@@ -307,16 +330,31 @@ owjs.year_chart = function(spec) {
 	        .data(data)
 	        .enter().append("rect")
                 .attr("class", function(d) {
-                    if (d.id == current_month){
+                    var sel_week = current_month + '-' + current_week;
+                    if (d.id == current_month || d.id == sel_week){
+                        /* Bar for the currently selected month or week */
                         select_x_axis_label(d).attr('style', "font-weight: bold;");
-                        return 'bar current'
+                        return 'bar current';
                     }
                     else {
-                        return 'bar'
+                        if (!current_week && d.id.indexOf(current_month) >=0 ) {
+                            /*
+                               User selected a month, then switched to weekly
+                               view, we do highlight all the bars for weeks in
+                               that month
+                            */
+                            select_x_axis_label(d).attr('style', "font-weight: bold;");
+                            return 'bar current';
+                        }
+                        else {
+                            /* Non-selected bar */
+                            return 'bar';
+                        }
+
                     }
                 })
 	        .attr("x", function (d) {
-		    return x(d.name);
+		    return x(get_name_for_x(d));
 	        })
 	        .attr("y", function (d) {
 		    return y(get_y_value(d, filter_by));
@@ -339,37 +377,54 @@ owjs.year_chart = function(spec) {
                     window.location.href = d.url;
                 });
 
-            g.selectAll(".text")
-                .data(data)
-                .enter()
-                .append("text")
-                .attr("class","label")
-	        .attr("x", function (d) {
-		    return x(d.name) + x.bandwidth()/2;
-	        })
-	        .attr("y", function (d) {
-                    /*
-                      Get the value for the current bar, then get the maximum
-                      value to be displayed in the bar, which is used to
-                      calculate the proper position of the label for this bar,
-                      relatively to its height (1% above the bar)
-                     */
-                    var value = get_y_value(d, filter_by);
-                    var max = y.domain()[1];
-                    return y(value + y.domain()[1] * 0.01);
-	        })
-                .text(function(d) {
-                    var value = get_y_value(d, filter_by)
-                    if ( value > 0) {
-                        return value;
-                    }
-                });
+            if (url == 'monthly') {
+                g.selectAll(".text")
+                    .data(data)
+                    .enter()
+                    .append("text")
+                    .attr("class","label")
+	            .attr("x", function (d) {
+		        return x(get_name_for_x(d)) + x.bandwidth()/2;
+	            })
+	            .attr("y", function (d) {
+                        /*
+                          Get the value for the current bar, then get the maximum
+                          value to be displayed in the bar, which is used to
+                          calculate the proper position of the label for this bar,
+                          relatively to its height (1% above the bar)
+                        */
+                        var value = get_y_value(d, filter_by);
+                        var max = y.domain()[1];
+                        return y(value + y.domain()[1] * 0.01);
+	            })
+                    .text(function(d) {
+                        var value = get_y_value(d, filter_by)
+                        if ( value > 0) {
+                            return value;
+                        }
+                    });
+            }
 
+            if (url == 'weekly') {
+                g.selectAll(".tick")
+                    .each(function (d, i) {
+                        /*
+                          Remove from the x-axis tickets those without letters
+                          on them (useful for the weekly chart)
+                        */
+                        if (d !== parseInt(d, 10)) {
+                            if(!d.match(/[a-z]/i)) {
+                                this.remove();
+                            }
+                        }
+                    });
+            }
         });
     };
 
     var that = {}
     that.filters_setup = filters_setup;
+    that.switcher_setup = switcher_setup;
     that.render = render;
     return that
 

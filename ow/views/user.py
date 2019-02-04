@@ -167,10 +167,12 @@ def profile(context, request):
     now = datetime.now(timezone.utc)
     year = int(request.GET.get('year', now.year))
     month = int(request.GET.get('month', now.month))
+    week = request.GET.get('week', None)
     return {
-        'workouts': context.workouts(year, month),
+        'workouts': context.workouts(year, month, week),
         'current_month': '{year}-{month}'.format(
-            year=str(year), month=str(month).zfill(2))
+            year=str(year), month=str(month).zfill(2)),
+        'current_week': week
     }
 
 
@@ -261,7 +263,7 @@ def week_stats(context, request):
 @view_config(
     context=User,
     permission='view',
-    name='yearly')
+    name='monthly')
 def last_months_stats(context, request):
     """
     Return a json-encoded stream with statistics for the last 12 months
@@ -290,6 +292,48 @@ def last_months_stats(context, request):
                 anchor='workouts')
         }
         json_stats.append(month_stats)
+    return Response(content_type='application/json',
+                    charset='utf-8',
+                    body=json.dumps(json_stats))
+
+
+@view_config(
+    context=User,
+    permission='view',
+    name='weekly')
+def last_weeks_stats(context, request):
+    """
+    Return a json-encoded stream with statistics for the last 12-months, but
+    in a per-week basis
+    """
+    stats = context.weekly_year_stats
+    # this sets which month is 2 times in the stats, once this year, once
+    # the previous year. We will show it a bit different in the UI (showing
+    # the year too to prevent confusion)
+    repeated_month = datetime.now(timezone.utc).date().month
+    json_stats = []
+    for week in stats:
+        hms = timedelta_to_hms(stats[week]['time'])
+        name = month_name[week[1]][:3]
+        if week[1] == repeated_month:
+            name += ' ' + str(week[0])
+        week_stats = {
+            'id': '-'.join(
+                [str(week[0]), str(week[1]).zfill(2), str(week[2])]),
+            'week': str(week[3]),  # the number of week in the current month
+            'name': name,
+            'time': str(hms[0]).zfill(2),
+            'distance': int(round(stats[week]['distance'])),
+            'elevation': int(stats[week]['elevation']),
+            'workouts': stats[week]['workouts'],
+            'url': request.resource_url(
+                context, 'profile',
+                query={'year': str(week[0]),
+                       'month': str(week[1]),
+                       'week': str(week[2])},
+                anchor='workouts')
+        }
+        json_stats.append(week_stats)
     return Response(content_type='application/json',
                     charset='utf-8',
                     body=json.dumps(json_stats))

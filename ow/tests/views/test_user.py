@@ -266,10 +266,39 @@ class TestUserViews(object):
         Renders the user profile page
         """
         request = dummy_request
+        # profile page for the current day (no workouts avalable)
         response = user_views.profile(john, request)
-        assert len(response.keys()) == 1
+        assert len(response.keys()) == 3
         current_month = datetime.now(timezone.utc).strftime('%Y-%m')
         assert response['current_month'] == current_month
+        assert response['current_week'] is None
+        assert response['workouts'] == []
+        # profile page for a previous date, that has workouts
+        request.GET['year'] = 2015
+        request.GET['month'] = 8
+        response = user_views.profile(john, request)
+        assert len(response.keys()) == 3
+        assert response['current_month'] == '2015-08'
+        assert response['current_week'] is None
+        assert response['workouts'] == john.workouts(2015, 8)
+        # same, passing a week, first on a week without workouts
+        request.GET['year'] = 2015
+        request.GET['month'] = 8
+        request.GET['week'] = 25
+        response = user_views.profile(john, request)
+        assert len(response.keys()) == 3
+        assert response['current_month'] == '2015-08'
+        assert response['current_week'] is 25
+        assert response['workouts'] == []
+        # now in a week with workoutss
+        request.GET['year'] = 2015
+        request.GET['month'] = 8
+        request.GET['week'] = 26
+        response = user_views.profile(john, request)
+        assert len(response.keys()) == 3
+        assert response['current_month'] == '2015-08'
+        assert response['current_week'] is 26
+        assert response['workouts'] == john.workouts(2015, 8)
 
     def test_login_get(self, dummy_request):
         """

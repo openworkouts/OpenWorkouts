@@ -1005,13 +1005,6 @@ input {
 }
 <a class="login-remember" href="#">Forgot your password?</a>
 */
-.user-profile img {
-  width: 140px;
-  height: 140px;
-  object-fit: cover;
-  border-radius: 50%;
-  margin-bottom: 0.5em;
-}
 .user-profile .workout-options {
   font-size: 13px;
   font-size: 0.8125rem;
@@ -1024,6 +1017,13 @@ input {
   .user-profile-account {
     padding: 2em 6em;
   }
+}
+.user-profile-account img {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 0.5em;
 }
 .user-profile-account h2 {
   margin: 0 0 0.15em 0;
@@ -1039,9 +1039,9 @@ input {
 .user-profile-account p span {
   color: #959595;
 }
-.user-profile-account .workouts {
-  font-size: 18px;
-  font-size: 1.125rem;
+.total-workouts {
+  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: bold;
 }
 .profile-data {

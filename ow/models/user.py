@@ -76,15 +76,19 @@ class User(Folder):
         self[workout_id] = workout
         reindex_object(catalog, workout)
 
-    def workouts(self, year=None, month=None):
+    def workouts(self, year=None, month=None, week=None):
         """
         Return this user workouts, sorted by date, from newer to older
         """
         workouts = self.values()
         if year:
             workouts = [w for w in workouts if w.start.year == year]
-        if month:
-            workouts = [w for w in workouts if w.start.month == month]
+            if month:
+                workouts = [w for w in workouts if w.start.month == month]
+            if week:
+                week = int(week)
+                workouts = [
+                    w for w in workouts if w.start.isocalendar()[1] == week]
         workouts = sorted(workouts, key=attrgetter('start'))
         workouts.reverse()
         return workouts

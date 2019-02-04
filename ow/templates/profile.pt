@@ -41,26 +41,6 @@
             </ul>
           </div>
         </div>
-        <ul class="profile-data">
-          <li>
-            <span><tal:t i18n:translate="">Gender:</tal:t></span>
-            <tal:c tal:content="getattr(context, 'gender', '-')"></tal:c>
-          </li>
-          <li tal:define="birth_date getattr(context, 'birth_date', None)">
-            <span><tal:t i18n:translate="">Birth date:</tal:t></span>
-            <tal:c tal:condition="birth_date"
-                   tal:content="birth_date.strftime('%d/%m/%Y')"></tal:c>
-            <tal:c tal:condition="birth_date is None">-</tal:c>
-          </li>
-          <li>
-            <span><tal:t i18n:translate="">Height:</tal:t></span>
-            <tal:c tal:content="getattr(context, 'height', '-')"></tal:c> meters
-          </li>
-          <li>
-            <span><tal:t i18n:translate="">Weight:</tal:t></span>
-            <tal:c tal:content="getattr(context, 'weight', '-')"></tal:c> kg
-          </li>
-        </ul>
 
       </div>
 
@@ -75,16 +55,18 @@
             <div class="svg-cotent">
               <svg width="900" height="180" viewBox="0 0 900 180"></svg>
             </div>
-            <ul class="workout-options filters js-filters">
-              <li><a href="#" class="js-distance is-active" i18n:translate="">distance</a></li>
-              <li><a href="#" class="js-time" i18n:translate="">time</a></li>
-              <li><a href="#" class="js-elevation" i18n:translate="">elevation</a></li>
-            </ul>
+            <div class="center">
+              <ul class="workout-options filters js-filters">
+                <li><a href="#" class="js-distance is-active" i18n:translate="">distance</a></li>
+                <li><a href="#" class="js-time" i18n:translate="">time</a></li>
+                <li><a href="#" class="js-elevation" i18n:translate="">elevation</a></li>
+              </ul>
 
-            <ul class="workout-options switcher js-switcher">
-              <li><a href="#" class="js-weekly" i18n:translate="">weekly</a></li>
-              <li><a href="#" class="js-monthly is-active" i18n:translate="">monthly</a></li>
-            </ul>
+              <ul class="workout-options switcher js-switcher">
+                <li><a href="#" class="js-weekly" i18n:translate="">weekly</a></li>
+                <li><a href="#" class="js-monthly is-active" i18n:translate="">monthly</a></li>
+              </ul>
+            </div>
           </div>
 
 
@@ -143,6 +125,29 @@
             </article>
 
           </tal:r>
+        </div>
+
+        <div class="workout-aside">
+          <ul class="profile-data">
+            <li>
+              <span><tal:t i18n:translate="">Gender:</tal:t></span>
+              <tal:c tal:content="getattr(context, 'gender', '-')"></tal:c>
+            </li>
+            <li tal:define="birth_date getattr(context, 'birth_date', None)">
+              <span><tal:t i18n:translate="">Birth date:</tal:t></span>
+              <tal:c tal:condition="birth_date"
+                     tal:content="birth_date.strftime('%d/%m/%Y')"></tal:c>
+              <tal:c tal:condition="birth_date is None">-</tal:c>
+            </li>
+            <li>
+              <span><tal:t i18n:translate="">Height:</tal:t></span>
+              <tal:c tal:content="getattr(context, 'height', '-')"></tal:c> meters
+            </li>
+            <li>
+              <span><tal:t i18n:translate="">Weight:</tal:t></span>
+              <tal:c tal:content="getattr(context, 'weight', '-')"></tal:c> kg
+            </li>
+          </ul>
         </div>
       </div>
     </div>

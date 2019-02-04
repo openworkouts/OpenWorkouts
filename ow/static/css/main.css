@@ -663,6 +663,7 @@ input {
   border-radius: 4px;
   padding: 0;
   width: auto;
+  background-color: white;
 }
 .workout-options li {
   display: inline-block;
@@ -1013,6 +1014,7 @@ input {
 }
 .user-profile-account {
   background-color: #fbfbfb;
+  border-bottom: 1px solid #e1e1e1;
   padding: 2em  1em;
 }
 @media (min-width: 480px) {
@@ -1036,6 +1038,7 @@ input {
   margin: 0 0 0.15em 0;
   font-size: 21px;
   font-size: 1.3125rem;
+  font-weight: 400;
 }
 .user-profile-account p {
   color: #555555;
@@ -1060,7 +1063,6 @@ input {
   padding: 0.5em 0.75em;
   border-radius: 4px;
   border: 1px solid #e1e1e1;
-  max-width: 200px;
 }
 .profile-data li {
   display: flex;
@@ -1084,6 +1086,9 @@ input {
 .month-stats,
 .latest-workouts {
   max-width: 700px;
+}
+.center {
+  text-align: center;
 }
 .month-stats {
   margin-bottom: 4em;

@@ -7,6 +7,7 @@
 
 .user-profile-account {
 	background-color: @color-main-xtralight;
+	border-bottom: 1px solid @color-main-light;
     padding: 2em  1em;
     @media (min-width: @screen-s){
         padding: 2em 6em;
@@ -26,6 +27,7 @@
 	h2 {
 		margin: 0 0 .15em 0;
 		.font-size(21);
+		font-weight: 400;
 	}
 	p{
 		color: @color-main-dark;
@@ -49,7 +51,6 @@
 	padding: .5em .75em;
 	border-radius: 4px;
 	border: 1px solid @color-main-light;
-	max-width: 200px;
 	li {
 		display: flex;
 		justify-content: space-between;
@@ -74,6 +75,10 @@
 .month-stats,
 .latest-workouts {
 	max-width: 700px
+}
+
+.center {
+	text-align: center;
 }
 
 .month-stats {

@@ -31,8 +31,9 @@
     <div class="workout-detail" id="workout">
       <div class="workout-detail-resume">
         <h3 tal:content="context.title"></h3>
-        <div id="" tal:content="context.notes"
-             tal:attributes="id 'workout-' + context.workout_id + '-notes'">
+        <div id="" tal:attributes="id 'workout-' + context.workout_id + '-notes'">
+          <p tal:repeat="paragraph context.notes.split('\n')"
+             tal:content="paragraph"></p>
         </div>
         <ul class="workout-options">
           <li>

@@ -90,6 +90,12 @@ owjs.map = function(spec) {
                 endIconUrl: end_icon,
                 shadowUrl: shadow,
             },
+	    polyline_options: {
+		color: '#EE4056',
+		opacity: 0.75,
+		weight: 5,
+		lineCap: 'round'
+	    },
         });
 
         gpx.on('loaded', function(e) {
@@ -106,12 +112,15 @@ owjs.map = function(spec) {
     };
 
     var render = function render() {
-        // create the map, add elevation, load gpx
+        // create the map, add elevation, load gpx (only if needed, as the
+        // elevation plugin already loads the gpx data)
         create_map(latitude, longitude, zoom);
         if (elevation) {
             add_elevation_chart();
         }
-        // load_gpx(gpx_url);
+        else {
+            load_gpx(gpx_url);
+        }
     };
 
     var that = {}

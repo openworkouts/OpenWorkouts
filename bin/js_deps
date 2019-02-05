@@ -178,9 +178,9 @@ leaflet_gpx() {
 }
 
 leaflet_elevation() {
-    NAME="Leaflet.Elevation"
-    VERSION="master"
-    URL=https://github.com/MrMufflon/${NAME}/archive/${VERSION}.tar.gz
+    NAME="leaflet-elevation"
+    VERSION="0.0.8"
+    URL=https://github.com/Raruto/${NAME}/archive/${VERSION}.tar.gz
     check_cache ${NAME} ${VERSION}
     in_cache=$?
     if [ ${in_cache} -eq 0 -a ${REINSTALL} -eq 1 ]; then

@@ -16,7 +16,9 @@
     <link rel="stylesheet" tal:condition="context.has_gpx"
           href="${request.static_url('ow:static/components/Leaflet/leaflet.css')}" />
     <link rel="stylesheet" tal:condition="context.has_gpx"
-          href="${request.static_url('ow:static/components/Leaflet.Elevation/dist/leaflet.elevation-0.0.4.css')}" />
+          href="${request.static_url('ow:static/components/leaflet-elevation/leaflet-elevation.css')}" />
+    <link rel="stylesheet"
+          href="${request.static_url('ow:static/css/leaflet-elevation.css')}" />
   </metal:css>
 
   <metal:title metal:fill-slot="title">
@@ -35,20 +37,20 @@
         <ul class="workout-options">
           <li>
             <a href="" i18n:translate=""
-             tal:attributes="href request.resource_url(context, 'edit')">
-            edit workout
+               tal:attributes="href request.resource_url(context, 'edit')">
+              edit workout
             </a>
           </li>
           <li>
             <a href="" i18n:translate=""
-             tal:attributes="href request.resource_url(context, 'update-from-file')">
-            update with tracking file
+               tal:attributes="href request.resource_url(context, 'update-from-file')">
+              update with tracking file
             </a>
           </li>
           <li class="owo-del"><a href="" i18n:translate=""
-             tal:attributes="href request.resource_url(context, 'delete')">
+                                 tal:attributes="href request.resource_url(context, 'delete')">
             delete
-            </a>
+          </a>
           </li>
         </ul>
       </div>
@@ -71,70 +73,46 @@
           <li tal:condition="context.speed">
             <span><tal:t i18n:translate="">Speed</tal:t></span>
             <span class="avg"><tal:t i18n:translate="">Avg.</tal:t>
-            <tal:c tal:content="round(context.speed['avg'], 1)"></tal:c>km/h</span>
+              <tal:c tal:content="round(context.speed['avg'], 1)"></tal:c>km/h</span>
             <span class="max"><tal:t i18n:translate="">Max.</tal:t>
-            <tal:c tal:content="round(context.speed['max'], 1)"></tal:c>km/h</span>
+              <tal:c tal:content="round(context.speed['max'], 1)"></tal:c>km/h</span>
           </li>
           <li tal:condition="hr">
             <span><tal:t i18n:translate="">Heart Rate</tal:t></span>
             <span class="avg"><tal:t i18n:translate="">Avg.</tal:t>
-            <tal:c tal:content="hr['avg']"></tal:c>bpm</span>
+              <tal:c tal:content="hr['avg']"></tal:c>bpm</span>
             <span class="max"><tal:t i18n:translate="">Max.</tal:t>
-            <tal:c tal:content="hr['max']"></tal:c> bpm</span>
+              <tal:c tal:content="hr['max']"></tal:c> bpm</span>
           </li>
           <li tal:condition="cad">
             <span><tal:t i18n:translate="">Cadence</tal:t></span>
             <span class="avg"><tal:t i18n:translate="">Avg.</tal:t>
-            <tal:c tal:content="cad['avg']"></tal:c></span>
+              <tal:c tal:content="cad['avg']"></tal:c></span>
             <span class="max"><tal:t i18n:translate="">Max.</tal:t>
-            <tal:c tal:content="cad['max']"></tal:c></span>
+              <tal:c tal:content="cad['max']"></tal:c></span>
           </li>
           <li tal:condition="atemp">
             <span><tal:t i18n:translate="">Temperature</tal:t></span>
             <span class="min"><tal:t i18n:translate="">Min.</tal:t>
-            <tal:c tal:content="atemp['min']"></tal:c>℃</span>
+              <tal:c tal:content="atemp['min']"></tal:c>℃</span>
             <span class="avg"><tal:t i18n:translate="">Avg.</tal:t>
-            <tal:c tal:content="atemp['avg']"></tal:c>℃</span>
+              <tal:c tal:content="atemp['avg']"></tal:c>℃</span>
             <span class="max"><tal:t i18n:translate="">Max.</tal:t>
-            <tal:c tal:content="atemp['max']"></tal:c>℃</span>
+              <tal:c tal:content="atemp['max']"></tal:c>℃</span>
           </li>
         </ul>
+        <div id="elevation"></div>
       </div>
     </div>
+
     <!--! Track map -->
     <div id="map" tal:condition="context.has_gpx"></div>
-
-    <!--! Additional map controls -->
-
-    <div id="ow-analysis">
-
-      <!--!
-          FIXME: the list of available charts should come from the workout
-          details, based on which data this workout has
-        -->
-      <!--! All those ids are needed for the leaflet openworkouts plugin -->
-      <tal:r tal:repeat="chart ['elevation', 'heartrate', 'cadence', 'temperature']">
-        <div id="ow-" tal:attributes="id 'ow-' + chart">
-          <div class="ow-average" id=""
-               tal:attributes="id 'ow-' + chart + '-average'"></div>
-          <div class="ow-chart" id=""
-               tal:attributes="id 'ow-' + chart + '-chart'"></div>
-          <div class="ow-current" id=""
-               tal:attributes="id 'ow-' + chart + '-current'"></div>
-        </div>
-      </tal:r>
-
-    </div>
   </metal:content>
 
   <metal:body-js metal:fill-slot="body-js">
 
-
-    <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <!--
-    <script src="${request.static_url('ow:static/d3/d3.min.js')}"
+    <script src="${request.static_url('ow:static/components/d3/d3.min.js')}"
             tal:condition="context.has_gpx"></script>
-    -->
 
     <script src="${request.static_url('ow:static/components/Leaflet/leaflet.js')}"
             tal:condition="context.has_gpx"></script>
@@ -142,7 +120,7 @@
     <script src="${request.static_url('ow:static/components/leaflet-gpx/gpx.js')}"
             tal:condition="context.has_gpx"></script>
 
-    <script src="${request.static_url('ow:static/components/Leaflet.Elevation/dist/leaflet.elevation-0.0.4.min.js')}"
+    <script src="${request.static_url('ow:static/components/leaflet-elevation/leaflet-elevation.js')}"
             tal:condition="context.has_gpx"></script>
 
     <script src="${request.static_url('ow:static/js/ow.js')}"

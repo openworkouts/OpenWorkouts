@@ -34,7 +34,6 @@ owjs.map = function(spec) {
     var map;
     var gpx;
     var elevation;
-    var ow_charts;
 
     var create_map = function create_map(latitude, longitude, zoom) {
         /* Create a Leaflet map, set center point and add tiles */
@@ -51,32 +50,32 @@ owjs.map = function(spec) {
            Add the elevation chart support to the map.
            This has to be called *after* create_map and *before* load_gpx.
         */
+
         elevation = L.control.elevation({
             position: "bottomright",
-            theme: "steelblue-theme", //default: lime-theme
-            width: 600,
-            height: 125,
-            margins: {
-                top: 10,
-                right: 20,
-                bottom: 30,
-                left: 50
-            },
+            theme: "openworkouts-theme",
             useHeightIndicator: true, //if false a marker is drawn at map position
-            interpolation: "linear", //see https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-area_interpolate
-            hoverNumber: {
-                decimalsX: 3, //decimals on distance (always in km)
-                decimalsY: 0, //deciamls on height (always in m)
-                formatter: undefined //custom formatter function may be injected
-            },
-            xTicks: undefined, //number of ticks in x axis, calculated by default according to width
-            yTicks: undefined, //number of ticks on y axis, calculated by default according to height
-            collapsed: false    //collapsed mode, show chart on click or mouseover
+            interpolation: d3.curveLinear,
+            elevationDiv: "#elevation",
+            detachedView: true,
+            responsiveView: true,
+            gpxOptions: {
+		async: true,
+		marker_options: {
+		    startIconUrl: null,
+		    endIconUrl: null,
+		    shadowUrl: null,
+		},
+		polyline_options: {
+		    color: '#EE4056',
+		    opacity: 0.75,
+		    weight: 5,
+		    lineCap: 'round'
+		},
+	    },
         });
-
-        var ele_container = elevation.addTo(map);
-        /* document.getElementById('ow-analysis').appendChild(
-            ele_container._container); */
+        elevation.loadGPX(map, gpx_url);
+        // var ele_container = elevation.addTo(map);
     };
 
     var load_gpx = function load_gpx(gpx_url) {
@@ -100,7 +99,6 @@ owjs.map = function(spec) {
         if (elevation) {
             gpx.on("addline",function(e){
                 elevation.addData(e.line);
-                // ow_charts.addData(e.line);
             });
         };
 
@@ -113,8 +111,7 @@ owjs.map = function(spec) {
         if (elevation) {
             add_elevation_chart();
         }
-        // add_ow_charts();
-        load_gpx(gpx_url);
+        // load_gpx(gpx_url);
     };
 
     var that = {}

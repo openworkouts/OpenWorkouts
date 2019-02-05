@@ -1,0 +1,38 @@
+
+/* Leaflet-elevation openworkouts theme */
+
+
+.openworkouts-theme.leaflet-control.elevation .background {
+    background-color: #ffffff;
+}
+
+.openworkouts-theme.leaflet-control.elevation .axis line, .openworkouts-theme.leaflet-control.elevation .axis path {
+    stroke: #151515;
+}
+
+.openworkouts-theme.leaflet-control.elevation .mouse-drag {
+    fill: #ee4056;
+    opacity: 0.5;
+}
+
+.openworkouts-theme.leaflet-control.elevation .elevation-toggle-icon {
+    background: url(images/elevation-steelblue.png) no-repeat center center;
+}
+
+.openworkouts-theme.leaflet-control.elevation .area {
+    fill: #f8b5be;
+}
+
+.openworkouts-theme.leaflet-control.elevation .mouse-focus-line {
+    stroke: #ee4056;
+}
+
+.openworkouts-theme.height-focus {
+    stroke: #4682b4;
+    fill: #4682b4;
+}
+
+.leaflet-control.elevation .area {
+    fill: #f8b5be;
+    stroke: #ee4056;
+}

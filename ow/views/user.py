@@ -1,6 +1,7 @@
 import json
 from calendar import month_name
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+from decimal import Decimal
 
 from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
@@ -168,11 +169,24 @@ def profile(context, request):
     year = int(request.GET.get('year', now.year))
     month = int(request.GET.get('month', now.month))
     week = request.GET.get('week', None)
+    workouts = context.workouts(year, month, week)
+    totals = {
+        'distance': Decimal(0),
+        'time': timedelta(0),
+        'elevation': Decimal(0)
+    }
+
+    for workout in workouts:
+        totals['distance'] += getattr(workout, 'distance', Decimal(0))
+        totals['time'] += getattr(workout, 'duration', timedelta(0))
+        totals['elevation'] += getattr(workout, 'uphill', Decimal(0))
+
     return {
-        'workouts': context.workouts(year, month, week),
+        'workouts': workouts,
         'current_month': '{year}-{month}'.format(
             year=str(year), month=str(month).zfill(2)),
-        'current_week': week
+        'current_week': week,
+        'totals': totals
     }
 
 

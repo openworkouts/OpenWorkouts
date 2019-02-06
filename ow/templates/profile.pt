@@ -50,8 +50,26 @@
       <div class="workout-content">
         <div class="workout-list">
           <div class="total-workouts">
-            <tal:w tal:replace="context.num_workouts"></tal:w>
-            <tal:t i18n:translate="">workouts</tal:t>
+            <span>
+              <tal:w tal:replace="len(workouts)"></tal:w>
+              <tal:t i18n:translate="">workouts</tal:t>
+            </span>
+            <span>
+              <tal:hms tal:define="hms timedelta_to_hms(totals['time'])">
+                <tal:h tal:content="str(hms[0]).zfill(2)"></tal:h>
+                <tal:t i18n:translate="">hours</tal:t>,
+                <tal:h tal:content="str(hms[1]).zfill(2)"></tal:h>
+                <tal:t i18n:translate="">min.</tal:t>
+              </tal:hms>
+            </span>
+            <span>
+              <tal:w tal:replace="round(totals['distance'])"></tal:w>
+              <tal:t i18n:translate="">km</tal:t>
+            </span>
+            <span>
+              <tal:w tal:replace="round(totals['elevation'])"></tal:w>
+              <tal:t i18n:translate="">m</tal:t>
+            </span>
           </div>
 
           <div class="month-stats js-month-stats">

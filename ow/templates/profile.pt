@@ -176,6 +176,7 @@
          chart_selector: '.js-month-stats svg',
          filters_selector: '.js-month-stats .js-filters a',
          switcher_selector: '.js-month-stats .js-switcher a',
+         is_active_class: 'is-active',
          urls: {"monthly": "${request.resource_url(context, 'monthly')}",
                 "weekly": "${request.resource_url(context, 'weekly')}"},
          current_month: "${current_month}",

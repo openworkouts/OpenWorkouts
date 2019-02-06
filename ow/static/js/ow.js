@@ -250,6 +250,8 @@ owjs.year_chart = function(spec) {
     var chart_selector = spec.chart_selector,
         filters_selector = spec.filters_selector,
         switcher_selector = spec.switcher_selector,
+        is_active_class = spec.is_active_class,
+        is_active_selector = '.' + is_active_class,
         urls = spec.urls,
         current_month = spec.current_month,
         current_week = spec.current_week,
@@ -286,17 +288,23 @@ owjs.year_chart = function(spec) {
     var filters_setup = function filters_setup() {
         $(filters_selector).on('click', function(e) {
             e.preventDefault();
+            $(filters_selector + is_active_selector).removeClass(is_active_class);
+            /* $(this).removeClass('is-active'); */
             filter_by = $(this).attr('class').split('-')[1]
+            $(this).addClass(is_active_class);
             var chart = d3.select(chart_selector);
             chart.selectAll("*").remove();
             render(filter_by, url);
+
         });
     };
 
     var switcher_setup = function switcher_setup() {
         $(switcher_selector).on('click', function(e) {
             e.preventDefault();
+            $(switcher_selector + is_active_selector).removeClass(is_active_class);
             url = $(this).attr('class').split('-')[1]
+            $(this).addClass(is_active_class);
             var chart = d3.select(chart_selector);
             chart.selectAll("*").remove();
             render(filter_by, url);

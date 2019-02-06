@@ -17,8 +17,6 @@
           href="${request.static_url('ow:static/components/Leaflet/leaflet.css')}" />
     <link rel="stylesheet" tal:condition="context.has_gpx"
           href="${request.static_url('ow:static/components/leaflet-elevation/leaflet-elevation.css')}" />
-    <link rel="stylesheet"
-          href="${request.static_url('ow:static/css/leaflet-elevation.css')}" />
   </metal:css>
 
   <metal:title metal:fill-slot="title">

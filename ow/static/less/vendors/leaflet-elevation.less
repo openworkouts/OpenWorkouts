@@ -1,0 +1,85 @@
+
+/* Leaflet-elevation openworkouts theme */
+
+/* background color */
+.openworkouts-theme.leaflet-control.elevation .background {
+    background-color: transparent;
+}
+
+/* Axis x and y*/
+.openworkouts-theme.leaflet-control.elevation .axis line, .openworkouts-theme.leaflet-control.elevation .axis path {
+    stroke: @color-main-medium;
+}
+
+/* selected drag area*/
+.openworkouts-theme.leaflet-control.elevation .mouse-drag {
+    fill: fade(@color-main, 10%);
+}
+
+/* Icon to show when the chart is collapse */
+/*
+.openworkouts-theme.leaflet-control.elevation .elevation-toggle-icon {
+    background: url(images/elevation-steelblue.png) no-repeat center center;
+}
+*/
+
+/* Graph color area background */
+.openworkouts-theme.leaflet-control.elevation .area {
+    fill: @color-app-light;
+    stroke: transparent;
+}
+
+/* vertical line to know where are you */
+.openworkouts-theme.leaflet-control.elevation .mouse-focus-line {
+    stroke: @color-main;
+}
+
+/* graph color line area */
+/*.leaflet-control.elevation .area {
+    fill: #f8b5be;
+}
+*/
+
+/* box with parameters */
+.mouse-focus-label {
+    opacity: .8;
+}
+
+
+.mouse-focus-label-text {
+    .font-size(13);
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 100 !important;
+}
+/*.mouse-focus-label-y {}*/
+
+
+/* Color line on map */
+.leaflet-interactive {
+    stroke: @color-main;
+    opacity: .6;
+    stroke-width: 6px;
+    stroke-linecap: round;
+}
+
+/* indicator on map line*/
+.openworkouts-theme.height-focus.line{
+    stroke: @color-main;
+    display: none;
+
+    /*fill: #4682b4;*/
+}
+
+/* txt on map */
+
+.openworkouts-theme.height-focus-label {
+    display: none;
+}
+
+/* indicator on map circle */
+.openworkouts-theme.height-focus.circle-lower {
+    fill:  @color-main;
+    stroke: @color-app;
+    stroke-width: 10px;
+
+}

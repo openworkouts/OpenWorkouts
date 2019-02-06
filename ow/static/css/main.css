@@ -345,6 +345,74 @@ template {
 [hidden] {
   display: none;
 }
+/* Leaflet-elevation openworkouts theme */
+/* background color */
+.openworkouts-theme.leaflet-control.elevation .background {
+  background-color: transparent;
+}
+/* Axis x and y*/
+.openworkouts-theme.leaflet-control.elevation .axis line,
+.openworkouts-theme.leaflet-control.elevation .axis path {
+  stroke: #959595;
+}
+/* selected drag area*/
+.openworkouts-theme.leaflet-control.elevation .mouse-drag {
+  fill: rgba(21, 21, 21, 0.1);
+}
+/* Icon to show when the chart is collapse */
+/*
+.openworkouts-theme.leaflet-control.elevation .elevation-toggle-icon {
+    background: url(images/elevation-steelblue.png) no-repeat center center;
+}
+*/
+/* Graph color area background */
+.openworkouts-theme.leaflet-control.elevation .area {
+  fill: #f8b5be;
+  stroke: transparent;
+}
+/* vertical line to know where are you */
+.openworkouts-theme.leaflet-control.elevation .mouse-focus-line {
+  stroke: #151515;
+}
+/* graph color line area */
+/*.leaflet-control.elevation .area {
+    fill: #f8b5be;
+}
+*/
+/* box with parameters */
+.mouse-focus-label {
+  opacity: 0.8;
+}
+.mouse-focus-label-text {
+  font-size: 13px;
+  font-size: 0.8125rem;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 100 !important;
+}
+/*.mouse-focus-label-y {}*/
+/* Color line on map */
+.leaflet-interactive {
+  stroke: #151515;
+  opacity: 0.6;
+  stroke-width: 6px;
+  stroke-linecap: round;
+}
+/* indicator on map line*/
+.openworkouts-theme.height-focus.line {
+  stroke: #151515;
+  display: none;
+  /*fill: #4682b4;*/
+}
+/* txt on map */
+.openworkouts-theme.height-focus-label {
+  display: none;
+}
+/* indicator on map circle */
+.openworkouts-theme.height-focus.circle-lower {
+  fill: #151515;
+  stroke: #EE4056;
+  stroke-width: 10px;
+}
 .hidden,
 .hide {
   display: none;
@@ -793,6 +861,7 @@ input {
   font-size: 0.8125rem;
   color: #959595;
   margin-bottom: 0.25em;
+  /* color for future features */
 }
 .workout-detail-info ul span.min,
 .workout-detail-info ul span.avg,
@@ -801,20 +870,11 @@ input {
   color: white;
   padding: 0.5em 0.85em;
   border-radius: 3px;
-}
-.workout-detail-info ul span.max {
-  background-color: #EE4056;
-}
-.workout-detail-info ul span.min {
-  background-color: #1395CA;
-  margin-right: 0.5em;
-}
-.workout-detail-info ul span.avg {
-  background-color: #17C898;
-  margin-right: 0.5em;
+  background-color: #e1e1e1;
+  color: #959595;
 }
 .workout-detail-info li {
-  margin-bottom: 2em;
+  margin-bottom: 1em;
   margin-right: 1em;
   color: #959595;
   font-size: 15px;

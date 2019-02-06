@@ -31,16 +31,10 @@
       <metal:head-title metal:define-slot="head-title"></metal:head-title>
     </title>
 
+    <metal:css metal:define-slot="css"></metal:css>
+
     <link rel="stylesheet"
           href="${request.static_url('ow:static/css/main.css')}" />
-
-    <link rel="stylesheet"
-          href="${request.static_url('ow:static/css/forms.css')}" />
-
-    <link rel="stylesheet"
-          href="${request.static_url('ow:static/css/openworkouts.css')}" />
-
-    <metal:css metal:define-slot="css"></metal:css>
 
     <metal:header-js metal:define-slot="header-js"></metal:header-js>
 

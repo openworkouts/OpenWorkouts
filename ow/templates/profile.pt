@@ -15,132 +15,141 @@
 
     <div class="user-profile">
       <div class="user-profile-account">
-        <tal:c tal:condition="getattr(context, 'picture', None)">
-          <img tal:attributes="src request.resource_path(context, 'picture')"
-               width="450" />
-        </tal:c>
-        <h2>
-            <tal:fullname tal:content="context.fullname"></tal:fullname>
-        </h2>
-        <p>
-          <tal:has-nickname tal:condition="context.nickname">
-              <tal:nickname tal:content="context.nickname"></tal:nickname>
-          </tal:has-nickname> |
-          <span><tal:email tal:content="context.email"></tal:email></span>
-        </p>
-
-        <div class="profile-bio" tal:content="getattr(context, 'bio', '')"></div>
-
-        <ul class="profile-data">
-          <li>
-            <tal:t i18n:translate="">Gender:</tal:t>
-            <tal:c tal:content="getattr(context, 'gender', '-')"></tal:c>
-          </li>
-          <li tal:define="birth_date getattr(context, 'birth_date', None)">
-            <tal:t i18n:translate="">Birth date:</tal:t>
-            <tal:c tal:condition="birth_date"
-                   tal:content="birth_date.strftime('%d/%m/%Y')"></tal:c>
-            <tal:c tal:condition="birth_date is None">-</tal:c>
-          </li>
-          <li>
-            <tal:t i18n:translate="">Height:</tal:t>
-            <tal:c tal:content="getattr(context, 'height', '-')"></tal:c> meters
-          </li>
-          <li>
-            <tal:t i18n:translate="">Weight:</tal:t>
-            <tal:c tal:content="getattr(context, 'weight', '-')"></tal:c> kg
-          </li>
-        </ul>
-        <ul class="workout-options">
-          <li><a href=""
-             tal:attributes="href request.resource_url(context, 'edit')"
-             i18n:translate="">edit profile</a></li>
-          <li><a href=""
-             tal:attributes="href request.resource_url(context, 'passwd')"
-             i18n:translate="">change password</a></li>
-        </ul>
-      </div>
-
-      <div class="total-workouts">
-        <tal:w tal:replace="context.num_workouts"></tal:w>
-        <tal:t i18n:translate="">workouts</tal:t>
-      </div>
-
-      <div class="month-stats js-month-stats">
-        <div class="svg-cotent">
-          <svg width="800" height="180" viewBox="0 0 800 180"></svg>
+        <div>
+          <tal:c tal:condition="getattr(context, 'picture', None)">
+            <img tal:attributes="src request.resource_path(context, 'picture')"
+                 width="450" />
+          </tal:c>
+          <div>
+            <h2>
+                <tal:fullname tal:content="context.fullname"></tal:fullname>
+            </h2>
+            <p>
+              <tal:has-nickname tal:condition="context.nickname">
+                  <tal:nickname tal:content="context.nickname"></tal:nickname>
+              </tal:has-nickname> |
+              <span><tal:email tal:content="context.email"></tal:email></span>
+            </p>
+            <div class="profile-bio" tal:content="getattr(context, 'bio', '')"></div>
+            <ul class="workout-options">
+              <li><a href=""
+                 tal:attributes="href request.resource_url(context, 'edit')"
+                 i18n:translate="">edit profile</a></li>
+              <li><a href=""
+                 tal:attributes="href request.resource_url(context, 'passwd')"
+                 i18n:translate="">change password</a></li>
+            </ul>
+          </div>
         </div>
-        <ul class="workout-options filters js-filters">
-          <li><a href="#" class="js-distance is-active" i18n:translate="">distance</a></li>
-          <li><a href="#" class="js-time" i18n:translate="">time</a></li>
-          <li><a href="#" class="js-elevation" i18n:translate="">elevation</a></li>
-        </ul>
 
-        <ul class="workout-options switcher js-switcher">
-          <li><a href="#" class="js-weekly" i18n:translate="">weekly</a></li>
-          <li><a href="#" class="js-monthly is-active" i18n:translate="">monthly</a></li>
-        </ul>
       </div>
 
-
-      <tal:r tal:repeat="workout workouts">
-
-        <a name="workouts"></a>
-
-
-        <article class="workout-resume">
-
-          <h2 class="workout-title">
-            <a href="" tal:content="workout.title"
-               tal:attributes="href request.resource_url(workout)"></a>
-          </h2>
-
-          <ul class="workout-info">
-            <li>
-              <tal:c tal:content="workout.start_in_timezone(context.timezone)"></tal:c>
-            </li>
-            <li>
-              <!--! use the properly formatted duration instead of the timedelta object -->
-              <tal:c tal:content="workout._duration"></tal:c>
-            </li>
-            <li tal:condition="workout.distance">
-              <tal:c tal:content="workout.rounded_distance"></tal:c> km
-            </li>
-          </ul>
-
-          <ul class="workout-info" tal:define="hr workout.hr; cad workout.cad">
-            <li tal:condition="hr">
-              <span i18n:translate="">HR (bpm)</span>:
-              <tal:c tal:content="hr['min']"></tal:c>
-              <tal:t i18n:translate="">Min.</tal:t>,
-              <tal:c tal:content="hr['avg']"></tal:c>
-              <tal:t i18n:translate="">Avg.</tal:t>,
-              <tal:c tal:content="hr['max']"></tal:c>
-              <tal:t i18n:translate="">Max.</tal:t>
-            </li>
-            <li tal:condition="cad">
-              <span i18n:translate="">Cad</span>:
-              <tal:c tal:content="cad['min']"></tal:c>
-              <tal:t i18n:translate="">Min.</tal:t>,
-              <tal:c tal:content="cad['avg']"></tal:c>
-              <tal:t i18n:translate="">Avg.</tal:t>,
-              <tal:c tal:content="cad['max']"></tal:c>
-              <tal:t i18n:translate="">Max.</tal:t>
-            </li>
-          </ul>
-
-          <div class="workout-intro" tal:content="workout.notes"></div>
-
-          <div class="workout-map" tal:condition="workout.has_gpx">
-            <a href="" tal:attributes="href request.resource_url(workout)">
-              <img src="" tal:attributes="src request.static_url(workout.map_screenshot);
-                        alt workout.title; title workout.title">
-            </a>
+      <div class="workout-content">
+        <div class="workout-list">
+          <div class="total-workouts">
+            <tal:w tal:replace="context.num_workouts"></tal:w>
+            <tal:t i18n:translate="">workouts</tal:t>
           </div>
 
-        </article>
+          <div class="month-stats js-month-stats">
+            <div class="svg-cotent">
+              <svg width="900" height="180" viewBox="0 0 900 180"></svg>
+            </div>
+            <div class="center">
+              <ul class="workout-options filters js-filters">
+                <li><a href="#" class="js-distance is-active" i18n:translate="">distance</a></li>
+                <li><a href="#" class="js-time" i18n:translate="">time</a></li>
+                <li><a href="#" class="js-elevation" i18n:translate="">elevation</a></li>
+              </ul>
 
-      </tal:r>
+              <ul class="workout-options switcher js-switcher">
+                <li><a href="#" class="js-weekly" i18n:translate="">weekly</a></li>
+                <li><a href="#" class="js-monthly is-active" i18n:translate="">monthly</a></li>
+              </ul>
+            </div>
+          </div>
+
+
+          <tal:r tal:repeat="workout workouts">
+
+            <article class="workout-resume">
+
+              <h2 class="workout-title">
+                <a href="" tal:content="workout.title"
+                   tal:attributes="href request.resource_url(workout)"></a>
+              </h2>
+
+              <ul class="workout-info">
+                <li>
+                  <tal:c tal:content="workout.start_in_timezone(context.timezone)"></tal:c>
+                </li>
+                <li>
+                  <!--! use the properly formatted duration instead of the timedelta object -->
+                  <tal:c tal:content="workout._duration"></tal:c>
+                </li>
+                <li tal:condition="workout.distance">
+                  <tal:c tal:content="workout.rounded_distance"></tal:c> km
+                </li>
+              </ul>
+
+              <ul class="workout-info" tal:define="hr workout.hr; cad workout.cad">
+                <li tal:condition="hr">
+                  <span i18n:translate="">HR (bpm)</span>:
+                  <tal:c tal:content="hr['min']"></tal:c>
+                  <tal:t i18n:translate="">Min.</tal:t>,
+                  <tal:c tal:content="hr['avg']"></tal:c>
+                  <tal:t i18n:translate="">Avg.</tal:t>,
+                  <tal:c tal:content="hr['max']"></tal:c>
+                  <tal:t i18n:translate="">Max.</tal:t>
+                </li>
+                <li tal:condition="cad">
+                  <span i18n:translate="">Cad</span>:
+                  <tal:c tal:content="cad['min']"></tal:c>
+                  <tal:t i18n:translate="">Min.</tal:t>,
+                  <tal:c tal:content="cad['avg']"></tal:c>
+                  <tal:t i18n:translate="">Avg.</tal:t>,
+                  <tal:c tal:content="cad['max']"></tal:c>
+                  <tal:t i18n:translate="">Max.</tal:t>
+                </li>
+              </ul>
+
+              <div class="workout-intro" tal:content="workout.notes"></div>
+
+              <div class="workout-map" tal:condition="workout.has_gpx">
+                <a href="" tal:attributes="href request.resource_url(workout)">
+                  <img src="" tal:attributes="src request.static_url(workout.map_screenshot);
+                            alt workout.title; title workout.title">
+                </a>
+              </div>
+
+            </article>
+
+          </tal:r>
+        </div>
+
+        <div class="workout-aside">
+          <ul class="profile-data">
+            <li>
+              <span><tal:t i18n:translate="">Gender:</tal:t></span>
+              <tal:c tal:content="getattr(context, 'gender', '-')"></tal:c>
+            </li>
+            <li tal:define="birth_date getattr(context, 'birth_date', None)">
+              <span><tal:t i18n:translate="">Birth date:</tal:t></span>
+              <tal:c tal:condition="birth_date"
+                     tal:content="birth_date.strftime('%d/%m/%Y')"></tal:c>
+              <tal:c tal:condition="birth_date is None">-</tal:c>
+            </li>
+            <li>
+              <span><tal:t i18n:translate="">Height:</tal:t></span>
+              <tal:c tal:content="getattr(context, 'height', '-')"></tal:c> meters
+            </li>
+            <li>
+              <span><tal:t i18n:translate="">Weight:</tal:t></span>
+              <tal:c tal:content="getattr(context, 'weight', '-')"></tal:c> kg
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
 
   </metal:content>

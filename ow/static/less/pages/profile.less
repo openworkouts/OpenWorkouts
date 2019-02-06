@@ -41,6 +41,18 @@
 .total-workouts {
 	.font-size(13);
 	font-weight: bold;
+	span {
+		color: @color-main-medium;
+		margin-right: .5em;
+		&:first-child {
+			color: @color-main;
+			&:after {
+				content: "|";
+				color: @color-main-light;
+				margin-left:  .5em;
+			}
+		}
+	}
 }
 
 .profile-data {

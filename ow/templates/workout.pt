@@ -102,10 +102,10 @@
         </ul>
         <div id="elevation"></div>
       </div>
-    </div>
 
-    <!--! Track map -->
-    <div id="map" tal:condition="context.has_gpx"></div>
+    </div>
+        <div id="map" tal:condition="context.has_gpx"></div>
+
   </metal:content>
 
   <metal:body-js metal:fill-slot="body-js">

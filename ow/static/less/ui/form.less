@@ -11,7 +11,9 @@ fieldset {
     border: none;
     padding: 0;
 }
-fieldset > div {
+
+fieldset > div,
+fieldset > p {
     margin-bottom: 1.5em;
 }
 
@@ -25,4 +27,23 @@ input {
     padding: .5em .75em;
     border: 1px solid transparent;
     border-radius: 2px;
+}
+
+.ow-forms {
+    label {
+        display: block;
+        margin-bottom: .35em;
+        color: @color-main-medium;
+    }
+    textarea {
+        resize: vertical;
+        height: 200px;
+    }
+    textarea,
+    input {
+        width: 100%;
+        padding: .65em;
+        border-radius: 4px;
+        border: 1px solid @color-main-light;
+    }
 }

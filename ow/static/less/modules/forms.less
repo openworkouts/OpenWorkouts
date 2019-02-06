@@ -1,0 +1,33 @@
+.ow-forms {
+	&:extend(.wrapper-s);
+	padding-top: 2em;
+
+	h2 {
+		border-top: 1px solid @color-main-light;
+		padding-top: .5em;
+	}
+}
+
+// .error {
+// 	list-style-type: none;
+// 	padding: 0;
+// 	margin: 0;
+// 	li {
+// 		background-color: @color-app;
+// 		padding:.5em;
+// 		color: white;
+// 	}
+// }
+
+.back {
+	color: @color-app;
+	text-decoration: none;
+	font-weight: 700;
+	&:before {
+		content: "⬅";
+		margin-right: .5em;
+	}
+	&:hover {
+		color: @color-main;
+	}
+}

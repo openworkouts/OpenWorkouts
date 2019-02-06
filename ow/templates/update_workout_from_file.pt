@@ -18,34 +18,43 @@
   </metal:title>
 
   <metal:content metal:fill-slot="content">
-    <div id="update_workout_file">
+    <div id="update_workout_file" class="ow-forms">
+
+      <a class="back" href="" tal:attributes="href request.resource_url(request.root)"
+         i18n:translate="">Back</a>
+
       ${form.begin(multipart=True)}
       ${form.csrf_token()}
 
       <div tal:condition="context.has_tracking_file"
            i18n:translate="">
-        Existing
+        <h2>Existing
         <tal:filetype i18n:name="filetype"
                       tal:content="context.tracking_filetype"></tal:filetype>
-        tracking file data:
-        <tal:data i18n:name="start"
-                  tal:content="context.start"></tal:data> -
-        <tal:data i18n:name="end"
-                  tal:content="context.end"></tal:data> -
-        <tal:data i18n:name="distance"
+        tracking file data</h2>
+        <p>
+          <tal:data i18n:name="start"
+                  tal:content="context.start"></tal:data>
+        </p>
+        <p>
+          <tal:data i18n:name="end"
+                  tal:content="context.end"></tal:data>
+        </p>
+        <p>
+          <tal:data i18n:name="distance"
                   tal:content="context.distance"></tal:data> kms
+        </p>
       </div>
 
       <fieldset>
         ${form.errorlist('tracking_file')}
-        <label for="notes" i18n:translate="">Workout file (gpx, fit):</label>
-        ${form.file('tracking_file')}
+        <div>
+          <label for="notes" i18n:translate="">Workout file (gpx, fit):</label>
+          ${form.file('tracking_file')}
+        </div>
       </fieldset>
 
-      ${form.submit("submit", "Save")}
-      <a href="" tal:attributes="href request.resource_url(request.root)"
-         i18n:translate="">Cancel</a>
-
+      ${form.submit("submit", "Save",  **{'class':"button button-normal"})}
       ${form.end()}
     </div>
 

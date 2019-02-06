@@ -428,6 +428,141 @@ html {
 *:after {
   box-sizing: inherit;
 }
+/* ==========================================================================
+   Wrappers
+   ========================================================================== */
+/**
+ * Common wrappers to use in Scms-site.
+ * To reducing css size you can use extends instead of mixins
+ * to move the selector up to the properties you wish to use.
+ *
+ * Example LESS:
+ * .myclass {
+ *		&:extend(.wrapper);
+ * }
+ */
+.wrapper,
+.wrapper-s,
+.wrapper-l,
+.wrapper-xl,
+.ow-forms {
+  display: block;
+  width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin: 0 auto;
+}
+@media (min-width: 480px) {
+  .wrapper,
+  .wrapper-s,
+  .wrapper-l,
+  .wrapper-xl,
+  .ow-forms {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+@media (min-width: 800px) {
+  .wrapper,
+  .wrapper-s,
+  .wrapper-l,
+  .wrapper-xl,
+  .ow-forms {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+@media (min-width: 1024px) {
+  .wrapper,
+  .wrapper-s,
+  .wrapper-l,
+  .wrapper-xl,
+  .ow-forms {
+    padding-left: 5rem;
+    padding-right: 5rem;
+  }
+}
+@media (min-width: 1440px) {
+  .wrapper,
+  .wrapper-s,
+  .wrapper-l,
+  .wrapper-xl,
+  .ow-forms {
+    padding-left: 6rem;
+    padding-right: 6rem;
+  }
+}
+@media (min-width: 320px) {
+  .wrapper-s,
+  .ow-forms {
+    max-width: 740px;
+  }
+}
+@media (min-width: 320px) {
+  .wrapper-l {
+    max-width: 1280px;
+  }
+}
+@media (min-width: 320px) {
+  .wrapper-xl {
+    max-width: 1440px;
+  }
+}
+/* Layout */
+.ly-flex {
+  display: flex;
+  justify-content: space-between;
+}
+.ly-flex.ly-center {
+  align-items: center;
+}
+.ly-flex.ly-start {
+  justify-content: flex-start;
+}
+.ly-flex.ly-2 {
+  flex-flow: row wrap;
+}
+.ly-flex.ly-2 > div,
+.ly-flex.ly-2 > li,
+.ly-flex.ly-2 > p,
+.ly-flex.ly-2 > a {
+  width: 50%;
+}
+.ly-flex.ly-2.has-gap > div,
+.ly-flex.ly-2.has-gap > li,
+.ly-flex.ly-2.has-gap > p,
+.ly-flex.ly-2.has-gap > a {
+  width: 48%;
+}
+.ly-flex.ly-3 {
+  flex-flow: row wrap;
+}
+.ly-flex.ly-3 > div,
+.ly-flex.ly-3 > li,
+.ly-flex.ly-3 > p {
+  width: 33%;
+}
+.ly-flex.ly-3.has-gap > div,
+.ly-flex.ly-3.has-gap > li,
+.ly-flex.ly-3.has-gap > p {
+  width: 31%;
+}
+.ly-flex.ly-4 {
+  flex-flow: row wrap;
+}
+.ly-flex.ly-4 > div,
+.ly-flex.ly-4 > li,
+.ly-flex.ly-4 > p {
+  width: 25%;
+}
+.ly-flex.ly-4.has-gap > div,
+.ly-flex.ly-4.has-gap > li,
+.ly-flex.ly-4.has-gap > p {
+  width: 23%;
+}
+.ly-flex-end {
+  align-items: flex-end;
+}
 /* Generic default forms */
 form {
   width: 100%;
@@ -439,7 +574,8 @@ fieldset {
   border: none;
   padding: 0;
 }
-fieldset > div {
+fieldset > div,
+fieldset > p {
   margin-bottom: 1.5em;
 }
 label {
@@ -452,6 +588,22 @@ input {
   padding: 0.5em 0.75em;
   border: 1px solid transparent;
   border-radius: 2px;
+}
+.ow-forms label {
+  display: block;
+  margin-bottom: 0.35em;
+  color: #959595;
+}
+.ow-forms textarea {
+  resize: vertical;
+  height: 200px;
+}
+.ow-forms textarea,
+.ow-forms input {
+  width: 100%;
+  padding: 0.65em;
+  border-radius: 4px;
+  border: 1px solid #e1e1e1;
 }
 /* Generic button */
 .button {
@@ -474,6 +626,17 @@ input {
   font-size: 1em;
   line-height: 1.25;
   max-width: 100%;
+  width: auto;
+}
+.button-normal {
+  width: auto;
+}
+.button-normal:hover {
+  background-color: #959595;
+  color: white;
+}
+.button-important {
+  background-color: #EE4056;
 }
 .header-content {
   padding: 1em 1.5em;
@@ -791,11 +954,12 @@ input {
 }
 /* Workout detail */
 #map {
+  width: 100%;
   height: 400px;
 }
 @media (min-width: 480px) {
   #map {
-    height: calc(100vh - 380px);
+    height: calc(100vh - 465px);
   }
 }
 .workout-detail {
@@ -1005,6 +1169,25 @@ input {
 .workout-activity-tree-year a:hover {
   background-color: #e1e1e1;
 }
+.ow-forms {
+  padding-top: 2em;
+}
+.ow-forms h2 {
+  border-top: 1px solid #e1e1e1;
+  padding-top: 0.5em;
+}
+.back {
+  color: #EE4056;
+  text-decoration: none;
+  font-weight: 700;
+}
+.back:before {
+  content: "⬅";
+  margin-right: 0.5em;
+}
+.back:hover {
+  color: #151515;
+}
 .login-content {
   background-image: url("../media/img/back-01.jpg");
   background-size: cover;
@@ -1113,6 +1296,18 @@ input {
   font-size: 13px;
   font-size: 0.8125rem;
   font-weight: bold;
+}
+.total-workouts span {
+  color: #959595;
+  margin-right: 0.5em;
+}
+.total-workouts span:first-child {
+  color: #151515;
+}
+.total-workouts span:first-child:after {
+  content: "|";
+  color: #e1e1e1;
+  margin-left: 0.5em;
 }
 .profile-data {
   list-style-type: none;

@@ -1,0 +1,50 @@
+/* Layout */
+
+.ly-flex {
+    display: flex;
+    justify-content: space-between;
+    &.ly-center {
+        align-items: center;
+    }
+    &.ly-start {
+        justify-content: flex-start;
+    }
+
+    &.ly-2 {
+        flex-flow: row wrap;
+        >div, >li, >p, >a {
+            width: 50%;
+        }
+        &.has-gap {
+            >div, >li, >p, >a   {
+                width: 48%;
+            }
+        }
+    }
+    &.ly-3 {
+        flex-flow: row wrap;
+        >div, >li, >p {
+            width: 33%;
+        }
+        &.has-gap {
+            >div, >li, >p   {
+                width: 31%;
+            }
+        }
+    }
+
+    &.ly-4 {
+        flex-flow: row wrap;
+        >div, >li, >p {
+            width: 25%;
+        }
+        &.has-gap {
+            >div, >li, >p   {
+                width: 23%;
+            }
+        }
+    }
+}
+.ly-flex-end {
+    align-items: flex-end;
+}

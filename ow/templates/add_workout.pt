@@ -16,42 +16,34 @@
   </metal:title>
 
   <metal:content metal:fill-slot="content">
-    <h2 i18n:translate="">Upload workout file</h2>
     <div class="upload-workout ow-forms">
+      <a href="" class="back"
+           tal:attributes="href request.resource_url(context)"
+           i18n:translate="">Back</a>
+      <h2 i18n:translate="">Upload workout file</h2>
         ${form.begin(multipart=True)}
         ${form.csrf_token()}
 
         <fieldset>
-            <p>
-                <label for="title" i18n:translate="">Title:</label>
-                ${form.errorlist('title')}
-                ${form.text('title')}
-            </p>
+          <p>
+              <label for="title" i18n:translate="">Title</label>
+              ${form.errorlist('title')}
+              ${form.text('title')}
+          </p>
+          <p>
+              <label for="notes" i18n:translate="">Notes</label>
+              ${form.errorlist('notes')}
+              ${form.textarea('notes', rows=10, cols=50)}
+          </p>
+          <p>
+              <label for="tracking_file" i18n:translate="">
+                  Workout file (gpx, fit)</label>
+              ${form.errorlist('tracking_file')}
+              ${form.file('tracking_file')}
+          </p>
         </fieldset>
 
-        <fieldset>
-            <p>
-                <label for="notes" i18n:translate="">Notes:</label>
-                ${form.errorlist('notes')}
-                ${form.textarea('notes', rows=10, cols=50)}
-            </p>
-        </fieldset>
-
-        <fieldset>
-            <p>
-                <label for="tracking_file" i18n:translate="">
-                    Workout file (gpx, fit):</label>
-                ${form.errorlist('tracking_file')}
-                ${form.file('tracking_file')}
-            </p>
-        </fieldset>
-
-        <p>
-            ${form.submit("submit", "Save",  **{'class':"button button-normal"})}
-            <a href="" class="button button-important"
-               tal:attributes="href request.resource_url(context)"
-               i18n:translate="">Cancel</a>
-        </p>
+        ${form.submit("submit", "Save",  **{'class':"button button-normal"})}
 
       ${form.end()}
     </div>

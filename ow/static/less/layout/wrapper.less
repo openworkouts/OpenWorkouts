@@ -1,0 +1,64 @@
+/* ==========================================================================
+   Wrappers
+   ========================================================================== */
+
+/**
+ * Common wrappers to use in Scms-site.
+ * To reducing css size you can use extends instead of mixins
+ * to move the selector up to the properties you wish to use.
+ *
+ * Example LESS:
+ * .myclass {
+ *		&:extend(.wrapper);
+ * }
+ */
+
+.wrapper,
+.wrapper-s,
+.wrapper-l,
+.wrapper-xl {
+ 	display: block;
+ 	width: 100%;
+ 	padding-left: 1rem;
+ 	padding-right: 1rem;
+ 	margin: 0 auto;
+
+ 	@media (min-width: @screen-s) {
+ 		padding-left: 2rem;
+		padding-right: 2rem;
+ 	}
+
+ 	@media (min-width: @screen-m) {
+ 		padding-left: 4rem;
+		padding-right: 4rem;
+ 	}
+
+ 	@media (min-width: @screen-l) {
+ 		padding-left: 5rem;
+		padding-right: 5rem;
+ 	}
+
+ 	@media (min-width: @screen-xl) {
+ 		padding-left: 6rem;
+		padding-right: 6rem;
+ 	}
+}
+.wrapper-s{
+	@media (min-width: @screen-xs) {
+ 		max-width: 740px;
+ 	}
+}
+
+
+.wrapper-l{
+	@media (min-width: @screen-xs) {
+ 		max-width: 1280px;
+ 	}
+}
+
+
+.wrapper-xl{
+	@media (min-width: @screen-xs) {
+ 		max-width: 1440px;
+ 	}
+}

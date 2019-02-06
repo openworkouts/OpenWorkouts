@@ -30,14 +30,17 @@
               </tal:has-nickname> |
               <span><tal:email tal:content="context.email"></tal:email></span>
             </p>
-            <div class="profile-bio" tal:content="getattr(context, 'bio', '')"></div>
+            <div class="profile-bio">
+              <p tal:repeat="paragraph getattr(context, 'bio', '').split('\n')"
+                 tal:content="paragraph"></p>
+            </div>
             <ul class="workout-options">
               <li><a href=""
-                 tal:attributes="href request.resource_url(context, 'edit')"
-                 i18n:translate="">edit profile</a></li>
+                     tal:attributes="href request.resource_url(context, 'edit')"
+                     i18n:translate="">edit profile</a></li>
               <li><a href=""
-                 tal:attributes="href request.resource_url(context, 'passwd')"
-                 i18n:translate="">change password</a></li>
+                     tal:attributes="href request.resource_url(context, 'passwd')"
+                     i18n:translate="">change password</a></li>
             </ul>
           </div>
         </div>
@@ -113,7 +116,10 @@
                 </li>
               </ul>
 
-              <div class="workout-intro" tal:content="workout.notes"></div>
+              <div class="workout-intro">
+                <p tal:repeat="paragraph workout.notes.split('\n')"
+                   tal:content="paragraph"></p>
+              </div>
 
               <div class="workout-map" tal:condition="workout.has_gpx">
                 <a href="" tal:attributes="href request.resource_url(workout)">

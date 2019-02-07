@@ -19,12 +19,13 @@
 
     <metal:header-metas metal:define-slot="header-metas"></metal:header-metas>
 
-    <link rel="shortcut icon"
-          href="${request.static_url('ow:static/pyramid-16x16.png')}">
-
-    <!--! This should be 182x182px-->
-    <link rel="apple-touch-icon"
-          href="${request.static_url('ow:static/pyramid-16x16.png')}">
+    <link rel="apple-touch-icon" sizes="180x180" href="${request.static_url('ow:static/apple-touch-icon.png')}">
+    <link rel="icon" type="image/png" sizes="32x32" href="${request.static_url('ow:static/favicon-32x32.png')}">
+    <link rel="icon" type="image/png" sizes="16x16" href="${request.static_url('ow:static/favicon-16x16.png')}">
+    <link rel="manifest" href="${request.static_url('ow:static/site.webmanifest')}">
+    <link rel="mask-icon" href="${request.static_url('ow:static/safari-pinned-tab.svg')}" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
 
     <title>
       OpenWorkouts |

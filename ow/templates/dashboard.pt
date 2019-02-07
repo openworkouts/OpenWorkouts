@@ -94,12 +94,6 @@
                 </a>
             </div>
 
-            <ul class="workout-options">
-              <li class="owo-edit"><a href="" i18n:translate="" tal:attributes="href request.resource_url(workout, 'edit')"><span>edit</span></a></li>
-              <li class="owo-update"><a href="" i18n:translate="" tal:attributes="href request.resource_url(workout, 'update-from-file')"><span>update with tracking file</span></a></li>
-              <li class="owo-del"><a href="" i18n:translate="" tal:attributes="href request.resource_url(workout, 'delete')"><span>delete</span></a></li>
-            </ul>
-
           </article>
 
         </tal:r>

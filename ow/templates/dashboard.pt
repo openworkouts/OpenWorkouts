@@ -62,13 +62,14 @@
               <li tal:condition="workout.distance">
                 <tal:c tal:content="workout.rounded_distance"></tal:c> km
               </li>
+              <li tal:condition="workout.uphill">
+                +<tal:c tal:content="workout.uphill"></tal:c> m
+              </li>
             </ul>
 
             <ul class="workout-info" tal:define="hr workout.hr; cad workout.cad">
               <li tal:condition="hr">
                 <span i18n:translate="">HR (bpm)</span>:
-                <tal:c tal:content="hr['min']"></tal:c>
-                <tal:t i18n:translate="">Min.</tal:t>,
                 <tal:c tal:content="hr['avg']"></tal:c>
                 <tal:t i18n:translate="">Avg.</tal:t>,
                 <tal:c tal:content="hr['max']"></tal:c>
@@ -76,8 +77,6 @@
               </li>
               <li tal:condition="cad">
                 <span i18n:translate="">Cad</span>:
-                <tal:c tal:content="cad['min']"></tal:c>
-                <tal:t i18n:translate="">Min.</tal:t>,
                 <tal:c tal:content="cad['avg']"></tal:c>
                 <tal:t i18n:translate="">Avg.</tal:t>,
                 <tal:c tal:content="cad['max']"></tal:c>
@@ -93,12 +92,6 @@
                               alt workout.title; title workout.title">
                 </a>
             </div>
-
-            <ul class="workout-options">
-              <li class="owo-edit"><a href="" i18n:translate="" tal:attributes="href request.resource_url(workout, 'edit')"><span>edit</span></a></li>
-              <li class="owo-update"><a href="" i18n:translate="" tal:attributes="href request.resource_url(workout, 'update-from-file')"><span>update with tracking file</span></a></li>
-              <li class="owo-del"><a href="" i18n:translate="" tal:attributes="href request.resource_url(workout, 'delete')"><span>delete</span></a></li>
-            </ul>
 
           </article>
 

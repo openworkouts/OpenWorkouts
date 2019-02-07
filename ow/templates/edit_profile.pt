@@ -21,99 +21,95 @@
   </metal:css>
 
   <metal:content metal:fill-slot="content">
-      <h2 i18n:translate="">Edit profile</h2>
     <div class="edit-profile ow-forms">
+            <a href="" class="back"
+               tal:attributes="href request.resource_url(context, 'profile')"
+               i18n:translate="">Cancel</a>
+      <h2 i18n:translate="">Edit profile</h2>
       ${form.begin(multipart=True)}
       ${form.csrf_token()}
 
         <fieldset>
-            <p>
-                <label for="email" i18n:translate="">Email address:</label>
-                ${form.errorlist('email')}
-                ${form.text('email')}
-            </p>
-            <p>
-                <label for="nickname" i18n:translate="">Nickname:</label>
-                ${form.errorlist('nickname')}
-                ${form.text('nickname')}
-            </p>
-        </fieldset>
+            <div class="input-container ly-flex ly-2 has-gap">
+              <div>
+                  <label for="email" i18n:translate="">Email address:</label>
+                  ${form.errorlist('email')}
+                  ${form.text('email')}
+              </div>
+              <div>
+                  <label for="nickname" i18n:translate="">Nickname:</label>
+                  ${form.errorlist('nickname')}
+                  ${form.text('nickname')}
+              </div>
+            </div>
+            <div  class="input-container ly-flex ly-2 has-gap">
+                <div>
+                  <tal:c tal:condition="getattr(context, 'picture', None)">
 
-        <fieldset>
-            <p>
-                <tal:c tal:condition="getattr(context, 'picture', None)">
+                      <label for="current_picture" i18n:translate="">
+                          Current picture:</label>
+                      <img id="current_picture" tal:attributes="src request.resource_path(context, 'picture')" width="150">
+                  </tal:c>
+                </div>
+                <div>
+                  <label for="picture" i18n:translate="">
+                      Picture (jpg, jpeg, png or gif):</label>
+                  ${form.errorlist('picture')}
+                  ${form.file('picture')}
+                </div>
+            </div>
+            <div class="input-container ly-flex ly-3 has-gap">
+              <div>
+                  <label for="firstname" i18n:translate="">First name:</label>
+                  ${form.errorlist('firstname')}
+                  ${form.text('firstname')}
+              </div>
+              <div>
+                  <label for="lastname" i18n:translate="">Last name:</label>
+                  ${form.errorlist('lastname')}
+                  ${form.text('lastname')}
+              </div>
+              <div>
+                  <label for="gender" i18n:translate="">Gender:</label>
+                  ${form.errorlist('gender')}
+                  ${form.select('gender', ['male', 'female'])}
+              </div>
+            </div>
 
-                    <label for="current_picture" i18n:translate="">
-                        Current picture:</label>
-                    <img id="current_picture" tal:attributes="src request.resource_path(context, 'picture')" width="150">
-                </tal:c>
-                <label for="picture" i18n:translate="">
-                    Picture (jpg, jpeg, png or gif):</label>
-                ${form.errorlist('picture')}
-                ${form.file('picture')}
-            </p>
-        </fieldset>
-
-        <fieldset>
-            <p>
-                <label for="firstname" i18n:translate="">First name:</label>
-                ${form.errorlist('firstname')}
-                ${form.text('firstname')}
-            </p>
-            <p>
-                <label for="lastname" i18n:translate="">Last name:</label>
-                ${form.errorlist('lastname')}
-                ${form.text('lastname')}
-            </p>
-        </fieldset>
-
-        <fieldset>
-            <p>
-                <label for="gender" i18n:translate="">Gender:</label>
-                ${form.errorlist('gender')}
-                ${form.select('gender', ['male', 'female'])}
-            </p>
-            <p>
-                <label for="birth_date" i18n:translate="">Birth date:</label>
-                ${form.errorlist('birth_date')}
-                ${form.date('birth_date', date_format='%d/%m/%Y')}
-            </p>
-            <p>
-                <label for="height" i18n:translate="">Height (meters):</label>
-                ${form.errorlist('height')}
-                ${form.text('height')}
-            </p>
-            <p>
-                <label for="weight" i18n:translate="">Weight (kg):</label>
-                ${form.errorlist('weight')}
-                ${form.text('weight')}
-            </p>
-        </fieldset>
-
-        <fieldset>
+            <div class="input-container ly-flex ly-3 has-gap">
+              <div>
+                  <label for="birth_date" i18n:translate="">Birth date:</label>
+                  ${form.errorlist('birth_date')}
+                  ${form.date('birth_date', date_format='%d/%m/%Y')}
+              </div>
+              <div>
+                  <label for="height" i18n:translate="">Height (meters):</label>
+                  ${form.errorlist('height')}
+                  ${form.text('height')}
+              </div>
+              <div>
+                  <label for="weight" i18n:translate="">Weight (kg):</label>
+                  ${form.errorlist('weight')}
+                  ${form.text('weight')}
+              </div>
+            </div>
             <p>
                 <label for="bio" i18n:translate="">Bio/About you:</label>
                 ${form.errorlist('bio')}
                 ${form.textarea('bio', rows=10, cols=50)}
             </p>
-        </fieldset>
-
-        <fieldset>
-            <p>
-                <label for="timezone" i18n:translate="">Timezone:</label>
+            <div>
+              <label for="timezone" i18n:translate="">Timezone:</label>
                 <small i18n:translate="">
                     All dates and times will be formatted for this timezone
                 </small>
-                ${form.errorlist('timezone')}
-                ${form.select('timezone', timezones)}
-            </p>
+            </div>
+            ${form.errorlist('timezone')}
+            ${form.select('timezone', timezones)}
         </fieldset>
 
         <p>
             ${form.submit("submit", "Save",  **{'class':"button button-normal"})}
-            <a href="" class="button button-important"
-               tal:attributes="href request.resource_url(context, 'profile')"
-               i18n:translate="">Cancel</a>
         </p>
         ${form.end()}
     </div>

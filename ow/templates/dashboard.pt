@@ -25,7 +25,9 @@
       <section class="workout-list">
 
         <h3>
-           <tal:n tal:content="len(workouts)"></tal:n> <tal:t i18n:translate="">Activities</tal:t>
+          <tal:d tal:content="month_name[viewing_month] + ' ' + str(viewing_year)"></tal:d> -
+          <tal:n tal:content="len(workouts)"></tal:n>
+          <tal:t i18n:translate="">Workouts</tal:t>
         </h3>
 
         <tal:no-workouts tal:condition="context.num_workouts == 0">

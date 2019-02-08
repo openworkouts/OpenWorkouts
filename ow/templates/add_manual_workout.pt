@@ -7,11 +7,11 @@
       metal:use-macro="load: base.pt"
       tal:attributes="lang request.locale_name">
 
-  <metal:head-title metal:fill-slot="head-title">
+  <metal:head-title metal:fill-slot="head-title" metal:define-slot="head-title">
     <tal:t i18n:translate="">Add workout manually</tal:t>
   </metal:head-title>
 
-  <metal:title metal:fill-slot="title">
+  <metal:title metal:fill-slot="title" metal:define-slot="head-title">
     <tal:t i18n:translate="">Add workout Manually</tal:t>
   </metal:title>
 
@@ -25,9 +25,15 @@
 
     <div class="add_workout ow-forms">
       <a href="" class="back"
-             tal:attributes="href request.resource_url(context)"
-             i18n:translate="">Back</a>
-        <h2 i18n:translate="">Add a new workout</h2>
+         tal:attributes="href request.resource_url(context)"
+         i18n:translate="">Back</a>
+
+      <h2>
+        <metal:form-title metal:define-slot="form-title">
+          <tal:t i18n:translate="">Add a new workout</tal:t>
+        </metal:form-title>
+      </h2>
+
         ${form.begin()}
         ${form.csrf_token()}
 
@@ -42,7 +48,12 @@
               ${form.errorlist('title')}
               ${form.text('title')}
           </p>
-          <div class="input-container ly-flex ly-2 has-gap">
+          <div class="input-container ly-flex ly-3 has-gap">
+            <div>
+              <label for="distance" i18n:translate="">Distance (Km):</label>
+              ${form.errorlist('distance')}
+              ${form.text('distance', size=4, **{'class': "number"})}
+            </div>
               <div>
                   <label for="start_date" i18n:translate="">Start date (dd/mm/yyyy)</label>
                   ${form.errorlist('start_date')}
@@ -72,12 +83,6 @@
               ${form.text('duration_seconds', size=3, **{'class': "number"})}
             </div>
           </div>
-
-          <p>
-              <label for="distance" i18n:translate="">Distance (Km):</label>
-              ${form.errorlist('distance')}
-              ${form.text('distance', size=4, **{'class': "number"})}
-          </p>
           <div>
             <label for="notes" i18n:translate="">Notes:</label>
             ${form.errorlist('notes')}

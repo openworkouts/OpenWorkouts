@@ -137,7 +137,7 @@ class Workout(Folder):
         data (weight lifting, martial arts, table tennis, etc)
         """
         if self.distance:
-            return round(self.distance, 1)
+            return round(self.distance, 2)
         return '-'
 
     @property

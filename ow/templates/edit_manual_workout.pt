@@ -22,4 +22,8 @@
     <tal:w tal:content="context.title"></tal:w>
   </metal:title>
 
+  <metal:form-title metal:fill-slot="form-title">
+    <tal:t i18n:translate="">Edit workout</tal:t>
+  </metal:form-title>
+
 </html>

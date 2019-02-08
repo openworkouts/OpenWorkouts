@@ -137,7 +137,7 @@ class TestWorkoutModels(object):
     def test_rounded_distance(self):
         workout = Workout()
         workout.distance = 44.44444444
-        assert workout.rounded_distance == 44.4
+        assert workout.rounded_distance == 44.44
 
     def test_has_hr(self):
         workout = Workout()

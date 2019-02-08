@@ -177,9 +177,12 @@ def profile(context, request):
     }
 
     for workout in workouts:
-        totals['distance'] += getattr(workout, 'distance', Decimal(0))
-        totals['time'] += getattr(workout, 'duration', timedelta(0))
-        totals['elevation'] += getattr(workout, 'uphill', Decimal(0))
+        totals['distance'] += (
+            getattr(workout, 'distance', Decimal(0)) or Decimal(0))
+        totals['time'] += (
+            getattr(workout, 'duration', timedelta(0)) or timedelta(0))
+        totals['elevation'] += (
+            getattr(workout, 'uphill', Decimal(0)) or Decimal(0))
 
     return {
         'workouts': workouts,

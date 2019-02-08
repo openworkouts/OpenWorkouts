@@ -127,6 +127,10 @@ def edit_workout(context, request):
         reindex_object(catalog, context)
         return HTTPFound(location=request.resource_url(context))
 
+    # round some values before rendering
+    if form.data['distance']:
+        form.data['distance'] = round(form.data['distance'], 2)
+
     return {
         'form': FormRenderer(form)
     }

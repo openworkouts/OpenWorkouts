@@ -37,20 +37,12 @@
                 <tal:c tal:content="context.start_in_timezone(timezone)"></tal:c>
               </li>
               <li>
-                <tal:t i18n:translate="">End:</tal:t>
-                <tal:c tal:content="context.end_in_timezone(timezone)"></tal:c>
+                <tal:t i18n:translate="">Duration:</tal:t>
+                <tal:c tal:content="context._duration"></tal:c>
               </li>
               <li>
                 <tal:t i18n:translate="">Distance:</tal:t>
-                <tal:c tal:content="context.distance"></tal:c>
-              </li>
-              <li>
-                <tal:t i18n:translate="">Average Heart Rate:</tal:t>
-                <tal:c tal:content="context.hr_avg"></tal:c>
-              </li>
-              <li>
-                <tal:t i18n:translate="">Maximum Heart Rate:</tal:t>
-                <tal:c tal:content="context.hr_max"></tal:c>
+                <tal:c tal:content="context.rounded_distance"></tal:c>
               </li>
             </ul>
             <div id="" tal:content="context.notes"

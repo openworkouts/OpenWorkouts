@@ -62,17 +62,17 @@
               view-level, so we can use that to know in which sections is the
               current user now -->
             <ul>
-              <li class=""
+              <li
                   tal:attributes="class 'is-active' if 'dashboard' in renderer_name else ''">
-                <a href="" i18n:translate=""
+                <a class="icon-dashboard" href="" i18n:translate=""
                    tal:attributes="href request.resource_url(request.root)">
-                  Dashboard</a>
+                  <span>Dashboard</span></a>
               </li>
-              <li class=""
+              <li
                   tal:attributes="class 'is-active' if 'profile' in renderer_name else ''">
-                <a href="" i18n:translate=""
+                <a class="icon-profile" href="" i18n:translate=""
                    tal:attributes="href request.resource_url(request.root, current_user, 'profile')">
-                  My profile</a>
+                  <span>My profile</span></a>
               </li>
               <li class="add-workout">
                 <a href="#"><span i18n:translate="">Add Workout</span></a>
@@ -90,9 +90,9 @@
                 </ul>
               </li>
               <li>
-                <a href="" i18n:translate=""
+                <a class="icon-logout" href="" i18n:translate=""
                    tal:attributes="href request.resource_url(request.root, 'logout')">
-                  Log out
+                  <span>Log out</span>
                 </a>
               </li>
             </ul>

@@ -663,6 +663,20 @@ input {
 .logo:hover span {
   color: #EE4056;
 }
+@media (max-width: 800px) {
+  .logo a {
+    content: "";
+    display: inline-block;
+    width: 34px;
+    height: 34px;
+    background-image: url('/static/media/img/logo-openworkouts.png');
+    background-size: 100%;
+    background-repeat: no-repeat;
+  }
+  .logo a span {
+    display: none !important;
+  }
+}
 .logo-open {
   display: block;
   color: #EE4056;
@@ -683,6 +697,7 @@ input {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
 }
 .nav-site li {
   border-left: 1px solid #e1e1e1;
@@ -699,6 +714,67 @@ input {
 }
 .nav-site .is-active a {
   color: #151515;
+}
+.icon-dashboard::before,
+.icon-profile::before,
+.icon-logout::before {
+  content: "";
+  display: inline-block;
+}
+.icon-dashboard span,
+.icon-profile span,
+.icon-logout span {
+  display: none;
+}
+@media (min-width: 800px) {
+  .icon-dashboard::before,
+  .icon-profile::before,
+  .icon-logout::before {
+    display: none;
+  }
+  .icon-dashboard span,
+  .icon-profile span,
+  .icon-logout span {
+    display: inline-block;
+  }
+}
+.icon-dashboard:hover,
+.icon-profile:hover,
+.icon-logout:hover {
+  opacity: 0.5;
+}
+.icon-dashboard::before {
+  content: "☰";
+  font-size: 30px;
+  font-size: 1.875rem;
+  line-height: 0em;
+  position: relative;
+  top: 3px;
+  margin: 0;
+}
+.icon-profile {
+  padding: 1em 1.25em !important;
+}
+.icon-profile::before {
+  position: relative;
+  top: 3px;
+  width: 20px;
+  height: 20px;
+  background-image: url('/static/media/img/icon-user.svg');
+  background-size: 100%;
+  margin: 0;
+}
+.icon-logout {
+  padding: 1em 1.25em !important;
+}
+.icon-logout::before {
+  position: relative;
+  top: 3px;
+  width: 20px;
+  height: 20px;
+  background-image: url('/static/media/img/icon-logout.svg');
+  background-size: 100%;
+  margin: 0;
 }
 /* Add workout button with submenu -------------------------------------------*/
 .add-workout {

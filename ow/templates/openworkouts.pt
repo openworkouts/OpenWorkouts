@@ -1,0 +1,20 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="OpenWorkouts"
+      metal:use-macro="load: base_anonymous.pt"
+      tal:attributes="lang request.locale_name">
+
+  <metal:content metal:fill-slot="content">
+
+      <!-- Promo -->
+
+      <div class="promo-content">
+          <h1>Welcome to OpenWorkouts</h1>
+      </div>
+
+  </metal:content>
+
+</html>

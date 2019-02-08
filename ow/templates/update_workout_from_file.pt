@@ -26,24 +26,35 @@
       ${form.begin(multipart=True)}
       ${form.csrf_token()}
 
+      <h2 tal:content="context.title"></h2>
+
       <div tal:condition="context.has_tracking_file"
            i18n:translate="">
-        <h2>Existing
-        <tal:filetype i18n:name="filetype"
-                      tal:content="context.tracking_filetype"></tal:filetype>
-        tracking file data</h2>
-        <p>
-          <tal:data i18n:name="start"
-                  tal:content="context.start"></tal:data>
-        </p>
-        <p>
-          <tal:data i18n:name="end"
-                  tal:content="context.end"></tal:data>
-        </p>
-        <p>
-          <tal:data i18n:name="distance"
-                  tal:content="context.distance"></tal:data> kms
-        </p>
+
+        <h3>Existing
+          <tal:filetype i18n:name="filetype"
+                        tal:content="context.tracking_filetype"></tal:filetype>
+          tracking file data</h3>
+
+        <ul class="workout-activity-summary" id=""
+            tal:attributes="id 'workout-' + context.workout_id + '-details'"
+            tal:define="timezone request.root[request.authenticated_userid].timezone">
+          <li>
+            <tal:t i18n:translate="">Start:</tal:t>
+            <tal:c tal:content="context.start_in_timezone(timezone)"></tal:c>
+          </li>
+          <li>
+            <tal:t i18n:translate="">Duration:</tal:t>
+            <tal:c tal:content="context._duration"></tal:c>
+          </li>
+          <li>
+            <tal:t i18n:translate="">Distance:</tal:t>
+            <tal:c tal:content="context.rounded_distance"></tal:c>
+          </li>
+        </ul>
+        <div id="" tal:content="context.notes"
+             tal:attributes="id 'workout-' + context.workout_id + '-notes'">
+        </div>
       </div>
 
       <fieldset>

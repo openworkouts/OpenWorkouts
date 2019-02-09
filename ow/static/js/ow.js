@@ -161,7 +161,7 @@ owjs.week_chart = function(spec) {
             x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
             y = d3.scaleLinear().rangeRound([height, 0]);
 
-        d3.json(url).then(function (data) {
+        d3.json(url, {credentials: "same-origin"}).then(function (data) {
 	    x.domain(data.map(function (d) {
 	        return d.name;
 	    }));
@@ -323,7 +323,7 @@ owjs.year_chart = function(spec) {
             x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
             y = d3.scaleLinear().rangeRound([height, 0]);
 
-        d3.json(urls[url]).then(function (data) {
+        d3.json(urls[url], {credentials: "same-origin"}).then(function (data) {
 	    x.domain(data.map(function (d) {
                 return get_name_for_x(d);
 	        // return d.name;

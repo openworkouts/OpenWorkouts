@@ -5,7 +5,7 @@ from decimal import Decimal
 from unittest.mock import patch, Mock
 
 import pytest
-from pyramid.security import Allow, Everyone
+from pyramid.security import Allow, Everyone, Deny, ALL_PERMISSIONS
 
 from ow.models.workout import Workout
 from ow.models.user import User
@@ -32,15 +32,19 @@ class TestWorkoutModels(object):
 
     def test__acl__(self, root):
         # First check permissions for a workout without parent
-        permissions = [(Allow, Everyone, 'view'),
-                       (Allow, 'group:admins', 'edit')]
         workout = Workout()
-        assert workout.__acl__() == permissions
-
+        with pytest.raises(AttributeError):
+            workout.__acl__()
         # Now permissions on a workout that has been added to a user
         uid = str(root['john'].uid)
-        permissions = [(Allow, uid, 'view'), (Allow, uid, 'edit')]
-        assert root['john']['1'].__acl__() == permissions
+        workout = root['john']['1']
+        permissions = [
+            (Allow, uid, 'view'),
+            (Allow, uid, 'edit'),
+            (Allow, uid, 'delete'),
+            (Deny, Everyone, ALL_PERMISSIONS)
+        ]
+        assert workout.__acl__() == permissions
 
     def test_runthrough(self, root):
         """

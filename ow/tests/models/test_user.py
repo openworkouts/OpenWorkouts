@@ -2,7 +2,7 @@ from decimal import Decimal
 from datetime import datetime, timedelta, timezone
 
 import pytest
-from pyramid.security import Allow
+from pyramid.security import Allow, Everyone, Deny, ALL_PERMISSIONS
 
 from ow.models.root import OpenWorkouts
 from ow.models.workout import Workout
@@ -32,7 +32,11 @@ class TestUser(object):
 
     def test__acl__(self, root):
         uid = str(root['john'].uid)
-        permissions = [(Allow, uid, 'edit'), (Allow, uid, 'view')]
+        permissions = [
+            (Allow, uid, 'view'),
+            (Allow, uid, 'edit'),
+            (Deny, Everyone, ALL_PERMISSIONS),
+        ]
         assert root['john'].__acl__() == permissions
 
     def test__str__(self, root):

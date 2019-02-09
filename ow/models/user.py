@@ -5,7 +5,7 @@ from operator import attrgetter
 
 import bcrypt
 from repoze.folder import Folder
-from pyramid.security import Allow
+from pyramid.security import Allow, Deny, Everyone, ALL_PERMISSIONS
 
 from ow.catalog import get_catalog, reindex_object
 from ow.utilities import get_week_days, get_month_week_number
@@ -17,8 +17,9 @@ class User(Folder):
 
     def __acl__(self):
         permissions = [
-            (Allow, str(self.uid), 'edit'),
             (Allow, str(self.uid), 'view'),
+            (Allow, str(self.uid), 'edit'),
+            (Deny, Everyone, ALL_PERMISSIONS),
         ]
         return permissions
 

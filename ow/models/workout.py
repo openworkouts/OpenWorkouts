@@ -5,7 +5,7 @@ from decimal import Decimal
 import pytz
 import gpxpy
 from repoze.folder import Folder
-from pyramid.security import Allow, Everyone
+from pyramid.security import Allow, Deny, Everyone, ALL_PERMISSIONS
 
 from ow.utilities import (
     GPXMinidomParser,
@@ -28,19 +28,13 @@ class Workout(Folder):
         If the workout is owned by a given user, only that user have access to
         it (for now). If not, everybody can view it, only admins can edit it.
         """
-        # Default permissions
+        uid = self.__parent__.uid
         permissions = [
-            (Allow, Everyone, 'view'),
-            (Allow, 'group:admins', 'edit')
+            (Allow, str(uid), 'view'),
+            (Allow, str(uid), 'edit'),
+            (Allow, str(uid), 'delete'),
+            (Deny, Everyone, ALL_PERMISSIONS)
         ]
-
-        uid = getattr(self.__parent__, 'uid', None)
-        if uid is not None:
-            # Change permissions in case this workout has an owner
-            permissions = [
-                (Allow, str(uid), 'view'),
-                (Allow, str(uid), 'edit'),
-            ]
         return permissions
 
     def __init__(self, **kw):

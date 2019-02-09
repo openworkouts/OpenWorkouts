@@ -22,6 +22,7 @@ from ..catalog import get_catalog, reindex_object, remove_from_catalog
 
 @view_config(
     context=User,
+    permission='edit',
     name='add-workout-manually',
     renderer='ow:templates/add_manual_workout.pt')
 def add_workout_manually(context, request):
@@ -58,6 +59,7 @@ def add_workout_manually(context, request):
 
 @view_config(
     context=User,
+    permission='edit',
     name='add-workout',
     renderer='ow:templates/add_workout.pt')
 def add_workout(context, request):
@@ -92,6 +94,7 @@ def add_workout(context, request):
 
 @view_config(
     context=Workout,
+    permission='edit',
     name='edit',
     renderer='ow:templates/edit_manual_workout.pt')
 def edit_workout(context, request):
@@ -138,6 +141,7 @@ def edit_workout(context, request):
 
 @view_config(
     context=Workout,
+    permission='edit',
     name='update-from-file',
     renderer='ow:templates/update_workout_from_file.pt')
 def update_workout_from_file(context, request):
@@ -166,6 +170,7 @@ def update_workout_from_file(context, request):
 
 @view_config(
     context=Workout,
+    permission='delete',
     name='delete',
     renderer='ow:templates/delete_workout.pt')
 def delete_workout(context, request):
@@ -183,6 +188,7 @@ def delete_workout(context, request):
 
 @view_config(
     context=Workout,
+    permission='view',
     renderer='ow:templates/workout.pt')
 def workout(context, request):
     """
@@ -211,6 +217,9 @@ def workout_gpx(context, request):
     Return a gpx file with the workout tracking information, if any.
     For now, simply return the gpx file if it has been attached to the
     workout.
+
+    This view requires no permission, as we access it from an non-authenticated
+    request in a separate job, to generate the static map screenshot.
     """
     if not context.has_gpx:
         return HTTPNotFound()
@@ -228,7 +237,9 @@ def workout_gpx(context, request):
     renderer='ow:templates/workout-map.pt')
 def workout_map(context, request):
     """
-    Render a page that has only a map with tracking info
+    Render a page that has only a map with tracking info.
+    This view requires no permission, as we access it from an non-authenticated
+    request in a separate job, to generate the static map screenshot.
     """
     start_point = {}
     if context.has_gpx:

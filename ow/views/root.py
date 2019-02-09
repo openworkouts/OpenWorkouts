@@ -43,3 +43,12 @@ def add_user(context, request):
     return {
         'form': FormRenderer(form)
     }
+
+@view_config(
+    context=OpenWorkouts,
+    permission='view',
+    name='promo',
+    renderer='ow:templates/openworkouts.pt')
+def promo(context, request):
+    return {}
+

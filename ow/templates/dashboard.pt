@@ -104,10 +104,16 @@
       <aside class="workout-aside">
         <div class="aside-profile">
           <tal:c tal:condition="getattr(context, 'picture', None)">
-            <img tal:attributes="src request.resource_path(context, 'picture')"
-                 width="450" />
+            <a href="" tal:attributes="href request.resource_url(context, 'profile')">
+              <img tal:attributes="src request.resource_path(context, 'picture')"
+                   width="450" />
+            </a>
           </tal:c>
-          <h2 tal:content="context.fullname"></h2>
+          <h2>
+            <a href="" tal:attributes="href request.resource_url(context, 'profile')"
+               tal:content="context.fullname">
+            </a>
+          </h2>
           <ul>
             <Li>
               <tal:n tal:content="context.num_workouts"></tal:n> <tal:t i18n:translate="">workouts</tal:t>

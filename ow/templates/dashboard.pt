@@ -24,7 +24,7 @@
 
       <section class="workout-list">
 
-        <h3>
+        <h3 tal:condition="viewing_month is not None">
           <tal:d tal:content="month_name[viewing_month] + ' ' + str(viewing_year)"></tal:d> -
           <tal:n tal:content="len(workouts)"></tal:n>
           <tal:t i18n:translate="">Workouts</tal:t>

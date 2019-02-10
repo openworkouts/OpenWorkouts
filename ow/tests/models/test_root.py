@@ -34,9 +34,9 @@ class TestRootOpenWorkouts(object):
     def test__init__(self, root):
         # a new OpenWorkouts instance has a catalog created automatically
         assert isinstance(root.catalog, Catalog)
-        assert len(root.catalog) == 2
-        assert 'email' in root.catalog
-        assert 'sport' in root.catalog
+        assert len(root.catalog) == 3
+        for key in ['email', 'nickname', 'sport']:
+            assert key in root.catalog
 
     def test_add_user_ok(self, root):
         assert len(root.users) == 1

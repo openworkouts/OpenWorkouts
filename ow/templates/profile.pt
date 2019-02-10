@@ -16,30 +16,33 @@
     <div class="user-profile">
       <div class="user-profile-account">
         <div>
-          <tal:c tal:condition="getattr(context, 'picture', None)">
-            <img tal:attributes="src request.resource_path(context, 'picture')"
+          <tal:c tal:condition="getattr(user, 'picture', None)">
+            <img tal:attributes="src request.resource_path(user, 'picture')"
                  width="450" />
           </tal:c>
           <div>
             <h2>
-                <tal:fullname tal:content="context.fullname"></tal:fullname>
+                <tal:fullname tal:content="user.fullname"></tal:fullname>
             </h2>
             <p>
-              <tal:has-nickname tal:condition="context.nickname">
-                  <tal:nickname tal:content="context.nickname"></tal:nickname>
-              </tal:has-nickname> |
-              <span><tal:email tal:content="context.email"></tal:email></span>
+              <tal:has-nickname tal:condition="user.nickname">
+                <a href=""
+                   tal:attributes="href request.resource_url(request.root, 'profile', user.nickname)"
+                   tal:content="request.resource_url(request.root, 'profile', user.nickname)">
+                </a> |
+              </tal:has-nickname>
+              <span><tal:email tal:content="user.email"></tal:email></span>
             </p>
             <div class="profile-bio">
-              <p tal:repeat="paragraph getattr(context, 'bio', '').split('\n')"
+              <p tal:repeat="paragraph getattr(user, 'bio', '').split('\n')"
                  tal:content="paragraph"></p>
             </div>
             <ul class="workout-options">
               <li><a href=""
-                     tal:attributes="href request.resource_url(context, 'edit')"
+                     tal:attributes="href request.resource_url(user, 'edit')"
                      i18n:translate="">edit profile</a></li>
               <li><a href=""
-                     tal:attributes="href request.resource_url(context, 'passwd')"
+                     tal:attributes="href request.resource_url(user, 'passwd')"
                      i18n:translate="">change password</a></li>
             </ul>
           </div>
@@ -102,7 +105,7 @@
 
               <ul class="workout-info">
                 <li>
-                  <tal:c tal:content="workout.start_in_timezone(context.timezone)"></tal:c>
+                  <tal:c tal:content="workout.start_in_timezone(user.timezone)"></tal:c>
                 </li>
                 <li>
                   <!--! use the properly formatted duration instead of the timedelta object -->
@@ -154,9 +157,9 @@
           <ul class="profile-data">
             <li>
               <span><tal:t i18n:translate="">Gender:</tal:t></span>
-              <tal:c tal:content="getattr(context, 'gender', '-')"></tal:c>
+              <tal:c tal:content="getattr(user, 'gender', '-')"></tal:c>
             </li>
-            <li tal:define="birth_date getattr(context, 'birth_date', None)">
+            <li tal:define="birth_date getattr(user, 'birth_date', None)">
               <span><tal:t i18n:translate="">Birth date:</tal:t></span>
               <tal:c tal:condition="birth_date"
                      tal:content="birth_date.strftime('%d/%m/%Y')"></tal:c>
@@ -164,11 +167,11 @@
             </li>
             <li>
               <span><tal:t i18n:translate="">Height:</tal:t></span>
-              <tal:c tal:content="getattr(context, 'height', '-')"></tal:c> meters
+              <tal:c tal:content="getattr(user, 'height', '-')"></tal:c> meters
             </li>
             <li>
               <span><tal:t i18n:translate="">Weight:</tal:t></span>
-              <tal:c tal:content="getattr(context, 'weight', '-')"></tal:c> kg
+              <tal:c tal:content="getattr(user, 'weight', '-')"></tal:c> kg
             </li>
           </ul>
         </div>
@@ -194,8 +197,8 @@
          filters_selector: '.js-month-stats .js-filters a',
          switcher_selector: '.js-month-stats .js-switcher a',
          is_active_class: 'is-active',
-         urls: {"monthly": "${request.resource_url(context, 'monthly')}",
-                "weekly": "${request.resource_url(context, 'weekly')}"},
+         urls: {"monthly": "${request.resource_url(user, 'monthly')}",
+                "weekly": "${request.resource_url(user, 'weekly')}"},
          current_month: "${current_month}",
          current_week: "${current_week}",
          y_axis_labels: y_axis_labels,

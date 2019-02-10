@@ -10,6 +10,7 @@ from ow.models.user import User
 from ow.catalog import (
     get_catalog,
     install_catalog,
+    update_indexes,
     reindex_object,
     remove_from_catalog,
     resources_from_query_results
@@ -39,9 +40,13 @@ class OpenWorkouts(Folder):
     def _get_catalog_indexes(self):
         indexes = {
             'email': CatalogFieldIndex('email'),
+            'nickname': CatalogFieldIndex('nickname'),
             'sport': CatalogFieldIndex('sport'),
         }
         return indexes
+
+    def _update_indexes(self):
+        return update_indexes(self.catalog, self._get_catalog_indexes())
 
     def reindex(self, obj):
         """
@@ -76,6 +81,15 @@ class OpenWorkouts(Folder):
             # for some reason, when searching for None
             # the catalog will return all users
             res = self.query(Eq('email', email))
+            if res:
+                return next(res)
+        return None
+
+    def get_user_by_nickname(self, nickname):
+        if nickname is not None:
+            # for some reason, when searching for None
+            # the catalog will return all users
+            res = self.query(Eq('nickname', nickname))
             if res:
                 return next(res)
         return None

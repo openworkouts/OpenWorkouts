@@ -55,14 +55,14 @@ class TestCatalog(object):
         indexes = {'newindex': CatalogFieldIndex('newindex')}
         changes = update_indexes(catalog, indexes)
         assert changes['added'] == ['newindex']
-        assert changes['removed'] == ['email', 'sport']
+        assert changes['removed'] == ['email', 'nickname', 'sport']
 
     def test_update_indexes_empty(self, root):
         catalog = get_catalog(root)
         indexes = {}
         changes = update_indexes(catalog, indexes)
         assert changes['added'] == []
-        assert changes['removed'] == ['email', 'sport']
+        assert changes['removed'] == ['email', 'nickname', 'sport']
 
     def test_install_catalog(self):
         root = OpenWorkouts()

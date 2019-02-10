@@ -3,7 +3,7 @@ from calendar import month_name
 from datetime import datetime, timezone, timedelta
 from decimal import Decimal
 
-from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from pyramid.view import view_config
 from pyramid.security import remember, forget
 from pyramid.response import Response
@@ -156,6 +156,11 @@ def dashboard(context, request):
 
 
 @view_config(
+    context=OpenWorkouts,
+    name='profile',
+    permission='view',
+    renderer='ow:templates/profile.pt')
+@view_config(
     context=User,
     permission='view',
     name='profile',
@@ -165,11 +170,18 @@ def profile(context, request):
     "public" profile view, showing some workouts from this user, her
     basic info, stats, etc
     """
+    if isinstance(context, OpenWorkouts):
+        nickname = request.subpath[0]
+        user = request.root.get_user_by_nickname(nickname)
+        if user is None:
+            return HTTPNotFound()
+    else:
+        user = context
     now = datetime.now(timezone.utc)
     year = int(request.GET.get('year', now.year))
     month = int(request.GET.get('month', now.month))
     week = request.GET.get('week', None)
-    workouts = context.workouts(year, month, week)
+    workouts = user.workouts(year, month, week)
     totals = {
         'distance': Decimal(0),
         'time': timedelta(0),
@@ -185,6 +197,7 @@ def profile(context, request):
             getattr(workout, 'uphill', Decimal(0)) or Decimal(0))
 
     return {
+        'user': user,
         'workouts': workouts,
         'current_month': '{year}-{month}'.format(
             year=str(year), month=str(month).zfill(2)),

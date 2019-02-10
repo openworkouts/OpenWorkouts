@@ -1,4 +1,5 @@
 import os
+import textwrap
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 
@@ -133,6 +134,14 @@ class Workout(Folder):
         if self.distance:
             return round(self.distance, 2)
         return '-'
+
+    @property
+    def trimmed_notes(self):
+        """
+        Return a string with a reduced version of the full notes for this
+        workout.
+        """
+        return textwrap.shorten(self.notes, width=225, placeholder=' ...')
 
     @property
     def has_hr(self):

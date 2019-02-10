@@ -143,6 +143,18 @@ class TestWorkoutModels(object):
         workout.distance = 44.44444444
         assert workout.rounded_distance == 44.44
 
+    def test_trimmed_notes(self):
+        workout = Workout()
+        assert workout.notes == ''
+        assert workout.trimmed_notes == ''
+        workout.notes = 'very short notes'
+        assert workout.notes == 'very short notes'
+        assert workout.trimmed_notes == 'very short notes'
+        workout.notes = 'long notes now, repeated' * 1000
+        assert len(workout.notes) == 24000
+        assert len(workout.trimmed_notes) == 224
+        assert workout.trimmed_notes.endswith(' ...')
+
     def test_has_hr(self):
         workout = Workout()
         assert not workout.has_hr

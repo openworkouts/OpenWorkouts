@@ -137,7 +137,7 @@
               </ul>
 
               <div class="workout-intro">
-                <p tal:repeat="paragraph workout.notes.split('\n')"
+                <p tal:repeat="paragraph workout.trimmed_notes.split('\n')"
                    tal:content="paragraph"></p>
               </div>
 

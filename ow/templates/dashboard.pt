@@ -55,6 +55,9 @@
 
             <ul class="workout-info">
               <li>
+                <tal:c tal:content="workout.sport"></tal:c>
+              </li>
+              <li>
                 <tal:c tal:content="workout.start_in_timezone(context.timezone)"></tal:c>
               </li>
               <li>
@@ -69,24 +72,10 @@
               </li>
             </ul>
 
-            <ul class="workout-info" tal:define="hr workout.hr; cad workout.cad">
-              <li tal:condition="hr">
-                <span i18n:translate="">HR (bpm)</span>:
-                <tal:c tal:content="hr['avg']"></tal:c>
-                <tal:t i18n:translate="">Avg.</tal:t>,
-                <tal:c tal:content="hr['max']"></tal:c>
-                <tal:t i18n:translate="">Max.</tal:t>
-              </li>
-              <li tal:condition="cad">
-                <span i18n:translate="">Cad</span>:
-                <tal:c tal:content="cad['avg']"></tal:c>
-                <tal:t i18n:translate="">Avg.</tal:t>,
-                <tal:c tal:content="cad['max']"></tal:c>
-                <tal:t i18n:translate="">Max.</tal:t>
-              </li>
-            </ul>
-
-            <div class="workout-intro" tal:content="workout.notes"></div>
+            <div class="workout-intro">
+              <p tal:repeat="paragraph workout.trimmed_notes.split('\n')"
+                 tal:content="paragraph"></p>
+            </div>
 
             <div class="workout-map" tal:condition="workout.has_gpx">
                 <a href="" tal:attributes="href request.resource_url(workout)">

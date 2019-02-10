@@ -125,7 +125,7 @@
             <p tal:define="totals context.week_totals">
               <span class="week-stats-distance">
                 <tal:d tal:content="round(totals['distance'])"></tal:d>
-                <tal:t i18n:translate="">kms</tal:t>
+                <tal:t i18n:translate="">kms</tal:t> |
               </span>
               <span class="week-stats-time">
                 <tal:hms tal:define="hms timedelta_to_hms(totals['time'])">

@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# Start uwsgi, loading the config from the ini file in etc/
+
+
+case "$1" in
+    'staging')
+        uwsgi --ini etc/uwsgi_staging.ini
+        echo "Started uwsgi, check var/log/uwsgi/uwsgi.log for more info"
+        ;;
+    'production')
+        uwsgi --ini etc/uwsgi_production.ini
+        echo "Started uwsgi, check var/log/uwsgi/uwsgi.log for more info"
+        ;;
+    *)
+        if [ $1 ]; then
+            echo "[error] $1 is not a valid environment"
+        else
+            echo "[error] No env name provided"
+        fi
+        echo "Valid env names: staging production"
+        exit 1
+        ;;
+esac

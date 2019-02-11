@@ -1,0 +1,6 @@
+#!/bin/sh
+#
+# Stop a running uwsgi service, if it has been started
+
+kill -15 `cat var/run/uwsgi.pid`
+echo "Stopped uwsgi"

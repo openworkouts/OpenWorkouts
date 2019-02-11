@@ -2,7 +2,8 @@ import re
 import os
 import logging
 import calendar
-import subprocess
+import shutil
+import time
 from datetime import datetime, timedelta
 from decimal import Decimal
 from shutil import copyfileobj
@@ -10,6 +11,8 @@ from shutil import copyfileobj
 from unidecode import unidecode
 from xml.dom import minidom
 from ZODB.blob import Blob
+from splinter import Browser
+
 
 log = logging.getLogger(__name__)
 
@@ -191,11 +194,26 @@ def create_blob(data, file_extension, binary=False):
     return blob
 
 
-def save_map_screenshot(workout):
-    if workout.has_gpx:
-        current_path = os.path.abspath(os.path.dirname(__file__))
-        tool_path = os.path.join(current_path, '../bin/screenshot_map')
+def save_map_screenshot(workout, request):
 
+    if workout.has_gpx:
+
+        map_url = request.resource_url(workout, 'map')
+
+        browser = Browser('chrome', headless=True)
+        browser.driver.set_window_size(1300, 436)
+
+        browser.visit(map_url)
+        # we need to wait a moment before taking the screenshot, to ensure
+        # all tiles are loaded in the map.
+        time.sleep(5)
+
+        # splinter saves the screenshot with a random name (even if we do
+        # provide a name) so we get the path to that file and later on we
+        # move it to the proper place
+        splinter_screenshot_path = browser.screenshot()
+
+        current_path = os.path.abspath(os.path.dirname(__file__))
         screenshots_path = os.path.join(
             current_path, 'static/maps', str(workout.owner.uid))
         if not os.path.exists(screenshots_path):
@@ -205,9 +223,7 @@ def save_map_screenshot(workout):
             screenshots_path, str(workout.workout_id))
         screenshot_path += '.png'
 
-        subprocess.run(
-            [tool_path, str(workout.owner.uid), str(workout.workout_id),
-             screenshot_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        shutil.move(splinter_screenshot_path, screenshot_path)
 
         return True
 

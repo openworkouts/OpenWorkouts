@@ -15,7 +15,6 @@ set_scripts_permissions() {
     # ensure the shell scripts we will need have proper permissions
     chmod u+x ${current}/bin/js_deps
     chmod u+x ${current}/bin/start
-    chmod u+x ${current}/bin/screenshot_map
 }
 
 check_python3() {

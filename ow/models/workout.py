@@ -422,8 +422,7 @@ class Workout(Folder):
     def has_fit(self):
         return self.fit_file is not None
 
-    @property
-    def map_screenshot(self):
+    def map_screenshot(self, request):
         """
         Return the static path to the screenshot image of the map for
         this workout (works only for workouts with gps tracking)
@@ -431,17 +430,15 @@ class Workout(Folder):
         if not self.has_gpx:
             return None
 
+        screenshot_name = os.path.join(
+            str(self.owner.uid), str(self.workout_id) + '.png')
         current_path = os.path.abspath(os.path.dirname(__file__))
         screenshot_path = os.path.join(
-            current_path, '../static/maps',
-            str(self.owner.uid), str(self.workout_id)) + '.png'
+            current_path, '../static/maps', screenshot_name)
 
         if not os.path.exists(screenshot_path):
             # screenshot does not exist, generate it
-            save_map_screenshot(self)
+            save_map_screenshot(self, request)
 
-        # the value returned is relative to the static files served
-        # by the app, so we can use request.static_url() with it
-        static_path = os.path.join('static/maps', str(self.owner.uid),
-                                   str(self.workout_id))
-        return 'ow:' + static_path + '.png'
+        static_path = os.path.join('static/maps', screenshot_name)
+        return request.static_url('ow:' + static_path)

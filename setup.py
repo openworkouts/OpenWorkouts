@@ -29,7 +29,8 @@ requires = [
     'gpxpy',
     'lxml',
     'pytz',
-    'fitparse'
+    'fitparse',
+    'splinter'
 ]
 
 tests_require = [

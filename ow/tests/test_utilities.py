@@ -1,10 +1,11 @@
 import os
 from datetime import timedelta, datetime
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 from pyexpat import ExpatError
 from xml.dom.minidom import Element
 
 import pytest
+from pyramid.testing import DummyRequest
 
 from ow.models.root import OpenWorkouts
 from ow.models.user import User
@@ -82,32 +83,42 @@ class TestUtilities(object):
     def test_kmph_to_mps(self):
         assert kmph_to_mps(30) == 30 * 0.277778
 
+    @patch('ow.utilities.shutil')
     @patch('ow.utilities.os')
-    @patch('ow.utilities.subprocess')
-    def test_save_map_screenshot_no_gpx(self, subprocess, os, root, john):
-        saved = save_map_screenshot(john['1'])
+    @patch('ow.utilities.Browser')
+    def test_save_map_screenshot_no_gpx(
+            self, Browser, os, shutil, root, john):
+        request = DummyRequest()
+        saved = save_map_screenshot(john['1'], request)
         assert not saved
+        assert not Browser.called
         assert not os.path.abspath.called
         assert not os.path.dirname.called
         assert not os.path.join.called
         assert not os.path.exists.called
         assert not os.makedirs.called
-        assert not subprocess.run.called
+        assert not shutil.move.called
         # even having a fit tracking file, nothing is done
         john['1'].tracking_file = 'faked fit file'
         john['1'].tracking_filetype = 'fit'
-        saved = save_map_screenshot(john['1'])
+        saved = save_map_screenshot(john['1'], request)
         assert not saved
+        assert not Browser.called
         assert not os.path.abspath.called
         assert not os.path.dirname.called
         assert not os.path.join.called
         assert not os.path.exists.called
         assert not os.makedirs.called
-        assert not subprocess.run.called
+        assert not shutil.move.called
 
+    @patch('ow.utilities.shutil')
     @patch('ow.utilities.os')
-    @patch('ow.utilities.subprocess')
-    def test_save_map_screenshot_with_gpx(self, subprocess, os, root, john):
+    @patch('ow.utilities.Browser')
+    def test_save_map_screenshot_with_gpx(
+            self, Browser, os, shutil, root, john):
+        request = DummyRequest()
+        browser = Mock()
+        Browser.return_value = browser
         os.path.abspath.return_value = 'current_dir'
         os.path.join.side_effect = join
         # This mimics what happens when the directory for this user map
@@ -115,36 +126,52 @@ class TestUtilities(object):
         # (calling os.makedirs)
         os.path.exists.return_value = False
 
+        map_url = request.resource_url(john['1'], 'map')
+
         john['1'].tracking_file = 'faked gpx content'
         john['1'].tracking_filetype = 'gpx'
-        saved = save_map_screenshot(john['1'])
+        saved = save_map_screenshot(john['1'], request)
         assert saved
+        Browser.assert_called_once_with('chrome', headless=True)
+        browser.driver.set_window_size.assert_called_once_with(1300, 436)
+        browser.visit.assert_called_once_with(map_url)
+        browser.screenshot.assert_called_once
         os.path.abspath.assert_called_once
         assert os.path.dirname.called
-        assert os.path.join.call_count == 3
+        assert os.path.join.call_count == 2
         assert os.path.exists.called
         assert os.makedirs.called
-        subprocess.run.assert_called_once
+        os.shutil.move.assert_called_once
 
+    @patch('ow.utilities.shutil')
     @patch('ow.utilities.os')
-    @patch('ow.utilities.subprocess')
+    @patch('ow.utilities.Browser')
     def test_save_map_screenshot_with_gpx_makedirs(
-            self, subprocess, os, root, john):
+            self, Browser, os, shutil, root, john):
+        request = DummyRequest()
+        browser = Mock()
+        Browser.return_value = browser
         os.path.abspath.return_value = 'current_dir'
         os.path.join.side_effect = join
         # If os.path.exists returns True, makedirs is not called
         os.path.exists.return_value = True
 
+        map_url = request.resource_url(john['1'], 'map')
+
         john['1'].tracking_file = 'faked gpx content'
         john['1'].tracking_filetype = 'gpx'
-        saved = save_map_screenshot(john['1'])
+        saved = save_map_screenshot(john['1'], request)
         assert saved
+        Browser.assert_called_once_with('chrome', headless=True)
+        browser.driver.set_window_size.assert_called_once_with(1300, 436)
+        browser.visit.assert_called_once_with(map_url)
+        browser.screenshot.assert_called_once
         os.path.abspath.assert_called_once
         assert os.path.dirname.called
-        assert os.path.join.call_count == 3
+        assert os.path.join.call_count == 2
         assert os.path.exists.called
         assert not os.makedirs.called
-        subprocess.run.assert_called_once
+        os.shutil.move.assert_called_once
 
     def test_timedelta_to_hms(self):
         value = timedelta(seconds=0)

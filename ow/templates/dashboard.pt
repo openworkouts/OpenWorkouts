@@ -79,7 +79,7 @@
 
             <div class="workout-map" tal:condition="workout.has_gpx">
                 <a href="" tal:attributes="href request.resource_url(workout)">
-                    <img src="" tal:attributes="src request.static_url(workout.map_screenshot);
+                    <img src="" tal:attributes="src workout.map_screenshot(request);
                               alt workout.title; title workout.title">
                 </a>
             </div>

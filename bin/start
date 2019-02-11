@@ -8,5 +8,12 @@ current=`pwd`
 # Full path to the env
 env_path=${current}/env
 
+# Activate the virtual env
 . ${env_path}/bin/activate
+
+# Now ensure all python and js packages are up-to-date
+yes | pip install --upgrade -e ${current}[testing] > /tmp/ow-start.stdout 2> /tmp/ow-start.stderr
+./bin/js_deps > /tmp/ow-start.stdout 2> /tmp/ow-start.stderr
+
+# And finally run the server
 pserve --reload development.ini

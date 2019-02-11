@@ -224,7 +224,7 @@ def save_map_screenshot(workout, request):
         screenshot_path += '.png'
 
         shutil.move(splinter_screenshot_path, screenshot_path)
-
+        os.chmod(screenshot_path, 0o644)
         return True
 
     return False

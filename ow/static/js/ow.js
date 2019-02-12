@@ -27,7 +27,7 @@ owjs.map = function(spec) {
     var zoom_control = spec.zoom_control;
 
     // OpenStreetMap urls and references
-    var openstreetmap_url = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    var openstreetmap_url = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
     var openstreetmap_attr = 'Map data &copy; <a href="http://www.osm.org">OpenStreetMap</a>';
 
     // Some vars reused through the code

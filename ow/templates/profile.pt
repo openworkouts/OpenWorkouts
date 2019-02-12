@@ -143,8 +143,14 @@
 
               <div class="workout-map" tal:condition="workout.has_gpx">
                 <a href="" tal:attributes="href request.resource_url(workout)">
-                  <img src="" tal:attributes="src workout.map_screenshot(request);
-                            alt workout.title; title workout.title">
+                  <tal:has-screenshot tal:condition="workout.map_screenshot is not None">
+                    <img src="" tal:attributes="src request.static_url(workout.map_screenshot);
+                              alt workout.title; title workout.title">
+                  </tal:has-screenshot>
+                  <tal:has-not-screenshot tal:condition="workout.map_screenshot is None">
+                    <img src="" tal:attributes="src request.static_url('ow:static/media/img/no_map.png');
+                              alt workout.title; title workout.title; class 'js-needs-map'">
+                  </tal:has-not-screenshot>
                 </a>
               </div>
 
@@ -186,6 +192,11 @@
     <script src="${request.static_url('ow:static/js/ow.js')}"></script>
 
     <script type="text/javascript">
+     var map_shots = owjs.map_shots({
+         img_selector: 'img.js-needs-map',
+     })
+     map_shots.run();
+
      var y_axis_labels = {
          "distance": "Kilometers",
          "time": "Hours",

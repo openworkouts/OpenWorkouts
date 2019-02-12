@@ -1,5 +1,6 @@
 from decimal import Decimal
 from datetime import datetime, timedelta, time, timezone
+import json
 
 import gpxpy
 
@@ -16,7 +17,7 @@ from ..schemas.workout import (
 )
 from ..models.workout import Workout
 from ..models.user import User
-from ..utilities import slugify
+from ..utilities import slugify, save_map_screenshot
 from ..catalog import get_catalog, reindex_object, remove_from_catalog
 
 
@@ -254,3 +255,21 @@ def workout_map(context, request):
                                'longitude': center_point.longitude,
                                'elevation': center_point.elevation}
     return {'start_point': start_point}
+
+
+@view_config(
+    context=Workout,
+    permission='edit',
+    name='map-shot')
+def workout_map_shot(context, request):
+    """
+    Ask for the screenshot of a map, creating one if it does not exist.
+    A json object is returned, containing the info for the needed screenshot
+    """
+    if context.map_screenshot is None:
+        save_map_screenshot(context, request)
+
+    info = {'url': request.static_url(context.map_screenshot)}
+    return Response(content_type='application/json',
+                    charset='utf-8',
+                    body=json.dumps(info))

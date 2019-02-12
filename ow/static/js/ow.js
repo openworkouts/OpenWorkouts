@@ -451,3 +451,31 @@ owjs.year_chart = function(spec) {
     return that
 
 };
+
+
+owjs.map_shots = function(spec) {
+
+    "use strict";
+
+    var img_selector = spec.img_selector;
+
+    var run = function run(){
+        $(img_selector).each(function(){
+            var img = $(this);
+            var a = $(this).parent();
+            var url = a.attr('href') + 'map-shot';
+            var jqxhr = $.getJSON(url, function(info) {
+                img.fadeOut('fast', function () {
+                    img.attr('src', info['url']);
+                    img.fadeIn('fast');
+                });
+                img.removeClass('js-needs-map');
+            });
+        });
+    };
+
+    var that = {}
+    that.run = run;
+    return that
+
+};

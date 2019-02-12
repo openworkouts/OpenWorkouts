@@ -13,7 +13,6 @@ from ow.utilities import (
     copy_blob,
     create_blob,
     mps_to_kmph,
-    save_map_screenshot,
     timedelta_to_hms
 )
 
@@ -422,7 +421,19 @@ class Workout(Folder):
     def has_fit(self):
         return self.fit_file is not None
 
-    def map_screenshot(self, request):
+    @property
+    def map_screenshot_name(self):
+        return os.path.join(
+            str(self.owner.uid), str(self.workout_id) + '.png')
+
+    @property
+    def map_screenshot_path(self):
+        current_path = os.path.abspath(os.path.dirname(__file__))
+        return os.path.join(
+            current_path, '../static/maps', self.map_screenshot_name)
+
+    @property
+    def map_screenshot(self):
         """
         Return the static path to the screenshot image of the map for
         this workout (works only for workouts with gps tracking)
@@ -430,15 +441,9 @@ class Workout(Folder):
         if not self.has_gpx:
             return None
 
-        screenshot_name = os.path.join(
-            str(self.owner.uid), str(self.workout_id) + '.png')
-        current_path = os.path.abspath(os.path.dirname(__file__))
-        screenshot_path = os.path.join(
-            current_path, '../static/maps', screenshot_name)
+        if not os.path.exists(self.map_screenshot_path):
+            return None
 
-        if not os.path.exists(screenshot_path):
-            # screenshot does not exist, generate it
-            save_map_screenshot(self, request)
-
-        static_path = os.path.join('static/maps', screenshot_name)
-        return request.static_url('ow:' + static_path)
+        static_path = os.path.join('static/maps', self.map_screenshot_name)
+        # return a string we can use with request.static_url
+        return 'ow:' + static_path

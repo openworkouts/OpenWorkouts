@@ -6,7 +6,6 @@ from unittest.mock import patch, Mock
 
 import pytest
 from pyramid.security import Allow, Everyone, Deny, ALL_PERMISSIONS
-from pyramid.testing import DummyRequest
 
 from ow.models.workout import Workout
 from ow.models.user import User
@@ -572,76 +571,54 @@ class TestWorkoutModels(object):
         workout.tracking_filetype = None
         assert workout.has_fit
 
-    @patch('ow.models.workout.os')
-    @patch('ow.models.workout.save_map_screenshot')
-    def test_map_screenshot_no_gpx(self, sms, os, root):
+    def test_map_screenshot_name(self, root):
         workout = root['john']['1']
-        request = DummyRequest()
-        assert workout.map_screenshot(request) is None
-        assert not os.path.abspath.called
-        assert not os.path.dirname.called
-        assert not os.path.join.called
-        assert not os.path.exists.called
-        assert not sms.called
+        assert workout.map_screenshot_name == (
+            str(root['john'].uid) + '/' + str(workout.workout_id) + '.png')
+
+    def test_map_screenshot_path(self, root):
+        workout = root['john']['1']
+        assert workout.map_screenshot_path.endswith(
+            'static/maps/' + workout.map_screenshot_name)
 
     @patch('ow.models.workout.os')
-    @patch('ow.models.workout.save_map_screenshot')
-    def test_map_screenshot_save(self, sms, os, root):
+    def test_map_screenshot_no_gpx(self, os, root):
+        workout = root['john']['1']
+        assert workout.map_screenshot is None
+        assert not os.path.join.called
+        assert not os.path.exists.called
+
+    @patch('ow.models.workout.os')
+    def test_map_screenshot_no_shot(self, os, root):
         """
-        A workout with a tracking file has no map screenshot, one is
-        saved to the filesystem.
-        This test simply asserts the calls to the separate methods that
-        look for existing screenshots and save a new one
+        A workout with a tracking file has no map screenshot
         """
-        os.path.abspath.return_value = 'current_dir'
-        os.path.join.side_effect = join
-        # This forces the "save screenshot" code to be run
+        # This says "no screenshot found"
         os.path.exists.return_value = False
 
         workout = root['john']['1']
         workout.tracking_file = 'faked gpx file'
         workout.tracking_filetype = 'gpx'
 
-        uid = str(root['john'].uid)
-        request = DummyRequest()
-        # dummyrequest can't resolve static assets without adding a lot
-        # of boilerplate, no need for that here
-        request.static_url = Mock()
-        request.static_url.return_value = 'ow:/static/maps/' + uid + '/1.png'
-        res = workout.map_screenshot(request)
-        assert res == 'ow:/static/maps/' + uid + '/1.png'
-        assert os.path.abspath.called
-        assert os.path.dirname.called
-        assert os.path.join.call_count == 3
-        assert os.path.exists.called
-        sms.assert_called_once_with(workout, request)
+        assert workout.map_screenshot is None
+        assert os.path.join.called
+        os.path.exists.assert_called_once_with(workout.map_screenshot_path)
 
     @patch('ow.models.workout.os')
-    @patch('ow.models.workout.save_map_screenshot')
-    def test_map_screenshot_do_not_save(self, sms, os, root):
+    def test_map_screenshot_has_shot(self, os, root):
         """
         A workout with a tracking file has a map screenshot, the path to that
         is returned without doing anything else
         """
-        os.path.abspath.return_value = 'current_dir'
+        # This says "yeah, we have a screenshot"
+        os.path.exists.return_value = True
+        os.path.abspath.return_value = '/'
         os.path.join.side_effect = join
-        # This forces the "save screenshot" code NOT to be run
-        os.path.eisxts.return_value = True
 
         workout = root['john']['1']
         workout.tracking_file = 'faked gpx file'
         workout.tracking_filetype = 'gpx'
-
         uid = str(root['john'].uid)
-        request = DummyRequest()
-        # dummyrequest can't resolve static assets without adding a lot
-        # of boilerplate, no need for that here
-        request.static_url = Mock()
-        request.static_url.return_value = 'ow:/static/maps/' + uid + '/1.png'
-        res = workout.map_screenshot(request)
-        assert res == 'ow:/static/maps/' + uid + '/1.png'
-        assert os.path.abspath.called
-        assert os.path.dirname.called
-        assert os.path.join.call_count == 3
-        assert os.path.exists.called
-        assert not sms.called
+        assert workout.map_screenshot == 'ow:/static/maps/' + uid + '/1.png'
+        os.path.exists.assert_called_once_with(workout.map_screenshot_path)
+        assert os.path.join.called

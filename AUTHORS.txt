@@ -1,0 +1,12 @@
+OpenWorkouts Authors and Contributors
+=====================================
+
+OpenWorkouts is an open source project, this file contains an updated
+list of people contributing to it.
+
+Authors
+-------
+
+- Borja Lopez Rio <borja@codigo23.net> (2019 - ?)
+
+- Segundo Fernandez <segundo@sond3.com> (2019 - ?)

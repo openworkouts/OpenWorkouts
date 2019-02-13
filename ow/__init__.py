@@ -18,11 +18,11 @@ def main(global_config, **settings):  # pragma: no cover
     This function returns a Pyramid WSGI application.
     """
     session_factory = SignedCookieSessionFactory(
-        'V4j:DL12^Gs//ho5)V94$j"Ue"F%wn{BT]KrSx`b3pmRj<Z&e3QP|fgPGEZT@#',
+        secret=settings['session.secret'],
         cookie_name='ow-session')
 
     authn_policy = AuthTktAuthenticationPolicy(
-        'l9|^@~wQoVKPQoI`GHK5M9ps@S7L:QNU?pF}.jI(9RWZVc<EM)aQv/j~l#xC++;5',
+        secret=settings['auth.secret'],
         callback=groupfinder,
         hashalg='sha512')
 

@@ -1361,17 +1361,25 @@ input {
     padding: 2em 6em;
   }
 }
-.user-profile-account > div {
-  display: flex;
-  align-items: center;
+@media (min-width: 800px) {
+  .user-profile-account > div {
+    display: flex;
+    align-items: center;
+  }
 }
 .user-profile-account img {
-  width: 140px;
-  height: 140px;
+  width: 64px;
+  height: 64px;
   object-fit: cover;
   border-radius: 50%;
   margin-bottom: 0.5em;
   margin-right: 1em;
+}
+@media (min-width: 800px) {
+  .user-profile-account img {
+    width: 140px;
+    height: 140px;
+  }
 }
 .user-profile-account h2 {
   margin: 0 0 0.15em 0;
@@ -1384,6 +1392,13 @@ input {
   font-size: 14px;
   font-size: 0.875rem;
   margin: 0;
+}
+.user-profile-account p a {
+  color: #EE4056;
+  text-decoration: none;
+}
+.user-profile-account p a:hover {
+  color: #151515;
 }
 .user-profile-account p span {
   color: #959595;

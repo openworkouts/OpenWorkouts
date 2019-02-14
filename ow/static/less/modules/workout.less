@@ -1,10 +1,13 @@
 .workout-content {
     padding: 2em  1em;
+    display: flex;
+    flex-direction: column;
     @media (min-width: @screen-s){
         padding: 2em 6em;
     }
-     @media (min-width: @screen-m){
+    @media (min-width: @screen-m){
         display: flex;
+        flex-direction: row;
         justify-content:space-between;
     }
 }
@@ -16,6 +19,10 @@
     >h2{
         font-weight: 300;
         margin: 0 0 1.5em;
+    }
+    order: 2;
+    @media (min-width: @screen-m){
+        order: 1;
     }
     /* provisional layout, replace this with grid layout system based on final content */
 }
@@ -86,13 +93,15 @@
 
 .workout-info {
     display: flex;
-    align-items:center;
+    flex-flow: row wrap;
+    //align-items:center;
     margin: .25em 0;
     li{
         color: @color-main-medium;
+        margin-bottom: .25em;
         &:after{
             content: "|";
-            margin:0 .5em;
+            margin: 0 .5em;
         }
         &:last-child{
             &:after{
@@ -155,7 +164,9 @@
 
 .workout-aside{
     width: 100%;
+    order: 1;
     @media (min-width: @screen-m){
+        order: 2;
         max-width: 300px;
         padding-left: 1.5em;
         border-left:1px solid @color-main-light;
@@ -183,6 +194,13 @@
         padding:0;
         .font-size(13);
         color: @color-main-dark;
+    }
+    a {
+        text-decoration: none;
+        color: @color-main;
+        &:hover {
+            color: @color-main-medium;
+        }
     }
 }
 

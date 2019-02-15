@@ -703,6 +703,15 @@ input {
   border-left: 1px solid #e1e1e1;
   flex-grow: 1;
   text-align: center;
+  /* this is for the dashboard li element */
+}
+.nav-site li:first-child {
+  display: none;
+}
+@media (min-width: 800px) {
+  .nav-site li:first-child {
+    display: inline-block;
+  }
 }
 .nav-site a {
   color: #959595;

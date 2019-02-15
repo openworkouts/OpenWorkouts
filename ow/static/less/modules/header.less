@@ -66,6 +66,13 @@
         border-left: 1px solid @color-main-light;
         flex-grow: 1;
         text-align: center;
+        /* this is for the dashboard li element */
+        &:first-child {
+            display: none;
+            @media (min-width: @screen-m){
+                display: inline-block;
+            }
+        }
     }
     a{
         color: @color-main-medium;

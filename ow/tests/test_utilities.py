@@ -24,7 +24,8 @@ from ow.utilities import (
     kmph_to_mps,
     save_map_screenshot,
     timedelta_to_hms,
-    get_week_days
+    get_week_days,
+    part_of_day
 )
 
 from ow.tests.helpers import join
@@ -233,6 +234,20 @@ class TestUtilities(object):
         ]
         for m in matches:
             assert m[0] == m[1]
+
+    def test_part_of_day(self):
+        parts = [
+            ((5, 11), 'Morning'),
+            ((12, 17), 'Afternoon'),
+            ((18, 22), 'Evening'),
+            ((23, 4), 'Night'),
+        ]
+        for part in parts:
+            hours_range = range(*part[0])
+            expected = part[1]
+            for hour in hours_range:
+                dt = datetime(2019, 1, 15, hour, 0)
+                assert part_of_day(dt) == expected
 
 
 class TestGPXParseMinidom(object):

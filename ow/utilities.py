@@ -13,6 +13,10 @@ from xml.dom import minidom
 from ZODB.blob import Blob
 from splinter import Browser
 
+from pyramid.i18n import TranslationStringFactory
+
+_ = TranslationStringFactory('OpenWorkouts')
+
 
 log = logging.getLogger(__name__)
 
@@ -262,3 +266,19 @@ def get_month_week_number(day):
         if day.day in week:
             return weeks.index(week)
     return None
+
+
+def part_of_day(dt):
+    """
+    Given a datetime object (dt), return which part of the day was it
+    (morning, afternoon, evening, night), translated in the proper
+    """
+    parts = {
+        _('Morning'): (5, 11),
+        _('Afternoon'): (12, 17),
+        _('Evening'): (18, 22),
+        _('Night'): (23, 4)
+    }
+    for key, value in parts.items():
+        if value[0] <= dt.hour <= value[1]:
+            return key

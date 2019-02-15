@@ -446,7 +446,6 @@ class TestUserViews(object):
         returned_image = Image.open(BytesIO(response.body))
         assert original_image.size == returned_image.size
 
-
     def test_edit_profile_get(self, dummy_request, john):
         """
         GET request to the edit profile page, returns the form ready to

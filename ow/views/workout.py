@@ -9,6 +9,7 @@ from pyramid.view import view_config
 from pyramid.response import Response
 from pyramid_simpleform import Form
 from pyramid_simpleform.renderers import FormRenderer
+from pyramid.i18n import TranslationStringFactory
 
 from ..schemas.workout import (
     UploadedWorkoutSchema,
@@ -17,8 +18,11 @@ from ..schemas.workout import (
 )
 from ..models.workout import Workout
 from ..models.user import User
-from ..utilities import slugify, save_map_screenshot
+from ..utilities import slugify, save_map_screenshot, part_of_day
 from ..catalog import get_catalog, reindex_object, remove_from_catalog
+
+
+_ = TranslationStringFactory('OpenWorkouts')
 
 
 @view_config(
@@ -50,6 +54,12 @@ def add_workout_manually(context, request):
         start = datetime.combine(form.data['start_date'], start_time,
                                  tzinfo=timezone.utc)
         workout.start = start
+        if not workout.title:
+            workout.title = part_of_day(start)
+            if workout.sport:
+                workout.title += ' ' + workout.sport
+            workout.title += ' ' + _('workout')
+
         context.add_workout(workout)
         return HTTPFound(location=request.resource_url(workout))
 

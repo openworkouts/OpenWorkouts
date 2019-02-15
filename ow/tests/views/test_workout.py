@@ -125,17 +125,37 @@ class TestWorkoutViews(object):
         # All required fields (6) are marked in the form errors
         assert len(response['form'].form.errors) == 6
 
-    def test_add_workout_manually_post_valid(self, valid_post_request):
+    add_workout_params = [
+        # no title, no sport, we generate a title based on when the
+        # workout started
+        ({'title': None, 'sport': None}, 'Morning workout'),
+        # no title, sport given, we use the sport too in the automatically
+        # generated title
+        ({'title': None, 'sport': 'cycling'}, 'Morning cycling workout'),
+        # title given, no sport, we use the provided title
+        ({'title': 'Example workout', 'sport': None}, 'Example workout'),
+        # title given, sport too, we use the provided title
+        ({'title': 'Example workout', 'sport': 'cycling'}, 'Example workout'),
+    ]
+
+    @pytest.mark.parametrize(('params', 'expected'), add_workout_params)
+    def test_add_workout_manually_post_valid(self, params, expected,
+                                             valid_post_request):
         """
         POST request to add a workout manually, providing the needed data
         """
         request = valid_post_request
+        if params['title'] is not None:
+            request.POST['title'] = params['title']
+        if params['sport'] is not None:
+            request.POST['sport'] = params['sport']
         user = request.root['john']
         assert len(user.workouts()) == 1
         response = workout_views.add_workout_manually(user, request)
         assert isinstance(response, HTTPFound)
         assert response.location.endswith('/2/')
         assert len(user.workouts()) == 2
+        assert user['2'].title == expected
 
     def test_add_workout_get(self, dummy_request):
         """

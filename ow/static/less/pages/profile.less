@@ -13,16 +13,22 @@
         padding: 2em 6em;
     }
     >div {
-    	display: flex;
-    	align-items: center;
+	    @media (min-width: @screen-m){
+	    	display: flex;
+	    	align-items: center;
+	    }
     }
     img {
-        width: 140px;
-        height: 140px;
+        width: 64px;
+        height: 64px;
         object-fit: cover;
         border-radius: 50%;
         margin-bottom: .5em;
         margin-right: 1em;
+	    @media (min-width: @screen-m){
+	        width: 140px;
+	        height: 140px;
+	    }
     }
 	h2 {
 		margin: 0 0 .15em 0;
@@ -33,6 +39,13 @@
 		color: @color-main-dark;
 		.font-size(14);
 		margin: 0;
+		a {
+			color: @color-app;
+			text-decoration: none;
+			&:hover {
+				color: @color-main;
+			}
+		}
 		span {
 			color: @color-main-medium;
 		}

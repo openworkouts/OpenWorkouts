@@ -854,6 +854,8 @@ input {
 }
 .workout-content {
   padding: 2em  1em;
+  display: flex;
+  flex-direction: column;
 }
 @media (min-width: 480px) {
   .workout-content {
@@ -863,6 +865,7 @@ input {
 @media (min-width: 800px) {
   .workout-content {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
   }
 }
@@ -870,11 +873,17 @@ input {
 .workout-list {
   margin-right: 2em;
   width: 100%;
+  order: 2;
   /* provisional layout, replace this with grid layout system based on final content */
 }
 .workout-list > h2 {
   font-weight: 300;
   margin: 0 0 1.5em;
+}
+@media (min-width: 800px) {
+  .workout-list {
+    order: 1;
+  }
 }
 /* Module resume on dashboard workouts */
 .workout-resume {
@@ -938,11 +947,12 @@ input {
 }
 .workout-info {
   display: flex;
-  align-items: center;
+  flex-flow: row wrap;
   margin: 0.25em 0;
 }
 .workout-info li {
   color: #959595;
+  margin-bottom: 0.25em;
 }
 .workout-info li:after {
   content: "|";
@@ -997,9 +1007,11 @@ input {
 }
 .workout-aside {
   width: 100%;
+  order: 1;
 }
 @media (min-width: 800px) {
   .workout-aside {
+    order: 2;
     max-width: 300px;
     padding-left: 1.5em;
     border-left: 1px solid #e1e1e1;
@@ -1027,6 +1039,13 @@ input {
   font-size: 13px;
   font-size: 0.8125rem;
   color: #555555;
+}
+.aside-profile a {
+  text-decoration: none;
+  color: #151515;
+}
+.aside-profile a:hover {
+  color: #959595;
 }
 /* Workout detail */
 #map {
@@ -1266,6 +1285,7 @@ input {
 }
 .login-content {
   background-image: url("../media/img/back-01.jpg");
+  background-position: center;
   background-size: cover;
   display: flex;
   justify-content: center;
@@ -1341,17 +1361,25 @@ input {
     padding: 2em 6em;
   }
 }
-.user-profile-account > div {
-  display: flex;
-  align-items: center;
+@media (min-width: 800px) {
+  .user-profile-account > div {
+    display: flex;
+    align-items: center;
+  }
 }
 .user-profile-account img {
-  width: 140px;
-  height: 140px;
+  width: 64px;
+  height: 64px;
   object-fit: cover;
   border-radius: 50%;
   margin-bottom: 0.5em;
   margin-right: 1em;
+}
+@media (min-width: 800px) {
+  .user-profile-account img {
+    width: 140px;
+    height: 140px;
+  }
 }
 .user-profile-account h2 {
   margin: 0 0 0.15em 0;
@@ -1364,6 +1392,13 @@ input {
   font-size: 14px;
   font-size: 0.875rem;
   margin: 0;
+}
+.user-profile-account p a {
+  color: #EE4056;
+  text-decoration: none;
+}
+.user-profile-account p a:hover {
+  color: #151515;
 }
 .user-profile-account p span {
   color: #959595;

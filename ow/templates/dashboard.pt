@@ -100,7 +100,7 @@
         <div class="aside-profile">
           <tal:c tal:condition="getattr(context, 'picture', None)">
             <a href="" tal:attributes="href request.resource_url(context, 'profile')">
-              <img tal:attributes="src request.resource_path(context, 'picture')"
+              <img tal:attributes="src request.resource_path(context, 'picture', query={'size': 200})"
                    width="450" />
             </a>
           </tal:c>

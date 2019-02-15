@@ -48,7 +48,9 @@
 
                       <label for="current_picture" i18n:translate="">
                           Current picture:</label>
-                      <img id="current_picture" tal:attributes="src request.resource_path(context, 'picture')" width="150">
+                      <img id="current_picture"
+                           tal:attributes="src request.resource_path(context, 'picture', query={'size': 200})"
+                           width="150">
                   </tal:c>
                 </div>
                 <div>

@@ -17,7 +17,7 @@
       <div class="user-profile-account">
         <div>
           <tal:c tal:condition="getattr(user, 'picture', None)">
-            <img tal:attributes="src request.resource_path(user, 'picture')"
+            <img tal:attributes="src request.resource_path(user, 'picture', query={'size': 200})"
                  width="450" />
           </tal:c>
           <div>

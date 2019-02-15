@@ -30,7 +30,8 @@ requires = [
     'lxml',
     'pytz',
     'fitparse',
-    'splinter'
+    'splinter',
+    'Pillow'
 ]
 
 tests_require = [

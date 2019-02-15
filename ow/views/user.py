@@ -2,6 +2,7 @@ import json
 from calendar import month_name
 from datetime import datetime, timezone, timedelta
 from decimal import Decimal
+from io import BytesIO
 
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from pyramid.view import view_config
@@ -10,6 +11,7 @@ from pyramid.response import Response
 from pyramid.i18n import TranslationStringFactory
 from pyramid_simpleform import Form, State
 from pytz import common_timezones
+from PIL import Image
 
 from ..models.user import User
 from ..schemas.user import (
@@ -211,9 +213,24 @@ def profile(context, request):
     name='picture',
     permission='view')
 def profile_picture(context, request):
-    return Response(
-        content_type='image',
-        body_file=context.picture.open())
+    if context.picture is None:
+        return HTTPNotFound()
+
+    size = request.GET.get('size', 0)
+    # we will need a tuple, it does not matter if both values are the same,
+    # Pillow will keep aspect ratio
+    size = (int(size), int(size))
+
+    image = Image.open(context.picture.open())
+
+    if size > (0, 0) and size < image.size:
+        # resize only if they are asking for smaller size, prevent
+        # someone asking for a "too big" image
+        image.thumbnail(size)
+
+    body_file = BytesIO()
+    image.save(body_file, format=image.format)
+    return Response(content_type='image', body=body_file.getvalue())
 
 
 @view_config(

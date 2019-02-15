@@ -4,6 +4,7 @@ from decimal import Decimal
 from datetime import datetime, timedelta, timezone
 from shutil import copyfileobj
 from unittest.mock import Mock, patch
+from io import BytesIO
 
 import pytest
 
@@ -14,6 +15,8 @@ from pyramid.httpexceptions import HTTPFound
 from pyramid.response import Response
 
 from webob.multidict import MultiDict
+
+from PIL import Image
 
 from ow.models.root import OpenWorkouts
 from ow.models.user import User
@@ -416,6 +419,33 @@ class TestUserViews(object):
         assert isinstance(response, Response)
         assert response.status_int == 200
         assert response.content_type == 'image'
+        # as we did not pass a specific size as a get parameter, the size is
+        # the same as the original image
+        original_image = Image.open(image_path)
+        returned_image = Image.open(BytesIO(response.body))
+        assert original_image.size == returned_image.size
+
+        # now, ask for a smaller image
+        request.GET['size'] = original_image.size[0] - 20
+        response = user_views.profile_picture(user, request)
+        assert isinstance(response, Response)
+        assert response.status_int == 200
+        assert response.content_type == 'image'
+        # now the size of the original image is bigger
+        returned_image = Image.open(BytesIO(response.body))
+        assert original_image.size > returned_image.size
+
+        # now, ask for a size that is bigger than the original image,
+        # image will be the same size, as we do not "grow" its size
+        request.GET['size'] = original_image.size[0] + 1000
+        response = user_views.profile_picture(user, request)
+        assert isinstance(response, Response)
+        assert response.status_int == 200
+        assert response.content_type == 'image'
+        # now the size of the original image is bigger
+        returned_image = Image.open(BytesIO(response.body))
+        assert original_image.size == returned_image.size
+
 
     def test_edit_profile_get(self, dummy_request, john):
         """

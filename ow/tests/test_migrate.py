@@ -7,7 +7,7 @@ import pytest
 from ow import migrate
 
 
-class MigrateUnitTests(object):
+class TestMigrateUnit(object):
     def test_includeme(self):
         config = Mock()
         migrate.includeme(config)
@@ -80,7 +80,7 @@ class mocked_get_connection(object):
         return {'database_version': self.versions}
 
 
-class MigrateTests(object):
+class TestsMigrate(object):
 
     package_name = 'ow.tests.migrations'
     ini_path = os.path.join(os.path.dirname(__file__), 'migrations')
@@ -164,5 +164,6 @@ class MigrateTests(object):
         invalid_migration.close()
         gc.return_value = mocked_get_connection(versions=0)
         migrate.run_migrations(None, {}, self.package_name)
+        cleanup()
         assert pr1.called
         assert pr2.called

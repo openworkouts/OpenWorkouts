@@ -41,7 +41,14 @@ class User(Folder):
         super(User, self).__init__()
 
     def __str__(self):
-        return u'User: %s (%s)' % (self.email, self.uid)
+        return u'User: %s (%s)' % (self.uid, self.email)
+
+    def __repr__(self):
+        return u'<%s.%s: %s (%s)>' % (
+            self.__class__.__module__,
+            self.__class__.__name__,
+            self.uid, self.email
+        )
 
     @property
     def password(self):

@@ -42,7 +42,13 @@ class TestUser(object):
     def test__str__(self, root):
         email = root['john'].email
         uid = str(root['john'].uid)
-        assert root['john'].__str__() == u'User: ' + email + ' (' + uid + ')'
+        assert root['john'].__str__() == u'User: ' + uid + ' (' + email + ')'
+
+    def test__repr__(self, root):
+        email = root['john'].email
+        uid = str(root['john'].uid)
+        expected = u'<ow.models.user.User: ' + uid + ' (' + email + ')>'
+        assert root['john'].__repr__() == expected
 
     def test_fullname(self, root):
         assert root['john'].fullname == 'John Doe'

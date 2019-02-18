@@ -44,6 +44,11 @@ var/zeo/blobs
 
 # mail queue
 var/spool
+var/run/mail-queue-processor.lock
+
+# log files
+var/log/openworkouts.log
+var/log/queueprocessor.log
 
 # JS static external components and libraries
 ow/static/components

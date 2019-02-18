@@ -37,7 +37,10 @@ venv/
 var/db/Data.*
 var/db/blobs
 var/zeo/Data.*
-var/db/blobs
+var/zeo/zeo.log
+var/zeo/zeo.sock
+var/zeo/zeo.pid
+var/zeo/blobs
 
 # JS static external components and libraries
 ow/static/components

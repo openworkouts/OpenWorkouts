@@ -25,6 +25,7 @@ from ow.utilities import (
     save_map_screenshot,
     timedelta_to_hms,
     get_week_days,
+    get_month_week_number,
     part_of_day
 )
 
@@ -234,6 +235,21 @@ class TestUtilities(object):
         ]
         for m in matches:
             assert m[0] == m[1]
+
+    def test_get_month_week_number(self):
+        # first day of january 2019, this is week number 1
+        day = datetime(2019,1,1)
+        week_number = get_month_week_number(day)
+        assert week_number == 0
+        # add 7 days (1 more week), week number is 2
+        day += timedelta(days=7)
+        week_number = get_month_week_number(day)
+        assert week_number == 1
+        # add days enough to move to the next month, we restart
+        # week number counting
+        day += timedelta(days=25)
+        week_number = get_month_week_number(day)
+        assert week_number == 0
 
     def test_part_of_day(self):
         parts = [

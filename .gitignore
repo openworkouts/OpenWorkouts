@@ -49,6 +49,15 @@ var/run/mail-queue-processor.lock
 # log files
 var/log/openworkouts.log
 var/log/queueprocessor.log
+var/log/install.log.stderr
+var/log/install.log.stdout
+var/log/pserve.err
+var/log/pserve.log
+var/log/zeo_start.err
+var/log/zeo_start.log
+var/log/zeo_stop.err
+var/log/zeo_stop.log
+var/run/pserve.pid
 
 # JS static external components and libraries
 ow/static/components

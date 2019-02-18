@@ -88,7 +88,9 @@ create_mail_queue() {
     # Creates a Maildir-format directory that pyramid_mailer can use to
     # queue mails.
     echo "Creating mail spool directory ${mail_queue_path}"
-    mkdir -p ${mail_queue_path}/{new,cur,tmp} >> ${install_log}.stdout 2>> ${install_log}.stderr
+    mkdir -p ${mail_queue_path}/new >> ${install_log}.stdout 2>> ${install_log}.stderr
+    mkdir -p ${mail_queue_path}/tmp >> ${install_log}.stdout 2>> ${install_log}.stderr
+    mkdir -p ${mail_queue_path}/cur >> ${install_log}.stdout 2>> ${install_log}.stderr
 }
 
 setup_start_stop() {

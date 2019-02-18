@@ -7,6 +7,7 @@ import time
 from datetime import datetime, timedelta
 from decimal import Decimal
 from shutil import copyfileobj
+from uuid import uuid4
 
 from unidecode import unidecode
 from xml.dom import minidom
@@ -19,6 +20,18 @@ _ = TranslationStringFactory('OpenWorkouts')
 
 
 log = logging.getLogger(__name__)
+
+
+def get_verification_token():
+    """
+    Generate a new uuid4 verification token we can give a user for
+    verification purposes.
+    uuid4 is a standard that generates a randomly generated token,
+    optimized for a very low chance of collisions. But even if
+    we had a collision, it wouldn't matter - it's simple some users
+    getting the same token in their verification mail.
+    """
+    return uuid4()
 
 
 def slugify(text, delim=u'-'):

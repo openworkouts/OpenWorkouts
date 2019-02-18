@@ -38,6 +38,9 @@ class User(Folder):
         self.timezone = kw.get('timezone', 'UTC')
         self.__password = None
         self.last_workout_id = 0
+        # has this user verified his account?
+        self.verified = False
+        self.verification_token = None
         super(User, self).__init__()
 
     def __str__(self):

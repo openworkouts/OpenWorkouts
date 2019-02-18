@@ -36,6 +36,7 @@ def main(global_config, **settings):  # pragma: no cover
     config.include('pyramid_tm')
     config.include('pyramid_retry')
     config.include('pyramid_zodbconn')
+    config.include('pyramid_mailer')
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_translation_dirs(
         'ow:locale',

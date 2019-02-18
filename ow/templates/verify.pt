@@ -1,0 +1,30 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="OpenWorkouts"
+      metal:use-macro="load: base_anonymous.pt"
+      tal:attributes="lang request.locale_name">
+
+  <metal:content metal:fill-slot="content">
+
+    <div class="verify-content">
+
+      <p i18n:translate="">
+        Your email hasn't been verified. Check the url and make sure you copied
+        it exactly as it was in the verification email.
+      </p>
+
+      <tal:not-logged-in tal:condition="not request.authenticated_userid">
+        <a href="" tal:attributes="href request.resource_url(request.root, 'login')"
+           i18n:translate="">Login</a>
+
+        <a href="" tal:attributes="href request.resource_url(request.root, 'signup')"
+           i18n:translate="">Join now!</a>
+      </tal:not-logged-in>
+    </div>
+
+  </metal:content>
+
+</html>

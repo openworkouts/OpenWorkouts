@@ -21,7 +21,8 @@ from ..schemas.user import (
 )
 from ..models.root import OpenWorkouts
 from ..views.renderers import OWFormRenderer
-from ..utilities import timedelta_to_hms
+from ..utilities import timedelta_to_hms, get_verification_token
+from ..mail import send_verification_email
 
 _ = TranslationStringFactory('OpenWorkouts')
 
@@ -58,13 +59,16 @@ def login(context, request):
         email = request.POST.get('email', None)
         user = context.get_user_by_email(email)
         if user:
-            password = request.POST.get('password', None)
-            if password is not None and user.check_password(password):
-                headers = remember(request, str(user.uid))
-                redirect_url = return_to or request.resource_url(user)
-                return HTTPFound(location=redirect_url, headers=headers)
+            if user.verified:
+                password = request.POST.get('password', None)
+                if password is not None and user.check_password(password):
+                    headers = remember(request, str(user.uid))
+                    redirect_url = return_to or request.resource_url(user)
+                    return HTTPFound(location=redirect_url, headers=headers)
+                else:
+                    message = _('Wrong password')
             else:
-                message = _('Wrong password')
+                message = _('You have to verify your account first')
         else:
             message = _('Wrong email address')
 
@@ -93,13 +97,43 @@ def signup(context, request):
 
     if 'submit' in request.POST and form.validate():
         user = form.bind(User(), exclude=['password_confirm'])
+        user.verified = False
+        user.verification_token = get_verification_token()
         context.add_user(user)
+        # send a verification link to the user email address
+        send_verification_email(request, user)
         # Send to login
         return HTTPFound(location=request.resource_url(context))
 
     return {
         'form': OWFormRenderer(form)
     }
+
+
+@view_config(
+    context=User,
+    name="verify",
+    renderer='ow:templates/verify.pt')
+def verify(context, request):
+    redirect_url = request.resource_url(context)
+
+    # user has been verified already, send to dashboard
+    if getattr(context, 'verified', False):
+        return HTTPFound(location=redirect_url)
+
+    # Look for a verification token, then check if we can verify the user with
+    # that token
+    verified = len(request.subpath) > 0
+    token = getattr(context, 'verification_token', False)
+    verified = verified and token and str(token) == request.subpath[0]
+    if verified:
+        # verified, log in automatically and send to the dashboard
+        context.verified = True
+        headers = remember(request, str(context.uid))
+        return HTTPFound(location=redirect_url, headers=headers)
+
+    # if we can not verify the user, show a page with some info about it
+    return {}
 
 
 @view_config(

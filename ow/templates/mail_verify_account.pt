@@ -1,0 +1,26 @@
+<html tal:omit-tag=""
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="OpenWorkouts">
+
+  <tal:t i18n:translate="">Welcome to OpenWorkouts</tal:t>
+  <tal:user tal:content="user.fullname"></tal:user>
+
+  <tal:t i18n:translate="">
+    You have joined the OpenWorkouts community successfully,
+    now please verify your account.
+  </tal:t>
+
+  <tal:t i18n:translate="">
+    Click on the following link, or copy and paste it in your browser
+    navigation bar to verify your account:
+  </tal:t>
+
+  <tal:link tal:content="verify_link"></tal:link>
+
+  <tal:t i18n:translate>
+    Thank you for joining us.
+
+    Best regards from the OpenWorkouts team.
+  </tal:t>
+
+</html>

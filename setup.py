@@ -16,6 +16,8 @@ requires = [
     'pyramid_retry',
     'pyramid_tm',
     'pyramid_zodbconn',
+    'pyramid_simpleform==0.7dev0',  # version needed for python3
+    'pyramid_mailer',
     'transaction',
     'ZODB3',
     'waitress',
@@ -24,7 +26,6 @@ requires = [
     '#egg=repoze.catalog-0.8.4',
     'bcrypt',
     'FormEncode',
-    'pyramid_simpleform==0.7dev0',  # version needed for python3
     'unidecode',
     'gpxpy',
     'lxml',

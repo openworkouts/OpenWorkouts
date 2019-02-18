@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, timezone
 from shutil import copyfileobj
 from unittest.mock import Mock, patch
 from io import BytesIO
+from uuid import UUID
 
 import pytest
 
@@ -111,6 +112,64 @@ class TestUserViews(object):
             'password_confirm': 'j4ck s3cr3t'
             })
         return request
+
+    @patch('ow.views.user.remember')
+    def test_verify_already_verified(self, remember, dummy_request, john):
+        john.verified = True
+        response = user_views.verify(john, dummy_request)
+        assert isinstance(response, HTTPFound)
+        assert response.location == dummy_request.resource_url(john)
+        # user was not authenticated
+        assert not remember.called
+        # verified status did not change
+        assert john.verified
+
+    @patch('ow.views.user.remember')
+    def test_verify_no_subpath(self, remember, dummy_request, john):
+        response = user_views.verify(john, dummy_request)
+        # the verify info page is rendered, we don't pass anything to the
+        # rendering context
+        assert response == {}
+        # user was not authenticated
+        assert not remember.called
+        # verified status did not change
+        assert not john.verified
+
+    def test_verify_subpath_not_verified(self, dummy_request, john):
+        dummy_request.subpath = ['not_the_token']
+        response = user_views.verify(john, dummy_request)
+        # the verify info page is rendered, we don't pass anything to the
+        # rendering context
+        assert response == {}
+
+    @patch('ow.views.user.remember')
+    def test_verify_wrong_token(self, remember, dummy_request, john):
+        token = 'some-uuid4'
+        john.verification_token = 'some-other-uuid4'
+        dummy_request.subpath = [token]
+        response = user_views.verify(john, dummy_request)
+        # the verify info page is rendered, we don't pass anything to the
+        # rendering context
+        assert response == {}
+        # user was not authenticated
+        assert not remember.called
+        # verified status did not change, neither did the token
+        assert not john.verified
+        assert john.verification_token == 'some-other-uuid4'
+
+    @patch('ow.views.user.remember')
+    def test_verify_verifying(self, remember, dummy_request, john):
+        token = 'some-uuid4'
+        john.verification_token = token
+        dummy_request.subpath = [token]
+        response = user_views.verify(john, dummy_request)
+        # redirect to user page
+        assert isinstance(response, HTTPFound)
+        assert response.location == dummy_request.resource_url(john)
+        # user was authenticated after verified
+        remember.assert_called_with(dummy_request, str(john.uid))
+        # user has been verified
+        assert john.verified
 
     def test_dashboard_redirect_unauthenticated(self, root):
         """
@@ -368,8 +427,20 @@ class TestUserViews(object):
         request.POST['submit'] = True
         request.POST['email'] = 'john.doe@example.net'
         request.POST['password'] = 'badpassword'
+        # verify the user first
+        request.root.users[0].verified = True
         response = user_views.login(request.root, request)
         assert response['message'] == u'Wrong password'
+
+    @patch('ow.views.user.remember')
+    def test_login_post_unverified(self, rem, dummy_request, john):
+        request = dummy_request
+        request.method = 'POST'
+        request.POST['submit'] = True
+        request.POST['email'] = 'john.doe@example.net'
+        request.POST['password'] = 's3cr3t'
+        response = user_views.login(request.root, request)
+        assert response['message'] == u'You have to verify your account first'
 
     @patch('ow.views.user.remember')
     def test_login_post_ok(self, rem, dummy_request, john):
@@ -378,6 +449,8 @@ class TestUserViews(object):
         request.POST['submit'] = True
         request.POST['email'] = 'john.doe@example.net'
         request.POST['password'] = 's3cr3t'
+        # verify the user first
+        john.verified = True
         response = user_views.login(request.root, request)
         assert isinstance(response, HTTPFound)
         assert rem.called
@@ -619,7 +692,8 @@ class TestUserViews(object):
         # no errors in the form (first load)
         assert response['form'].errorlist() == ''
 
-    def test_signup_post_ok(self, signup_post_request):
+    @patch('ow.views.user.send_verification_email')
+    def test_signup_post_ok(self, sve, signup_post_request):
         request = signup_post_request
         assert 'jack.black@example.net' not in request.root.emails
         assert 'JackBlack' not in request.root.all_nicknames
@@ -628,6 +702,12 @@ class TestUserViews(object):
         assert response.location == request.resource_url(request.root)
         assert 'jack.black@example.net' in request.root.emails
         assert 'JackBlack' in request.root.all_nicknames
+        # user is in "unverified" state
+        user = request.root.get_user_by_email('jack.black@example.net')
+        assert not user.verified
+        assert isinstance(user.verification_token, UUID)
+        # also, we sent an email to that user
+        sve.assert_called_once_with(request, user)
 
     def test_signup_missing_required(self, signup_post_request):
         request = signup_post_request

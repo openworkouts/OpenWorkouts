@@ -77,7 +77,7 @@ setup_start_stop() {
     # echo ""
 }
 
-set_script_permissions
+set_scripts_permissions
 check_python3
 create_venv
 upgrade_pip_setuptools

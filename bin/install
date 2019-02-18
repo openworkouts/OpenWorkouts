@@ -9,9 +9,11 @@ current=`pwd`
 python_bin=''
 # Full path to the env
 env_path=${current}/env
-
+# full path to the install logs
+install_log=${current}/var/log/install.log
 
 set_scripts_permissions() {
+    echo "Setting up script permissions"
     # ensure the shell scripts we will need have proper permissions
     chmod u+x ${current}/bin/js_deps
     chmod u+x ${current}/bin/start
@@ -22,6 +24,7 @@ check_python3() {
     if command -v python3 > /dev/null; then
         # ok
         python_bin=`command -v python3`
+        echo "Found valid python installation: ${python_bin}"
         return
     else
         # no python3 binary, look for python
@@ -29,6 +32,7 @@ check_python3() {
             # python found, check if it is 3.x
             if `command -v python` -c "import sys; exit(0) if sys.version.startswith('3.') else exit(1)"; then
                 python_bin=`command -v python`
+                echo "Found valid python installation: ${python_bin}"
                 return
             else
                 # no python binary, error
@@ -45,23 +49,27 @@ check_python3() {
 
 create_venv() {
     # create a new virtual environment
+    echo "Creating new python virtual environment [${env_path}]"
     ${python_bin} -m venv ${env_path}
 }
 
 upgrade_pip_setuptools() {
     . ${env_path}/bin/activate
-    yes | pip install --upgrade setuptools pip
+    echo "Upgrading python packaging tools"
+    yes | pip install --upgrade setuptools pip >> ${install_log}.stdout 2>> ${install_log}.stderr
     deactivate
 }
 
 install_openworkouts() {
     . ${env_path}/bin/activate
-    yes | pip install --upgrade -e ${current}[testing]
+    echo "Installing OpenWorkouts dependencies"
+    yes | pip install --upgrade -e ${current}[testing] >> ${install_log}.stdout 2>> ${install_log}.stderr
     deactivate
 }
 
 install_js_deps() {
-    ${current}/bin/js_deps
+    echo "Installing javascript components"
+    ${current}/bin/js_deps >> ${install_log}.stdout 2>> ${install_log}.stderr
 }
 
 setup_start_stop() {
@@ -70,6 +78,8 @@ setup_start_stop() {
     echo "You can now start the OpenWorkouts service calling:"
     echo ""
     echo "  cd ${current} && ./bin/start"
+    echo ""
+    echo "(the installation script left a log under ${install_log})"
     echo ""
     # echo "You can stop any running OpenWorkouts instances calling:"
     # echo ""
@@ -84,5 +94,3 @@ upgrade_pip_setuptools
 install_openworkouts
 install_js_deps
 setup_start_stop
-
-echo ${python_bin}

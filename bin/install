@@ -11,6 +11,8 @@ python_bin=''
 env_path=${current}/env
 # full path to the install logs
 install_log=${current}/var/log/install.log
+# mail queue directory (where automatically generated emails are stored)
+mail_queue_path=${current}/var/spool/mqueue
 
 set_scripts_permissions() {
     echo "Setting up script permissions"
@@ -49,8 +51,18 @@ check_python3() {
 
 create_venv() {
     # create a new virtual environment
-    echo "Creating new python virtual environment [${env_path}]"
-    ${python_bin} -m venv ${env_path}
+    if [ ! -d ${env_path} ]; then
+        echo "Creating new python virtual environment [${env_path}]"
+        ${python_bin} -m venv ${env_path}
+    else
+        if [ ! -f ${env_path}/bin/activate ]; then
+            # env dir found, but not a virtual env
+            echo "Error: ${env_path} exists and is not a valid virtual environment"
+            exit 1
+        else
+            echo "Reusing python virtual environment [${env_path}]"
+        fi
+    fi
 }
 
 upgrade_pip_setuptools() {
@@ -70,6 +82,13 @@ install_openworkouts() {
 install_js_deps() {
     echo "Installing javascript components"
     ${current}/bin/js_deps >> ${install_log}.stdout 2>> ${install_log}.stderr
+}
+
+create_mail_queue() {
+    # Creates a Maildir-format directory that pyramid_mailer can use to
+    # queue mails.
+    echo "Creating mail spool directory ${mail_queue_path}"
+    mkdir -p ${mail_queue_path}/{new,cur,tmp} >> ${install_log}.stdout 2>> ${install_log}.stderr
 }
 
 setup_start_stop() {
@@ -93,4 +112,5 @@ create_venv
 upgrade_pip_setuptools
 install_openworkouts
 install_js_deps
+create_mail_queue
 setup_start_stop

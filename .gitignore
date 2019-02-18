@@ -42,6 +42,9 @@ var/zeo/zeo.sock
 var/zeo/zeo.pid
 var/zeo/blobs
 
+# mail queue
+var/spool
+
 # JS static external components and libraries
 ow/static/components
 ow/static/maps

@@ -238,7 +238,7 @@ class TestUtilities(object):
 
     def test_get_month_week_number(self):
         # first day of january 2019, this is week number 1
-        day = datetime(2019,1,1)
+        day = datetime(2019, 1, 1)
         week_number = get_month_week_number(day)
         assert week_number == 0
         # add 7 days (1 more week), week number is 2

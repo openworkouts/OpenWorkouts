@@ -8,12 +8,33 @@ current=`pwd`
 # Full path to the env
 env_path=${current}/env
 
+# trap control+c, which is what we use to stop pserve, ensuring ZEO is shut down
+trap ctrl_c INT
+
+ctrl_c() {
+    ./bin/zeo_stop
+}
+
 # Activate the virtual env
+echo "Activating virtual environment"
 . ${env_path}/bin/activate
 
 # Now ensure all python and js packages are up-to-date
+echo "Installing dependency updates (this may take a moment)"
 yes | pip install --upgrade -e ${current}[testing] > /tmp/ow-start.stdout 2> /tmp/ow-start.stderr
 ./bin/js_deps > /tmp/ow-start.stdout 2> /tmp/ow-start.stderr
 
+# Start ZEO (stop if it is running)
+echo "Starting database"
+./bin/zeo_stop >> var/log/zeo_stop.log 2>> var/log/zeo_stop.err &
+./bin/zeo_start >> var/log/zeo_start.log 2>> var/log/zeo_start.err &
+
 # And finally run the server
-pserve --reload development.ini
+echo "Starting OpenWorkouts"
+pserve --reload development.ini >> var/log/pserve.log 2>> var/log/pserve.err &
+echo $! > var/run/pserve.pid
+
+# show the url where the app is accesible
+ow_url=http://`grep listen development.ini |cut -f 3 -d " "`
+echo "Open this url in your browser to access the app: ${ow_url}"
+# open ${ow_url}

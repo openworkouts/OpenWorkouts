@@ -1,0 +1,20 @@
+#!/bin/sh
+#
+# Script to stop OpenWorkouts
+#
+
+# Full path to where we run the script from
+current=`pwd`
+# Full path to the env
+env_path=${current}/env
+
+# Activate the virtual env
+. ${env_path}/bin/activate
+
+# stop pserve
+echo "Stopping OpenWorkouts"
+kill -15 `cat var/run/pserve.pid`
+
+# Stop ZEO
+echo "Stopping database"
+./bin/zeo_stop >> var/log/zeo_stop.log 2>> var/log/zeo_stop.err &

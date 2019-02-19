@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+# Script to run the task that sends emails
+#
+
+# Full path to where we run the script from
+current=`pwd`
+# Full path to the env
+env_path=${current}/env
+
+# Activate the virtual env
+echo "Activating virtual environment"
+. ${env_path}/bin/activate
+
+# Send emails
+echo "Running the mail queue processor (this can take a while)"
+echo "  (more info in ${current}/var/log/queueprocessor.log)"
+python ow/tasks/run.py development.ini send_emails
+echo "Done"

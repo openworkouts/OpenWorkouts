@@ -93,6 +93,40 @@ create_mail_queue() {
     mkdir -p ${mail_queue_path}/cur >> ${install_log}.stdout 2>> ${install_log}.stderr
 }
 
+setup_mail_server() {
+    echo ""
+    echo "IMPORTANT, READ BEFORE STARTING OpenWorkouts"
+    echo "--------------------------------------------"
+    echo ""
+    echo "For emails to be sent by OpenWorkouts you have to set up your mail"
+    echo "server account. Edit the file development.ini and update the"
+    echo "parameters:"
+    echo ""
+    echo "  mail.host = SERVER"
+    echo "  mail.tls = True"
+    echo "  mail.username = USERNAME"
+    echo "  mail.password = PASSWORD"
+    echo ""
+    echo "--------------------------------------------"
+
+}
+
+create_cron_job() {
+    echo ""
+    echo "IMPORTANT, READ BEFORE STARTING OpenWorkouts"
+    echo "--------------------------------------------"
+    echo ""
+    echo "Remember to add a periodic task in your operating system to process"
+    echo "the mail queue, so emails are sent"
+    echo ""
+    echo "In a unix-like system, add this to your crontab:"
+    echo ""
+    echo "*/5 * * * * cd ${current} && ./bin/send_emails > /dev/null 2> /dev/null"
+    echo ""
+    echo "--------------------------------------------"
+    echo ""
+}
+
 setup_start_stop() {
     echo "OpenWorkouts successfully installed in ${env_path}"
     echo ""
@@ -115,4 +149,6 @@ upgrade_pip_setuptools
 install_openworkouts
 install_js_deps
 create_mail_queue
+setup_mail_server
+create_cron_job
 setup_start_stop

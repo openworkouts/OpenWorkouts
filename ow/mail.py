@@ -38,11 +38,18 @@ def idna_encode_recipients(message):
 
 def send_verification_email(request, user):
     subject = _('Welcome to OpenWorkouts')
-    template = 'ow:templates/mail_verify_account.pt'
+    txt_template = 'ow:templates/mail_verify_account_txt.pt'
+    html_template = 'ow:templates/mail_verify_account_html.pt'
     verify_link = request.resource_url(user, 'verify', user.verification_token)
     context = {'user': user, 'verify_link': verify_link}
     mailer = get_mailer(request)
-    body = render(template, context, request)
-    message = Message(subject=subject, recipients=[user.email], body=body)
+    txt_body = render(txt_template, context, request)
+    html_body = render(html_template, context, request)
+    message = Message(
+        subject=subject,
+        recipients=[user.email],
+        body=txt_body,
+        html=html_body
+    )
     message = idna_encode_recipients(message)
     mailer.send_to_queue(message)

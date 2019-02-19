@@ -1,0 +1,41 @@
+.verify-account-content {
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 98px);
+    padding: 1em 0;
+    color: @color-main-light;
+
+    .info {
+        max-width: 580px;
+        background-color: fadeout(@color-main, 40%);
+        border-radius: 6px;
+        padding: 2em  1.5em;
+        div {
+            margin-bottom: 1.5em;
+        }
+    }
+
+    a {
+        color: @color-main-light;
+        font-size: 13px;
+        text-decoration: none;
+        margin-right: .75em;
+        &:hover {
+            color: white;
+        }
+    }
+
+    .button {
+        transition: all 500ms ease-in-out;
+        background-color: @color-app;
+        color: white;
+        text-transform: uppercase;
+        &:hover {
+            background-color: darken(@color-app, 10%);
+        }
+    }
+
+}

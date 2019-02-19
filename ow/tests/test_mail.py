@@ -40,20 +40,37 @@ class TestMail(object):
         message = Mock()
         message.recipients = ['user@example.net']
         m.return_value = message
-        body = Mock()
-        r.return_value = body
+
+        txt_body = Mock()
+        html_body = Mock()
+        r.side_effect = [txt_body, html_body]
+
         request = DummyRequest()
         request.root = root
         user = root.users[0]
         send_verification_email(request, user)
         verify_link = request.resource_url(
             user, 'verify', user.verification_token)
-        r.assert_called_once_with(
-            'ow:templates/mail_verify_account.pt',
-            {'user': user, 'verify_link': verify_link},
-            request
-        )
+
+        # two render calls
+        assert r.call_count == 2
+
+        # first call renders the text version of the email
+        assert r.call_args_list[0][0][0] == (
+            'ow:templates/mail_verify_account_txt.pt')
+        assert r.call_args_list[0][0][1] == (
+            {'user': user, 'verify_link': verify_link})
+        assert r.call_args_list[0][0][2] == request
+
+        # second call renders the html version of the email
+        assert r.call_args_list[1][0][0] == (
+            'ow:templates/mail_verify_account_html.pt')
+        assert r.call_args_list[1][0][1] == (
+            {'user': user, 'verify_link': verify_link})
+        assert r.call_args_list[1][0][2] == request
+
         m.assert_called_once
         m.call_args_list[0][1]['recipients'] == user.email
-        m.call_args_list[0][1]['body'] == body
+        m.call_args_list[0][1]['body'] == txt_body
+        m.call_args_list[0][1]['html'] == html_body
         mailer.send_to_queue.assert_called_once_with(message)

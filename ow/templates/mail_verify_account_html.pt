@@ -1,0 +1,57 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="OpenWorkouts"
+      metal:use-macro="load: base_anonymous.pt"
+      tal:attributes="lang request.locale_name">
+
+  <metal:content metal:fill-slot="content">
+
+    <div class="verify-account-content">
+
+      <div class="info">
+
+        <h1>
+          <tal:t i18n:translate="">Welcome</tal:t> <tal:user tal:content="user.fullname"></tal:user>
+        </h1>
+
+        <p>
+          <tal:t i18n:translate="">
+            You have joined the OpenWorkouts community successfully,
+            now please verify your account.
+          </tal:t>
+        </p>
+
+        <p>
+          <a href="" class="button button-action"
+             tal:attributes="href verify_link"
+             i18n:translate="">Verify my account (*)</a>
+        </p>
+
+        <p>
+          <tal:t i18n:translate>
+            Thank you for joining us.
+          </tal:t>
+          <tal:t i18n:translate>
+            Best regards from the OpenWorkouts team.
+          </tal:t>
+        </p>
+
+        <p>
+          <small i18n:translate="">
+            (*) If clicking on the button does not work, you can copy this link and paste it on your browser navigation bar:
+          </small>
+        </p>
+        <p>
+          <small tal:content="verify_link"></small>
+        </p>
+
+      </div>
+
+    </div>
+
+  </metal:content>
+
+</html>

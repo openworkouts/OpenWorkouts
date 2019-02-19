@@ -1485,3 +1485,40 @@ input {
   font-size: 13px;
   font-size: 0.8125rem;
 }
+.verify-account-content {
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 98px);
+  padding: 1em 0;
+  color: #e1e1e1;
+}
+.verify-account-content .info {
+  max-width: 580px;
+  background-color: rgba(21, 21, 21, 0.6);
+  border-radius: 6px;
+  padding: 2em 1.5em;
+}
+.verify-account-content .info div {
+  margin-bottom: 1.5em;
+}
+.verify-account-content a {
+  color: #e1e1e1;
+  font-size: 13px;
+  text-decoration: none;
+  margin-right: 0.75em;
+}
+.verify-account-content a:hover {
+  color: white;
+}
+.verify-account-content .button {
+  transition: all 500ms ease-in-out;
+  background-color: #EE4056;
+  color: white;
+  text-transform: uppercase;
+}
+.verify-account-content .button:hover {
+  background-color: #e6152f;
+}

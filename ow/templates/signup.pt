@@ -21,25 +21,30 @@
               <label for="email" i18n:translate="">Email</label>
               <input placeholder="We need a valid email address"
                      type="text" name="email"
-                     value="" i18n:attributes="placeholder">
+                     value="" i18n:attributes="placeholder"
+                     tal:attributes="value form.data.get('email', '')">
             </div>
             <div>
               ${form.errorlist('nickname')}
               <label for="nickname" i18n:translate="">Nickname</label>
               <input placeholder="Choose a cool nickname" type="text"
-                     name="nickname" value="" i18n:attributes="placeholder">
+                     name="nickname" value=""
+                     i18n:attributes="placeholder"
+                     tal:attributes="value form.data.get('nickname', '')">
             </div>
             <div>
               ${form.errorlist('firstname')}
               <label for="firstname" i18n:translate="">First name</label>
               <input placeholder="Your real first name here" type="text"
-                     name="firstname" value="" i18n:attributes="placeholder">
+                     name="firstname" value="" i18n:attributes="placeholder"
+                     tal:attributes="value form.data.get('firstname', '')">
             </div>
             <div>
               ${form.errorlist('lastname')}
               <label for="lastname" i18n:translate="">Last name</label>
               <input placeholder="Your family name here" type="text"
-                     name="lastname" value="" i18n:attributes="placeholder">
+                     name="lastname" value="" i18n:attributes="placeholder"
+                     tal:attributes="value form.data.get('lastname', '')">
             </div>
             <div>
               ${form.errorlist('password')}

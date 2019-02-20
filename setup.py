@@ -22,6 +22,8 @@ requires = [
     'ZODB3',
     'waitress',
     'repoze.folder',
+    'repoze.sendmail @ git+https://github.com/WuShell/repoze.sendmail.git@4.4.2'
+    '#egg=repoze.sendmail-4.4.2',
     'repoze.catalog @ git+https://github.com/WuShell/repoze.catalog.git@0.8.4'
     '#egg=repoze.catalog-0.8.4',
     'bcrypt',

@@ -34,7 +34,8 @@ requires = [
     'pytz',
     'fitparse',
     'splinter',
-    'Pillow'
+    'Pillow',
+    'premailer'
 ]
 
 tests_require = [

@@ -1,9 +1,11 @@
 import logging
 
 from pyramid_mailer import get_mailer
-from pyramid_mailer.message import Message
+from pyramid_mailer.message import Message, Attachment
 from pyramid.renderers import render
 from pyramid.i18n import TranslationStringFactory
+
+import premailer
 
 _ = TranslationStringFactory('OpenWorkouts')
 
@@ -44,12 +46,16 @@ def send_verification_email(request, user):
     context = {'user': user, 'verify_link': verify_link}
     mailer = get_mailer(request)
     txt_body = render(txt_template, context, request)
-    html_body = render(html_template, context, request)
+    html_body = premailer.transform(render(html_template, context, request))
     message = Message(
         subject=subject,
         recipients=[user.email],
-        body=txt_body,
-        html=html_body
+        body=Attachment(data=txt_body,
+                        content_type="text/plain; charset=utf-8",
+                        transfer_encoding="quoted-printable"),
+        html=Attachment(data=html_body,
+                        content_type="text/html; charset=utf-8",
+                        transfer_encoding="quoted-printable")
     )
     message = idna_encode_recipients(message)
     mailer.send_to_queue(message)

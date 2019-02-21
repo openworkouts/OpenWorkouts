@@ -31,10 +31,11 @@ class TestMail(object):
         message = idna_encode_recipients(message)
         assert message.recipients == ['a@a.com', 'a@xn--tda.de']
 
+    @patch('ow.mail.premailer')
     @patch('ow.mail.get_mailer')
     @patch('ow.mail.Message')
     @patch('ow.mail.render')
-    def test_send_verification_email(self, r, m, gm, root):
+    def test_send_verification_email(self, r, m, gm, premailer, root):
         mailer = Mock()
         gm.return_value = mailer
         message = Mock()
@@ -69,6 +70,10 @@ class TestMail(object):
             {'user': user, 'verify_link': verify_link})
         assert r.call_args_list[1][0][2] == request
 
+        # premailer is called once, for the html body of the mail
+        premailer.transform.assert_called_once_with(html_body)
+
+        # One message built
         m.assert_called_once
         m.call_args_list[0][1]['recipients'] == user.email
         m.call_args_list[0][1]['body'] == txt_body

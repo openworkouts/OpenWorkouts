@@ -171,9 +171,77 @@ class TestUserViews(object):
         # user has been verified
         assert john.verified
 
+    @patch('ow.views.user.send_verification_email')
+    def test_resend_verification_already_verified(
+            self, sve, dummy_request, john):
+        john.verified = True
+        assert john.verification_token is None
+        response = user_views.resend_verification_link(john, dummy_request)
+        assert isinstance(response, HTTPFound)
+        assert response.location == dummy_request.resource_url(
+            dummy_request.root, 'login', query={'message': 'already-verified'}
+        )
+        # no emails have been sent
+        assert not sve.called
+        # the token has not been modified
+        assert john.verification_token is None
+
+    @patch('ow.views.user.send_verification_email')
+    def test_resend_verification(self, sve, dummy_request, john):
+        john.verified = False
+        john.verification_token = 'faked-uuid4-verification-token'
+        assert john.verification_tokens_sent == 0
+        response = user_views.resend_verification_link(john, dummy_request)
+        assert isinstance(response, HTTPFound)
+        assert response.location == dummy_request.resource_url(
+            dummy_request.root, 'login',
+            query={'message': 'link-sent', 'email': john.email}
+        )
+        # no emails have been sent
+        sve.assert_called_once_with(dummy_request, john)
+        # the token has not been modified
+        assert john.verification_token == 'faked-uuid4-verification-token'
+        # and we have registered that we sent a token
+        assert john.verification_tokens_sent == 1
+
+    @patch('ow.views.user.send_verification_email')
+    def test_resend_verification_new_token(self, sve, dummy_request, john):
+        john.verified = False
+        john.verification_token = None
+        assert john.verification_tokens_sent == 0
+        response = user_views.resend_verification_link(john, dummy_request)
+        assert isinstance(response, HTTPFound)
+        assert response.location == dummy_request.resource_url(
+            dummy_request.root, 'login',
+            query={'message': 'link-sent', 'email': john.email}
+        )
+        # no emails have been sent
+        sve.assert_called_once_with(dummy_request, john)
+        # the token has been modified
+        assert john.verification_token is not None
+        assert john.verification_tokens_sent == 1
+
+    @patch('ow.views.user.send_verification_email')
+    def test_resend_verification_limit(
+            self, sve, dummy_request, john):
+        john.verified = False
+        john.verification_token = 'faked-uuid4-verification-token'
+        john.verification_tokens_sent = 4
+        response = user_views.resend_verification_link(john, dummy_request)
+        assert isinstance(response, HTTPFound)
+        assert response.location == dummy_request.resource_url(
+            dummy_request.root, 'login',
+            query={'message': 'max-tokens-sent', 'email': john.email}
+        )
+        # no emails have been sent
+        assert not sve.called
+        # the token has not been modified
+        assert john.verification_token == 'faked-uuid4-verification-token'
+        assert john.verification_tokens_sent == 4
+
     def test_dashboard_redirect_unauthenticated(self, root):
         """
-        Anoymous access to the root object, send the user to the login page.
+        Anonymous access to the root object, send the user to the login page.
 
         Instead of reusing the DummyRequest from the request fixture, we do
         Mock fully the request here, because we need to use
@@ -399,6 +467,7 @@ class TestUserViews(object):
         assert response['email'] == ''
         assert response['password'] == ''
         assert response['redirect_url'] == request.resource_url(request.root)
+        assert response['resend_verify_link'] is None
 
     def test_login_get_return_to(self, dummy_request, john):
         """
@@ -412,6 +481,42 @@ class TestUserViews(object):
         request.params['return_to'] = workout_url
         response = user_views.login(request.root, request)
         assert response['redirect_url'] == workout_url
+
+    def test_login_get_GET_messages(self, dummy_request):
+        """
+        GET request to access the login page, passing as a GET parameter
+        a "message key" so a given message is shown to the user
+        """
+        request = dummy_request
+        # first try with the keys we know there are messages associated to
+        request.GET['message'] = 'already-verified'
+        response = user_views.login(request.root, request)
+        assert response['message'] == 'User has been verified already'
+        request.GET['message'] = 'link-sent'
+        response = user_views.login(request.root, request)
+        assert response['message'] == (
+            'Verification link sent, please check your inbox')
+        request.GET['message'] = 'max-tokens-sent'
+        response = user_views.login(request.root, request)
+        assert response['message'] == (
+            'We already sent you the verification link more than three times')
+
+        # now try with a key that has no message assigned
+        request.GET['message'] = 'invalid-message-key'
+        response = user_views.login(request.root, request)
+        assert response['message'] == ''
+
+    def test_login_get_GET_email(self, dummy_request):
+        """
+        GET request to access the login page, passing as a GET parameter
+        an email address. That email is used to automatically fill in the
+        email input in the login form.
+        """
+        request = dummy_request
+        # first try with the keys we know there are messages associated to
+        request.GET['email'] = 'user@example.net'
+        response = user_views.login(request.root, request)
+        assert response['email'] == 'user@example.net'
 
     def test_login_post_wrong_email(self, dummy_request):
         request = dummy_request

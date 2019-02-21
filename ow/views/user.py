@@ -49,11 +49,24 @@ def dashboard_redirect(context, request):
     name='login',
     renderer='ow:templates/login.pt')
 def login(context, request):
-    message = ''
-    email = ''
+    # messages is a dict of pre-defined messages we would need to show to the
+    # user when coming back to the login page after certain actions
+    messages = {
+        'already-verified': _('User has been verified already'),
+        'link-sent': _('Verification link sent, please check your inbox'),
+        'max-tokens-sent': _(
+            'We already sent you the verification link more than three times')
+    }
+    message = request.GET.get('message', '')
+    if message:
+        message = messages.get(message, '')
+    email = request.GET.get('email', '')
     password = ''
     return_to = request.params.get('return_to')
     redirect_url = return_to or request.resource_url(request.root)
+    # If the user still has to verify the account, this will be set to the
+    # proper link to re-send the verification email
+    resend_verify_link = None
 
     if 'submit' in request.POST:
         email = request.POST.get('email', None)
@@ -69,6 +82,9 @@ def login(context, request):
                     message = _('Wrong password')
             else:
                 message = _('You have to verify your account first')
+                resend_verify_link = request.resource_url(
+                    user, 'resend-verification-link'
+                )
         else:
             message = _('Wrong email address')
 
@@ -76,7 +92,8 @@ def login(context, request):
         'message': message,
         'email': email,
         'password': password,
-        'redirect_url': redirect_url
+        'redirect_url': redirect_url,
+        'resend_verify_link': resend_verify_link
     }
 
 
@@ -102,6 +119,7 @@ def signup(context, request):
         context.add_user(user)
         # send a verification link to the user email address
         send_verification_email(request, user)
+        user.verification_tokens_sent += 1
         # Send to login
         return HTTPFound(location=request.resource_url(context))
 
@@ -134,6 +152,33 @@ def verify(context, request):
 
     # if we can not verify the user, show a page with some info about it
     return {}
+
+
+@view_config(
+    context=User,
+    name="resend-verification-link")
+def resend_verification_link(context, request):
+    """
+    Send an email with the verification link, only if the user has not
+    been verified yet
+    """
+    # the message to be shown when the user gets back to the login page
+    query = {'message': 'already-verified'}
+    if not context.verified:
+        tokens_sent = getattr(context, 'verification_tokens_sent', 0)
+        if tokens_sent > 3:
+            # we already sent the token 3 times, we don't send it anymore
+            query = {'message': 'max-tokens-sent', 'email': context.email}
+        else:
+            if context.verification_token is None:
+                # for some reason the verification token is not there, get one
+                context.verification_token = get_verification_token()
+            send_verification_email(request, context)
+            context.verification_tokens_sent = tokens_sent + 1
+            query = {'message': 'link-sent', 'email': context.email}
+    # Send to login
+    url = request.resource_url(request.root, 'login', query=query)
+    return HTTPFound(location=url)
 
 
 @view_config(

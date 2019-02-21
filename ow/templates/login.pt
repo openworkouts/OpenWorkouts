@@ -19,7 +19,14 @@
                  tal:attributes="value redirect_url">
 
           <div id="messages" class="message message-error"
-               tal:content="message" tal:condition="message != ''"></div>
+               tal:condition="message != ''">
+            <tal:message tal:content="message"></tal:message>
+            <tal:resend-verify tal:condition="resend_verify_link is not None">
+              <br>
+              <a href="" tal:attributes="href resend_verify_link"
+                 i18n:translate="">Please send me the verification link again</a>
+            </tal:resend-verify>
+          </div>
 
           <fieldset>
             <div>

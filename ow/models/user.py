@@ -41,6 +41,7 @@ class User(Folder):
         # has this user verified his account?
         self.verified = False
         self.verification_token = None
+        self.verification_tokens_sent = 0
         super(User, self).__init__()
 
     def __str__(self):

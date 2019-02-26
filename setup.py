@@ -38,6 +38,11 @@ requires = [
     'premailer'
 ]
 
+translations_require = [
+    'babel',
+    'lingua'
+]
+
 tests_require = [
     'WebTest >= 1.3.1',  # py3 compat
     'pytest',
@@ -67,6 +72,7 @@ setup(
     zip_safe=False,
     extras_require={
         'testing': tests_require,
+        'translations': translations_require,
     },
     install_requires=requires,
     entry_points={

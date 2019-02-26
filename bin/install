@@ -75,7 +75,7 @@ upgrade_pip_setuptools() {
 install_openworkouts() {
     . ${env_path}/bin/activate
     echo "Installing OpenWorkouts dependencies"
-    yes | pip install --upgrade -e ${current}[testing] >> ${install_log}.stdout 2>> ${install_log}.stderr
+    yes | pip install --upgrade -e ${current}[testing,translations] >> ${install_log}.stdout 2>> ${install_log}.stderr
     deactivate
 }
 

@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2019-02-26 17:08+0100\n"
-"PO-Revision-Date: 2019-02-26 17:09+0100\n"
+"POT-Creation-Date: 2019-02-26 18:41+0100\n"
+"PO-Revision-Date: 2019-02-26 18:42+0100\n"
 "Last-Translator: Wu <info@openworkouts.org>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -17,29 +17,117 @@ msgstr ""
 "Generated-By: Lingua 4.13\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ow/utilities.py:290
+#: ow/utilities.py:302
+msgid "January"
+msgstr "Enero"
+
+#: ow/utilities.py:303
+msgid "February"
+msgstr "Febrero"
+
+#: ow/utilities.py:304
+msgid "March"
+msgstr "Marzo"
+
+#: ow/utilities.py:305
+msgid "April"
+msgstr "Abril"
+
+#: ow/utilities.py:306
+msgid "May"
+msgstr "Mayo"
+
+#: ow/utilities.py:307
+msgid "June"
+msgstr "Junio"
+
+#: ow/utilities.py:308
+msgid "July"
+msgstr "Julio"
+
+#: ow/utilities.py:309
+msgid "August"
+msgstr "Agosto"
+
+#: ow/utilities.py:310
+msgid "September"
+msgstr "Septiembre"
+
+#: ow/utilities.py:311
+msgid "October"
+msgstr "Octubre"
+
+#: ow/utilities.py:312
+msgid "November"
+msgstr "Noviembre"
+
+#: ow/utilities.py:313
+msgid "December"
+msgstr "Diciembre"
+
+#: ow/utilities.py:325
+msgid "Monday"
+msgstr "Lunes"
+
+#: ow/utilities.py:326
+msgid "Tuesday"
+msgstr "Martes"
+
+#: ow/utilities.py:327
+msgid "Wednesday"
+msgstr "Miércoles"
+
+#: ow/utilities.py:328
+msgid "Thursday"
+msgstr "Jueves"
+
+#: ow/utilities.py:329
+msgid "Friday"
+msgstr "Viernes"
+
+#: ow/utilities.py:330
+msgid "Saturday"
+msgstr "Sábado"
+
+#: ow/utilities.py:331
+msgid "Sunday"
+msgstr "Domingo"
+
+#: ow/utilities.py:341
 msgid "Morning"
 msgstr "Mañana"
 
-#: ow/utilities.py:291
+#: ow/utilities.py:342
 msgid "Afternoon"
 msgstr "Tarde"
 
-#: ow/utilities.py:292
+#: ow/utilities.py:343
 msgid "Evening"
 msgstr "Tarde"
 
-#: ow/utilities.py:293
+#: ow/utilities.py:344
 msgid "Night"
 msgstr "Noche"
 
-#: ow/utilities.py:309
+#: ow/utilities.py:360
 msgid "English"
 msgstr "Inglés"
 
-#: ow/utilities.py:310
+#: ow/utilities.py:361
 msgid "Spanish"
 msgstr "Español"
+
+#: ow/utilities.py:367
+msgid "Male"
+msgstr "Hombre"
+
+#: ow/utilities.py:368
+msgid "Female"
+msgstr "Mujer"
+
+#: ow/utilities.py:369
+msgid "Robot"
+msgstr "Robot"
 
 #: ow/mail.py:42 ow/templates/mail_verify_account_txt.pt:5
 msgid "Welcome to OpenWorkouts"
@@ -253,58 +341,58 @@ msgstr "Clave nueva (confirmación)"
 msgid "My dashboard"
 msgstr "Inicio"
 
-#: ow/templates/dashboard.pt:30 ow/templates/user_list.pt:24
+#: ow/templates/dashboard.pt:31 ow/templates/user_list.pt:24
 msgid "Workouts"
 msgstr "Entrenos"
 
-#: ow/templates/dashboard.pt:35
+#: ow/templates/dashboard.pt:36
 msgid "You haven't added any workouts yet"
 msgstr "No has creado ningún entreno todavía"
 
-#: ow/templates/dashboard.pt:38
+#: ow/templates/dashboard.pt:39
 msgid "Upload one"
 msgstr "Sube un entreno"
 
-#: ow/templates/dashboard.pt:41
+#: ow/templates/dashboard.pt:42
 msgid "Add one manually"
 msgstr "Crea un entreno manualmente"
 
-#: ow/templates/dashboard.pt:114 ow/templates/profile.pt:58
+#: ow/templates/dashboard.pt:115 ow/templates/profile.pt:58
 msgid "workouts"
 msgstr "entrenos"
 
-#: ow/templates/dashboard.pt:119
+#: ow/templates/dashboard.pt:120
 msgid "This week"
 msgstr "Esta semana"
 
-#: ow/templates/dashboard.pt:123 ow/templates/profile.pt:70
+#: ow/templates/dashboard.pt:124 ow/templates/profile.pt:70
 msgid "km"
 msgstr "km"
 
-#: ow/templates/dashboard.pt:128 ow/templates/dashboard.pt:161
+#: ow/templates/dashboard.pt:129 ow/templates/dashboard.pt:162
 #: ow/templates/profile.pt:63
 msgid "hours"
 msgstr "horas"
 
-#: ow/templates/dashboard.pt:130 ow/templates/dashboard.pt:163
+#: ow/templates/dashboard.pt:131 ow/templates/dashboard.pt:164
 #: ow/templates/profile.pt:65
 msgid "min."
 msgstr "min."
 
-#: ow/templates/dashboard.pt:149
+#: ow/templates/dashboard.pt:150
 msgid "Workouts:"
 msgstr "Entrenos:"
 
-#: ow/templates/dashboard.pt:153 ow/templates/delete_workout.pt:44
+#: ow/templates/dashboard.pt:154 ow/templates/delete_workout.pt:44
 #: ow/templates/update_workout_from_file.pt:52
 msgid "Distance:"
 msgstr "Distancia:"
 
-#: ow/templates/dashboard.pt:157
+#: ow/templates/dashboard.pt:158
 msgid "Time:"
 msgstr "Tiempo:"
 
-#: ow/templates/dashboard.pt:168
+#: ow/templates/dashboard.pt:169
 msgid "Elevation:"
 msgstr "Elevación:"
 
@@ -668,32 +756,36 @@ msgstr ""
 "(*) Si haciendo click en el botón no funciona, puedes copiar este enlace\n"
 "y pegarlo en la barra de navegación de tu navegador web:"
 
-#: ow/views/user.py:59
+#: ow/views/user.py:63
 msgid "User has been verified already"
 msgstr "La cuenta ya ha sido verificada"
 
-#: ow/views/user.py:60
+#: ow/views/user.py:64
 msgid "Verification link sent, please check your inbox"
 msgstr ""
 "El enlace de verificación de cuenta ha sido enviado, por favor, comprueba "
 "tu\n"
 "buzón de correo electrónico"
 
-#: ow/views/user.py:61
+#: ow/views/user.py:65
 msgid "We already sent you the verification link more than three times"
 msgstr "Ya te hemos enviado el enlace de verificación más de tres veces"
 
-#: ow/views/user.py:96
+#: ow/views/user.py:100
 msgid "Wrong password"
 msgstr "Clave incorrecta"
 
-#: ow/views/user.py:98
+#: ow/views/user.py:102
 msgid "You have to verify your account first"
 msgstr "Tienes que verificar tu cuenta primero"
 
-#: ow/views/user.py:103
+#: ow/views/user.py:107
 msgid "Wrong email address"
 msgstr "Dirección de correo electrónico incorrecta"
+
+#: ow/views/user.py:302
+msgid "Unknown"
+msgstr "Desconocido"
 
 #: ow/views/workout.py:61
 msgid "workout"

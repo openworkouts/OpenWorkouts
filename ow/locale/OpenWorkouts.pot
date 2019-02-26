@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2019-02-26 17:08+0100\n"
+"POT-Creation-Date: 2019-02-26 18:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,28 +16,116 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Lingua 4.13\n"
 
-#: ./ow/utilities.py:290
-msgid "Morning"
+#: ./ow/utilities.py:302
+msgid "January"
 msgstr ""
 
-#: ./ow/utilities.py:291
-msgid "Afternoon"
+#: ./ow/utilities.py:303
+msgid "February"
 msgstr ""
 
-#: ./ow/utilities.py:292
-msgid "Evening"
+#: ./ow/utilities.py:304
+msgid "March"
 msgstr ""
 
-#: ./ow/utilities.py:293
-msgid "Night"
+#: ./ow/utilities.py:305
+msgid "April"
+msgstr ""
+
+#: ./ow/utilities.py:306
+msgid "May"
+msgstr ""
+
+#: ./ow/utilities.py:307
+msgid "June"
+msgstr ""
+
+#: ./ow/utilities.py:308
+msgid "July"
 msgstr ""
 
 #: ./ow/utilities.py:309
-msgid "English"
+msgid "August"
 msgstr ""
 
 #: ./ow/utilities.py:310
+msgid "September"
+msgstr ""
+
+#: ./ow/utilities.py:311
+msgid "October"
+msgstr ""
+
+#: ./ow/utilities.py:312
+msgid "November"
+msgstr ""
+
+#: ./ow/utilities.py:313
+msgid "December"
+msgstr ""
+
+#: ./ow/utilities.py:325
+msgid "Monday"
+msgstr ""
+
+#: ./ow/utilities.py:326
+msgid "Tuesday"
+msgstr ""
+
+#: ./ow/utilities.py:327
+msgid "Wednesday"
+msgstr ""
+
+#: ./ow/utilities.py:328
+msgid "Thursday"
+msgstr ""
+
+#: ./ow/utilities.py:329
+msgid "Friday"
+msgstr ""
+
+#: ./ow/utilities.py:330
+msgid "Saturday"
+msgstr ""
+
+#: ./ow/utilities.py:331
+msgid "Sunday"
+msgstr ""
+
+#: ./ow/utilities.py:341
+msgid "Morning"
+msgstr ""
+
+#: ./ow/utilities.py:342
+msgid "Afternoon"
+msgstr ""
+
+#: ./ow/utilities.py:343
+msgid "Evening"
+msgstr ""
+
+#: ./ow/utilities.py:344
+msgid "Night"
+msgstr ""
+
+#: ./ow/utilities.py:360
+msgid "English"
+msgstr ""
+
+#: ./ow/utilities.py:361
 msgid "Spanish"
+msgstr ""
+
+#: ./ow/utilities.py:367
+msgid "Male"
+msgstr ""
+
+#: ./ow/utilities.py:368
+msgid "Female"
+msgstr ""
+
+#: ./ow/utilities.py:369
+msgid "Robot"
 msgstr ""
 
 #: ./ow/mail.py:42 ./ow/templates/mail_verify_account_txt.pt:5
@@ -247,58 +335,58 @@ msgstr ""
 msgid "My dashboard"
 msgstr ""
 
-#: ./ow/templates/dashboard.pt:30 ./ow/templates/user_list.pt:24
+#: ./ow/templates/dashboard.pt:31 ./ow/templates/user_list.pt:24
 msgid "Workouts"
 msgstr ""
 
-#: ./ow/templates/dashboard.pt:35
+#: ./ow/templates/dashboard.pt:36
 msgid "You haven't added any workouts yet"
 msgstr ""
 
-#: ./ow/templates/dashboard.pt:38
+#: ./ow/templates/dashboard.pt:39
 msgid "Upload one"
 msgstr ""
 
-#: ./ow/templates/dashboard.pt:41
+#: ./ow/templates/dashboard.pt:42
 msgid "Add one manually"
 msgstr ""
 
-#: ./ow/templates/dashboard.pt:114 ./ow/templates/profile.pt:58
+#: ./ow/templates/dashboard.pt:115 ./ow/templates/profile.pt:58
 msgid "workouts"
 msgstr ""
 
-#: ./ow/templates/dashboard.pt:119
+#: ./ow/templates/dashboard.pt:120
 msgid "This week"
 msgstr ""
 
-#: ./ow/templates/dashboard.pt:123 ./ow/templates/profile.pt:70
+#: ./ow/templates/dashboard.pt:124 ./ow/templates/profile.pt:70
 msgid "km"
 msgstr ""
 
-#: ./ow/templates/dashboard.pt:128 ./ow/templates/dashboard.pt:161
+#: ./ow/templates/dashboard.pt:129 ./ow/templates/dashboard.pt:162
 #: ./ow/templates/profile.pt:63
 msgid "hours"
 msgstr ""
 
-#: ./ow/templates/dashboard.pt:130 ./ow/templates/dashboard.pt:163
+#: ./ow/templates/dashboard.pt:131 ./ow/templates/dashboard.pt:164
 #: ./ow/templates/profile.pt:65
 msgid "min."
 msgstr ""
 
-#: ./ow/templates/dashboard.pt:149
+#: ./ow/templates/dashboard.pt:150
 msgid "Workouts:"
 msgstr ""
 
-#: ./ow/templates/dashboard.pt:153 ./ow/templates/delete_workout.pt:44
+#: ./ow/templates/dashboard.pt:154 ./ow/templates/delete_workout.pt:44
 #: ./ow/templates/update_workout_from_file.pt:52
 msgid "Distance:"
 msgstr ""
 
-#: ./ow/templates/dashboard.pt:157
+#: ./ow/templates/dashboard.pt:158
 msgid "Time:"
 msgstr ""
 
-#: ./ow/templates/dashboard.pt:168
+#: ./ow/templates/dashboard.pt:169
 msgid "Elevation:"
 msgstr ""
 
@@ -649,28 +737,32 @@ msgid ""
 " it on your browser navigation bar:"
 msgstr ""
 
-#: ./ow/views/user.py:59
+#: ./ow/views/user.py:63
 msgid "User has been verified already"
 msgstr ""
 
-#: ./ow/views/user.py:60
+#: ./ow/views/user.py:64
 msgid "Verification link sent, please check your inbox"
 msgstr ""
 
-#: ./ow/views/user.py:61
+#: ./ow/views/user.py:65
 msgid "We already sent you the verification link more than three times"
 msgstr ""
 
-#: ./ow/views/user.py:96
+#: ./ow/views/user.py:100
 msgid "Wrong password"
 msgstr ""
 
-#: ./ow/views/user.py:98
+#: ./ow/views/user.py:102
 msgid "You have to verify your account first"
 msgstr ""
 
-#: ./ow/views/user.py:103
+#: ./ow/views/user.py:107
 msgid "Wrong email address"
+msgstr ""
+
+#: ./ow/views/user.py:302
+msgid "Unknown"
 msgstr ""
 
 #: ./ow/views/workout.py:61

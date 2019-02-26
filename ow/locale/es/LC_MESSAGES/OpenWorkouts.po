@@ -1,0 +1,669 @@
+#
+# Spanish translations for PACKAGE package
+# Traducciones al espa~nol para el paquete PACKAGE
+# This file is distributed under the same license as the PACKAGE package.
+# Wu <info@openworkouts.org>, 2019.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE 1.0\n"
+"POT-Creation-Date: 2019-02-25 13:14+0100\n"
+"PO-Revision-Date: 2019-02-25 13:24+0100\n"
+"Last-Translator: Wu <info@openworkouts.org>\n"
+"Language-Team: Spanish\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Lingua 4.13\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ow/utilities.py:290
+msgid "Morning"
+msgstr "Mañana"
+
+#: ow/utilities.py:291
+msgid "Afternoon"
+msgstr "Tarde"
+
+#: ow/utilities.py:292
+msgid "Evening"
+msgstr "Tarde"
+
+#: ow/utilities.py:293
+msgid "Night"
+msgstr "Noche"
+
+#: ow/mail.py:42 ow/templates/mail_verify_account_txt.pt:5
+msgid "Welcome to OpenWorkouts"
+msgstr "Bienvenido a OpenWorkouts"
+
+#: ow/schemas/blob.py:14
+msgid "Please upload a valid file type."
+msgstr "Por favor, adjunta un fichero válido."
+
+#: ow/schemas/user.py:12
+msgid "The given password does not match the existing one "
+msgstr "La clave no coincide"
+
+#: ow/schemas/user.py:24
+msgid "Another user is already using the nickname %(name)s"
+msgstr "Otro usuario está usando el apodo %(name)s"
+
+#: ow/schemas/user.py:36
+msgid "Another user is already registered with the email %(email)s"
+msgstr "Otro usuario ya está registrado con el email %(email)s"
+
+#: ow/templates/403.pt:15
+msgid "Uh oh! you are not supposed to access these contents! :-/"
+msgstr "Uh oh! se supone que no deberías de estar aquí! :-/"
+
+#. Used in sentence: "We are sorry, but you do not have permissions to view
+#. these contents. Please ${goback} and access the contents you have available
+#. from there."
+#. Used in sentence: "We are sorry, but the contents you were looking for can
+#. not be found. Please ${goback} and, if the problem persist, let us know!"
+#. Used in sentence: "Our support stuff has been notified already with all
+#. details about the problem. Please ${goback} and be patient while we fix it."
+#: ow/templates/403.pt:23 ow/templates/404.pt:23 ow/templates/500.pt:24
+msgid "go back to your dashboard"
+msgstr "vuelve a tu página de inicio"
+
+#. Canonical text for ${goback} is: "go back to your dashboard"
+#: ow/templates/403.pt:21
+msgid ""
+"We are sorry, but you do not have permissions to view these contents. Please "
+"${goback} and access the contents you have available from there."
+msgstr ""
+"Lo sentimos, pero no tienes permiso para ver estos contenidos. Por favor\n"
+"${goback} y accede a los contenidos que tienes disponibles desde allí."
+
+#: ow/templates/404.pt:15
+msgid "So sorry! :-("
+msgstr "Lo sentimos! :-("
+
+#. Canonical text for ${goback} is: "go back to your dashboard"
+#: ow/templates/404.pt:21
+msgid ""
+"We are sorry, but the contents you were looking for can not be found. Please "
+"${goback} and, if the problem persist, let us know!"
+msgstr ""
+"Lo sentimos, pero no podemos encontrar los contenidos que estás buscando.\n"
+"Por favor ${goback} y, si el problema persiste, háznoslo saber!"
+
+#: ow/templates/500.pt:15
+msgid "Dammit! Something got broken! :-("
+msgstr "Vaya! Algo se ha roto! :-("
+
+#. Canonical text for ${goback} is: "go back to your dashboard"
+#: ow/templates/500.pt:21
+msgid ""
+"Our support stuff has been notified already with all details about the "
+"problem. Please ${goback} and be patient while we fix it."
+msgstr ""
+"Nuestro equipo técnico ha sido informado con todos los detalles sobre el\n"
+"problema. Por favor ${goback} y ten paciencia mientras lo solucionamos."
+
+#: ow/templates/add_manual_workout.pt:11 ow/templates/add_manual_workout.pt:15
+msgid "Add workout manually"
+msgstr "Crear un entreno manualmente"
+
+#: ow/templates/add_manual_workout.pt:29 ow/templates/add_workout.pt:22
+#: ow/templates/update_workout_from_file.pt:24
+msgid "Back"
+msgstr "Volver"
+
+#: ow/templates/add_manual_workout.pt:33
+msgid "Add a new workout"
+msgstr "Subir un nuevo entreno"
+
+#: ow/templates/add_manual_workout.pt:42
+msgid "Sport/Activity"
+msgstr "Deporte/Actividad"
+
+#: ow/templates/add_manual_workout.pt:47 ow/templates/add_workout.pt:29
+msgid "Title"
+msgstr "Título"
+
+#: ow/templates/add_manual_workout.pt:53
+msgid "Distance (Km):"
+msgstr "Distancia (km)"
+
+#: ow/templates/add_manual_workout.pt:58
+msgid "Start date (dd/mm/yyyy)"
+msgstr "Fecha de inicio (dd/mm/yyyy)"
+
+#: ow/templates/add_manual_workout.pt:63
+msgid "Start time (HH:MM)"
+msgstr "Hora de inicio (HH:MM)"
+
+#: ow/templates/add_manual_workout.pt:71
+msgid "Hours"
+msgstr "Horas"
+
+#: ow/templates/add_manual_workout.pt:76
+msgid "Minutes"
+msgstr "Minutos"
+
+#: ow/templates/add_manual_workout.pt:81
+msgid "Seconds"
+msgstr "Segundos"
+
+#: ow/templates/add_manual_workout.pt:87
+msgid "Notes:"
+msgstr "Notas:"
+
+#: ow/templates/add_user.pt:11 ow/templates/add_user.pt:15
+msgid "Add user"
+msgstr "Agregar usuario"
+
+#: ow/templates/add_user.pt:25
+msgid "E-Mail:"
+msgstr "Correo electrónico:"
+
+#: ow/templates/add_user.pt:28 ow/templates/signup.pt:29
+msgid "Nickname"
+msgstr "Apodo"
+
+#: ow/templates/add_user.pt:34
+msgid "Firstname:"
+msgstr "Nombre:"
+
+#: ow/templates/add_user.pt:37
+msgid "Lastname:"
+msgstr "Apellidos:"
+
+#: ow/templates/add_user.pt:43
+msgid "Group / Admin:"
+msgstr "Grupo / Admin:"
+
+#: ow/templates/add_user.pt:49 ow/templates/change_password.pt:23
+#: ow/templates/delete_workout.pt:23 ow/templates/edit_profile.pt:27
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: ow/templates/add_workout.pt:11 ow/templates/add_workout.pt:15
+#: ow/templates/add_workout.pt:23
+msgid "Upload workout file"
+msgstr "Subir fichero del entreno"
+
+#: ow/templates/add_workout.pt:34
+msgid "Notes"
+msgstr "Notas"
+
+#: ow/templates/add_workout.pt:39
+msgid "Workout file (gpx, fit)"
+msgstr "Fichero del entreno (gpx, fit)"
+
+#: ow/templates/base.pt:69
+msgid "Dashboard"
+msgstr "Inicio"
+
+#: ow/templates/base.pt:75 ow/templates/profile.pt:11
+msgid "My profile"
+msgstr "Mi perfil"
+
+#: ow/templates/base.pt:78
+msgid "Add Workout"
+msgstr "Crear entreno"
+
+#: ow/templates/base.pt:82
+msgid "Upload file"
+msgstr "Subir fichero del entreno"
+
+#: ow/templates/base.pt:87
+msgid "Add manually"
+msgstr "Crear manualmente"
+
+#: ow/templates/base.pt:95
+msgid "Log out"
+msgstr "Cerrar sesión"
+
+#: ow/templates/change_password.pt:11 ow/templates/change_password.pt:15
+#: ow/templates/change_password.pt:24
+msgid "Change password"
+msgstr "Cambiar clave de acceso"
+
+#: ow/templates/change_password.pt:31
+msgid "Old/current password"
+msgstr "Clave actual"
+
+#: ow/templates/change_password.pt:39
+msgid "New password"
+msgstr "Clave nueva"
+
+#: ow/templates/change_password.pt:45
+msgid "New password (again)"
+msgstr "Clave nueva (confirmación)"
+
+#: ow/templates/dashboard.pt:11
+msgid "My dashboard"
+msgstr "Inicio"
+
+#: ow/templates/dashboard.pt:30 ow/templates/user_list.pt:24
+msgid "Workouts"
+msgstr "Entrenos"
+
+#: ow/templates/dashboard.pt:35
+msgid "You haven't added any workouts yet"
+msgstr "No has creado ningún entreno todavía"
+
+#: ow/templates/dashboard.pt:38
+msgid "Upload one"
+msgstr "Sube un entreno"
+
+#: ow/templates/dashboard.pt:41
+msgid "Add one manually"
+msgstr "Crea un entreno manualmente"
+
+#: ow/templates/dashboard.pt:114 ow/templates/profile.pt:58
+msgid "workouts"
+msgstr "entrenos"
+
+#: ow/templates/dashboard.pt:119
+msgid "This week"
+msgstr "Esta semana"
+
+#: ow/templates/dashboard.pt:123 ow/templates/profile.pt:70
+msgid "km"
+msgstr "km"
+
+#: ow/templates/dashboard.pt:128 ow/templates/dashboard.pt:161
+#: ow/templates/profile.pt:63
+msgid "hours"
+msgstr "horas"
+
+#: ow/templates/dashboard.pt:130 ow/templates/dashboard.pt:163
+#: ow/templates/profile.pt:65
+msgid "min."
+msgstr "min."
+
+#: ow/templates/dashboard.pt:149
+msgid "Workouts:"
+msgstr "Entrenos:"
+
+#: ow/templates/dashboard.pt:153 ow/templates/delete_workout.pt:44
+#: ow/templates/update_workout_from_file.pt:52
+msgid "Distance:"
+msgstr "Distancia:"
+
+#: ow/templates/dashboard.pt:157
+msgid "Time:"
+msgstr "Tiempo:"
+
+#: ow/templates/dashboard.pt:168
+msgid "Elevation:"
+msgstr "Elevación:"
+
+#: ow/templates/delete_workout.pt:11 ow/templates/delete_workout.pt:16
+msgid "Delete workout"
+msgstr "Eliminar entreno"
+
+#: ow/templates/delete_workout.pt:36
+#: ow/templates/update_workout_from_file.pt:44
+msgid "Start:"
+msgstr "Inicio:"
+
+#: ow/templates/delete_workout.pt:40
+#: ow/templates/update_workout_from_file.pt:48
+msgid "Duration:"
+msgstr "Duración:"
+
+#: ow/templates/edit_manual_workout.pt:16
+#: ow/templates/edit_manual_workout.pt:21
+#: ow/templates/edit_manual_workout.pt:26
+msgid "Edit workout"
+msgstr "Editar entreno"
+
+#: ow/templates/edit_profile.pt:11 ow/templates/edit_profile.pt:15
+#: ow/templates/edit_profile.pt:28
+msgid "Edit profile"
+msgstr "Editar perfil"
+
+#: ow/templates/edit_profile.pt:35
+msgid "Email address:"
+msgstr "Dirección de correo electrónico:"
+
+#: ow/templates/edit_profile.pt:40
+msgid "Nickname:"
+msgstr "Apodo:"
+
+#: ow/templates/edit_profile.pt:49
+msgid "Current picture:"
+msgstr "Foto actual:"
+
+#: ow/templates/edit_profile.pt:57
+msgid "Picture (jpg, jpeg, png or gif):"
+msgstr "Foto (jpg, jpeg, png o gif):"
+
+#: ow/templates/edit_profile.pt:65
+msgid "First name:"
+msgstr "Nombre:"
+
+#: ow/templates/edit_profile.pt:70
+msgid "Last name:"
+msgstr "Apellidos:"
+
+#: ow/templates/edit_profile.pt:75 ow/templates/profile.pt:165
+msgid "Gender:"
+msgstr "Género:"
+
+#: ow/templates/edit_profile.pt:83 ow/templates/profile.pt:169
+msgid "Birth date:"
+msgstr "Fecha de nacimiento:"
+
+#: ow/templates/edit_profile.pt:88
+msgid "Height (meters):"
+msgstr "Altura (metros):"
+
+#: ow/templates/edit_profile.pt:93
+msgid "Weight (kg):"
+msgstr "Peso (kg):"
+
+#: ow/templates/edit_profile.pt:99
+msgid "Bio/About you:"
+msgstr "Bio/Acerca de ti:"
+
+#: ow/templates/edit_profile.pt:104
+msgid "Timezone:"
+msgstr "Zona horaria:"
+
+#: ow/templates/edit_profile.pt:105
+msgid "All dates and times will be formatted for this timezone"
+msgstr "Todas las fechas serán formateadas para esta zona horaria"
+
+#: ow/templates/login.pt:27
+msgid "Please send me the verification link again"
+msgstr "Por favor, enviadme de nuevo el enlace para verificar mi cuenta"
+
+#: ow/templates/login.pt:33 ow/templates/signup.pt:21
+msgid "Email"
+msgstr "Correo electrónico"
+
+#: ow/templates/login.pt:34
+msgid "Your email..."
+msgstr "Tu email..."
+
+#: ow/templates/login.pt:39 ow/templates/signup.pt:51
+msgid "Password"
+msgstr "Clave"
+
+#: ow/templates/login.pt:40
+msgid "Your password..."
+msgstr "Tu clave..."
+
+#: ow/templates/login.pt:46
+msgid "Forgot your password?"
+msgstr "Has olvidado tu clave?"
+
+#: ow/templates/login.pt:49 ow/templates/verify.pt:24
+msgid "Join now!"
+msgstr "Únete!"
+
+#: ow/templates/profile.pt:43
+msgid "edit profile"
+msgstr "editar perfil"
+
+#: ow/templates/profile.pt:46
+msgid "change password"
+msgstr "cambiar clave de acceso"
+
+#: ow/templates/profile.pt:74
+msgid "m"
+msgstr "m"
+
+#: ow/templates/profile.pt:84
+msgid "distance"
+msgstr "distancia"
+
+#: ow/templates/profile.pt:85
+msgid "time"
+msgstr "tiempo"
+
+#: ow/templates/profile.pt:86
+msgid "elevation"
+msgstr "elevación"
+
+#: ow/templates/profile.pt:90
+msgid "weekly"
+msgstr "semanal"
+
+#: ow/templates/profile.pt:91
+msgid "monthly"
+msgstr "mensual"
+
+#: ow/templates/profile.pt:124
+msgid "HR (bpm)"
+msgstr "Frec. cardíaca (bpm)"
+
+#: ow/templates/profile.pt:126 ow/templates/profile.pt:133
+#: ow/templates/workout.pt:74 ow/templates/workout.pt:81
+#: ow/templates/workout.pt:88 ow/templates/workout.pt:97
+msgid "Avg."
+msgstr "Media"
+
+#: ow/templates/profile.pt:128 ow/templates/profile.pt:135
+#: ow/templates/workout.pt:76 ow/templates/workout.pt:83
+#: ow/templates/workout.pt:90 ow/templates/workout.pt:99
+msgid "Max."
+msgstr "Max."
+
+#: ow/templates/profile.pt:131
+msgid "Cad"
+msgstr "Cad"
+
+#: ow/templates/profile.pt:175
+msgid "Height:"
+msgstr "Altura:"
+
+#: ow/templates/profile.pt:179
+msgid "Weight:"
+msgstr "Peso:"
+
+#: ow/templates/signup.pt:22
+msgid "We need a valid email address"
+msgstr "Necesitamos una dirección de correo electrónico válida"
+
+#: ow/templates/signup.pt:30
+msgid "Choose a cool nickname"
+msgstr "Elige un apodo molón"
+
+#: ow/templates/signup.pt:37
+msgid "First name"
+msgstr "Nombre"
+
+#: ow/templates/signup.pt:38
+msgid "Your real first name here"
+msgstr "Escribe aquí tu nombre"
+
+#: ow/templates/signup.pt:44
+msgid "Last name"
+msgstr "Apellidos"
+
+#: ow/templates/signup.pt:45
+msgid "Your family name here"
+msgstr "Escribe aquí tus apellidos"
+
+#: ow/templates/signup.pt:52
+msgid "More than 9 characters, numbers and/or symbols"
+msgstr "Más de 9 caracteres, números y/o símbolos"
+
+#: ow/templates/signup.pt:58
+msgid "Password (confirm)"
+msgstr "Clave (confirmación)"
+
+#: ow/templates/signup.pt:59
+msgid "Confirm your password"
+msgstr "Vuelve a escribir tu clave"
+
+#: ow/templates/update_workout_from_file.pt:11
+#: ow/templates/update_workout_from_file.pt:16
+msgid "Update workout from file"
+msgstr "Actualizar entreno con un fichero nuevo"
+
+#: ow/templates/update_workout_from_file.pt:33
+msgid "Existing ${filetype} tracking file data"
+msgstr "Fichero ${filetype} de entreno actual"
+
+#: ow/templates/update_workout_from_file.pt:64
+msgid "Workout file (gpx, fit):"
+msgstr "Fichero de entreno (gpx, fit)"
+
+#: ow/templates/user_list.pt:11
+msgid "User list"
+msgstr "Lista de usuarios"
+
+#: ow/templates/user_list.pt:15
+msgid "user list"
+msgstr "lista de usuarios"
+
+#: ow/templates/user_list.pt:22
+msgid "Name"
+msgstr "Nombre"
+
+#: ow/templates/user_list.pt:23
+msgid "E-mail"
+msgstr "Correo electrónico"
+
+#: ow/templates/workout.pt:11 ow/templates/workout.pt:23
+msgid "Workout details"
+msgstr "Detalles del entreno"
+
+#: ow/templates/workout.pt:39
+msgid "edit workout"
+msgstr "editar entreno"
+
+#: ow/templates/workout.pt:45
+msgid "update with tracking file"
+msgstr "actualizar con fichero de entreno"
+
+#: ow/templates/workout.pt:50
+msgid "delete"
+msgstr "eliminar"
+
+#: ow/templates/workout.pt:60
+msgid "Distance"
+msgstr "Distancia"
+
+#: ow/templates/workout.pt:64
+msgid "Duration"
+msgstr "Duración"
+
+#: ow/templates/workout.pt:69
+msgid "Start"
+msgstr "Inicio"
+
+#: ow/templates/workout.pt:73
+msgid "Speed"
+msgstr "Velocidad"
+
+#: ow/templates/workout.pt:80
+msgid "Heart Rate"
+msgstr "Frec. cardíaca"
+
+#: ow/templates/workout.pt:87
+msgid "Cadence"
+msgstr "Cadencia"
+
+#: ow/templates/workout.pt:94
+msgid "Temperature"
+msgstr "Temperatura"
+
+#: ow/templates/workout.pt:95
+msgid "Min."
+msgstr "Min."
+
+#: ow/templates/mail_verify_account_txt.pt:8
+#: ow/templates/mail_verify_account_html.pt:21
+msgid ""
+"You have joined the OpenWorkouts community successfully, now please verify "
+"your account."
+msgstr ""
+"Ya eres miembro de la comunidad OpenWorkouts, ahora por favor verifica\n"
+"tu cuenta."
+
+#: ow/templates/mail_verify_account_txt.pt:13
+msgid ""
+"Click on the following link, or copy and paste it in your browser navigation "
+"bar to verify your account:"
+msgstr ""
+"Haz click en el siguiente enlace, o copialo y pégalo en la barra de\n"
+"navegación de tu navegador, para verificar tu cuenta:"
+
+#: ow/templates/mail_verify_account_txt.pt:20
+msgid "Thank you for joining us. Best regards from the OpenWorkouts team."
+msgstr ""
+"Muchas gracias por unirte a nuestra comunidad. Saludos de todo el equipo\n"
+"detrás de OpenWorkouts."
+
+#: ow/templates/verify.pt:14
+msgid ""
+"Your email hasn't been verified. Check the url and make sure you copied it "
+"exactly as it was in the verification email."
+msgstr ""
+"Tu dirección de correo electrónico no ha sido verificada. Comprueba el "
+"enlace\n"
+"de verificación y asegúrate de que lo has copiado tal cual estaba en el "
+"correo\n"
+"de verificación."
+
+#: ow/templates/verify.pt:21
+msgid "Login"
+msgstr "Inicia sesión"
+
+#: ow/templates/mail_verify_account_html.pt:17
+msgid "Welcome"
+msgstr "Bienvenido"
+
+#: ow/templates/mail_verify_account_html.pt:30
+msgid "Verify my account (*)"
+msgstr "Verificar mi cuenta (*)"
+
+#: ow/templates/mail_verify_account_html.pt:34
+msgid "Thank you for joining us."
+msgstr "Gracias por unirte a nuestra comunidad."
+
+#: ow/templates/mail_verify_account_html.pt:37
+msgid "Best regards from the OpenWorkouts team."
+msgstr "Un saludo de todo el equipo detrás de OpenWorkouts"
+
+#: ow/templates/mail_verify_account_html.pt:43
+msgid ""
+"(*) If clicking on the button does not work, you can copy this link and "
+"paste it on your browser navigation bar:"
+msgstr ""
+"(*) Si haciendo click en el botón no funciona, puedes copiar este enlace\n"
+"y pegarlo en la barra de navegación de tu navegador web:"
+
+#: ow/views/user.py:55
+msgid "User has been verified already"
+msgstr "La cuenta ya ha sido verificada"
+
+#: ow/views/user.py:56
+msgid "Verification link sent, please check your inbox"
+msgstr ""
+"El enlace de verificación de cuenta ha sido enviado, por favor, comprueba "
+"tu\n"
+"buzón de correo electrónico"
+
+#: ow/views/user.py:57
+msgid "We already sent you the verification link more than three times"
+msgstr "Ya te hemos enviado el enlace de verificación más de tres veces"
+
+#: ow/views/user.py:82
+msgid "Wrong password"
+msgstr "Clave incorrecta"
+
+#: ow/views/user.py:84
+msgid "You have to verify your account first"
+msgstr "Tienes que verificar tu cuenta primero"
+
+#: ow/views/user.py:89
+msgid "Wrong email address"
+msgstr "Dirección de correo electrónico incorrecta"
+
+#: ow/views/workout.py:61
+msgid "workout"
+msgstr "entreno"
+
+#~ msgid "Add workout Manually"
+#~ msgstr "Crear un entreno manualmente"

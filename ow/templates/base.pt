@@ -64,15 +64,15 @@
             <ul>
               <li
                   tal:attributes="class 'is-active' if 'dashboard' in renderer_name else ''">
-                <a class="icon-dashboard" href="" i18n:translate=""
+                <a class="icon-dashboard" href=""
                    tal:attributes="href request.resource_url(request.root)">
-                  <span>Dashboard</span></a>
+                  <span i18n:translate="">Dashboard</span></a>
               </li>
               <li
                   tal:attributes="class 'is-active' if 'profile' in renderer_name else ''">
-                <a class="icon-profile" href="" i18n:translate=""
+                <a class="icon-profile" href=""
                    tal:attributes="href request.resource_url(request.root, current_user, 'profile')">
-                  <span>My profile</span></a>
+                  <span i18n:translate="">My profile</span></a>
               </li>
               <li class="add-workout">
                 <a href="#"><span i18n:translate="">Add Workout</span></a>
@@ -90,9 +90,9 @@
                 </ul>
               </li>
               <li>
-                <a class="icon-logout" href="" i18n:translate=""
+                <a class="icon-logout" href=""
                    tal:attributes="href request.resource_url(request.root, 'logout')">
-                  <span>Log out</span>
+                  <span i18n:translate="">Log out</span>
                 </a>
               </li>
             </ul>

@@ -1,0 +1,3 @@
+#!/bin/sh
+pot-create -o ow/locale/OpenWorkouts.pot ow
+msgmerge --update ow/locale/es/LC_MESSAGES/OpenWorkouts.po ow/locale/OpenWorkouts.pot

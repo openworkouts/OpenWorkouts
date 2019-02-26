@@ -1,0 +1,3 @@
+#!/bin/sh
+
+msgfmt --statistics -o ow/locale/es/LC_MESSAGES/OpenWorkouts.mo ow/locale/es/LC_MESSAGES/OpenWorkouts.po

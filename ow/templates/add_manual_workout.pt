@@ -12,7 +12,7 @@
   </metal:head-title>
 
   <metal:title metal:fill-slot="title" metal:define-slot="head-title">
-    <tal:t i18n:translate="">Add workout Manually</tal:t>
+    <tal:t i18n:translate="">Add workout manually</tal:t>
   </metal:title>
 
   <metal:css metal:fill-slot="css">

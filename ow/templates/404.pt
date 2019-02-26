@@ -20,7 +20,7 @@
   <metal:content metal:fill-slot="content">
     <div id="userinfo" i18n:translate="">
       We are sorry, but the contents you were looking for can not be found.
-      Please <a href="" tal:attributes="href url">
+      Please <a i18n:name="goback" i18n:translate="" href="" tal:attributes="href url">
         go back to your dashboard</a> and, if the problem persist, let us know!
     </div>
   </metal:content>

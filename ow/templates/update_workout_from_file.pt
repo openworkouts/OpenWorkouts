@@ -28,13 +28,14 @@
 
       <h2 tal:content="context.title"></h2>
 
-      <div tal:condition="context.has_tracking_file"
-           i18n:translate="">
+      <div tal:condition="context.has_tracking_file">
 
-        <h3>Existing
+        <h3 i18n:translate="">
+          Existing
           <tal:filetype i18n:name="filetype"
                         tal:content="context.tracking_filetype"></tal:filetype>
-          tracking file data</h3>
+          tracking file data
+        </h3>
 
         <ul class="workout-activity-summary" id=""
             tal:attributes="id 'workout-' + context.workout_id + '-details'"

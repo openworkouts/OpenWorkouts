@@ -290,12 +290,13 @@ class TestUserViews(object):
         """
         Renders the user dashboard
         """
+        now = datetime.now(timezone.utc)
         request = dummy_request
         response = user_views.dashboard(john, request)
         assert len(response) == 6
         assert 'month_name' in response.keys()
-        assert response['current_year'] == datetime.now().year
-        assert response['current_day_name'] == datetime.now().strftime('%a')
+        assert response['current_year'] == now.year
+        assert response['current_day_name'] == now.strftime('%a')
         # this user has a single workout, in 2015
         assert response['viewing_year'] == 2015
         assert response['viewing_month'] == 6
@@ -305,14 +306,15 @@ class TestUserViews(object):
         """
         Renders the user dashboard for a chosen year.
         """
+        now = datetime.now(timezone.utc)
         request = dummy_request
         # first test the year for which we know there is a workout
         request.GET['year'] = 2015
         response = user_views.dashboard(john, request)
         assert len(response) == 6
         assert 'month_name' in response.keys()
-        assert response['current_year'] == datetime.now().year
-        assert response['current_day_name'] == datetime.now().strftime('%a')
+        assert response['current_year'] == now.year
+        assert response['current_day_name'] == now.strftime('%a')
         # this user has a single workout, in 2015
         assert response['viewing_year'] == 2015
         assert response['viewing_month'] == 6
@@ -322,8 +324,8 @@ class TestUserViews(object):
         response = user_views.dashboard(john, request)
         assert len(response) == 6
         assert 'month_name' in response.keys()
-        assert response['current_year'] == datetime.now().year
-        assert response['current_day_name'] == datetime.now().strftime('%a')
+        assert response['current_year'] == now.year
+        assert response['current_day_name'] == now.strftime('%a')
         # this user has a single workout, in 2015
         assert response['viewing_year'] == 2000
         # we have no data for that year and we didn't ask for a certain month,
@@ -335,6 +337,7 @@ class TestUserViews(object):
         """
         Renders the user dashboard for a chosen year and month.
         """
+        now = datetime.now(timezone.utc)
         request = dummy_request
         # first test the year/month for which we know there is a workout
         request.GET['year'] = 2015
@@ -342,8 +345,8 @@ class TestUserViews(object):
         response = user_views.dashboard(john, request)
         assert len(response) == 6
         assert 'month_name' in response.keys()
-        assert response['current_year'] == datetime.now().year
-        assert response['current_day_name'] == datetime.now().strftime('%a')
+        assert response['current_year'] == now.year
+        assert response['current_day_name'] == now.strftime('%a')
         # this user has a single workout, in 2015
         assert response['viewing_year'] == 2015
         assert response['viewing_month'] == 6
@@ -353,8 +356,8 @@ class TestUserViews(object):
         response = user_views.dashboard(john, request)
         assert len(response) == 6
         assert 'month_name' in response.keys()
-        assert response['current_year'] == datetime.now().year
-        assert response['current_day_name'] == datetime.now().strftime('%a')
+        assert response['current_year'] == now.year
+        assert response['current_day_name'] == now.strftime('%a')
         # this user has a single workout, in 2015
         assert response['viewing_year'] == 2015
         assert response['viewing_month'] == 2
@@ -365,8 +368,8 @@ class TestUserViews(object):
         response = user_views.dashboard(john, request)
         assert len(response) == 6
         assert 'month_name' in response.keys()
-        assert response['current_year'] == datetime.now().year
-        assert response['current_day_name'] == datetime.now().strftime('%a')
+        assert response['current_year'] == now.year
+        assert response['current_day_name'] == now.strftime('%a')
         # this user has a single workout, in 2015
         assert response['viewing_year'] == 2010
         assert response['viewing_month'] == 6
@@ -377,14 +380,15 @@ class TestUserViews(object):
         Passing a month without a year when rendering the dashboard. The last
         year for which workout data is available is assumed
         """
+        now = datetime.now(timezone.utc)
         request = dummy_request
         # Set a month without workout data
         request.GET['month'] = 5
         response = user_views.dashboard(john, request)
         assert len(response) == 6
         assert 'month_name' in response.keys()
-        assert response['current_year'] == datetime.now().year
-        assert response['current_day_name'] == datetime.now().strftime('%a')
+        assert response['current_year'] == now.year
+        assert response['current_day_name'] == now.strftime('%a')
         # this user has a single workout, in 2015
         assert response['viewing_year'] == 2015
         assert response['viewing_month'] == 5
@@ -394,8 +398,8 @@ class TestUserViews(object):
         response = user_views.dashboard(john, request)
         assert len(response) == 6
         assert 'month_name' in response.keys()
-        assert response['current_year'] == datetime.now().year
-        assert response['current_day_name'] == datetime.now().strftime('%a')
+        assert response['current_year'] == now.year
+        assert response['current_day_name'] == now.strftime('%a')
         # this user has a single workout, in 2015
         assert response['viewing_year'] == 2015
         assert response['viewing_month'] == 6

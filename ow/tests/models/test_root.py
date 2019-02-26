@@ -38,6 +38,18 @@ class TestRootOpenWorkouts(object):
         for key in ['email', 'nickname', 'sport']:
             assert key in root.catalog
 
+    def test_update_indexes(self, root):
+        indexes = sorted([i for i in root.catalog])
+        assert indexes == ['email', 'nickname', 'sport']
+        # remove one index
+        del root.catalog['email']
+        indexes = sorted([i for i in root.catalog])
+        assert indexes == ['nickname', 'sport']
+        # now update indexes, the index will be back there
+        root._update_indexes()
+        indexes = sorted([i for i in root.catalog])
+        assert indexes == ['email', 'nickname', 'sport']
+
     def test_add_user_ok(self, root):
         assert len(root.users) == 1
         user = User(firstname='New', lastname='For Testing',

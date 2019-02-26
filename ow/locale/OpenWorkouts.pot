@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2019-02-25 13:14+0100\n"
+"POT-Creation-Date: 2019-02-26 17:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,6 +32,14 @@ msgstr ""
 msgid "Night"
 msgstr ""
 
+#: ./ow/utilities.py:309
+msgid "English"
+msgstr ""
+
+#: ./ow/utilities.py:310
+msgid "Spanish"
+msgstr ""
+
 #: ./ow/mail.py:42 ./ow/templates/mail_verify_account_txt.pt:5
 msgid "Welcome to OpenWorkouts"
 msgstr ""
@@ -40,15 +48,15 @@ msgstr ""
 msgid "Please upload a valid file type."
 msgstr ""
 
-#: ./ow/schemas/user.py:12
+#: ./ow/schemas/user.py:13
 msgid "The given password does not match the existing one "
 msgstr ""
 
-#: ./ow/schemas/user.py:24
+#: ./ow/schemas/user.py:25
 msgid "Another user is already using the nickname %(name)s"
 msgstr ""
 
-#: ./ow/schemas/user.py:36
+#: ./ow/schemas/user.py:37
 msgid "Another user is already registered with the email %(email)s"
 msgstr ""
 
@@ -146,6 +154,12 @@ msgstr ""
 msgid "Notes:"
 msgstr ""
 
+#: ./ow/templates/add_manual_workout.pt:187 ./ow/templates/add_workout.pt:93
+#: ./ow/templates/edit_profile.pt:255
+#: ./ow/templates/update_workout_from_file.pt:139
+msgid "Save"
+msgstr ""
+
 #: ./ow/templates/add_user.pt:11 ./ow/templates/add_user.pt:15
 msgid "Add user"
 msgstr ""
@@ -213,7 +227,7 @@ msgid "Log out"
 msgstr ""
 
 #: ./ow/templates/change_password.pt:11 ./ow/templates/change_password.pt:15
-#: ./ow/templates/change_password.pt:24
+#: ./ow/templates/change_password.pt:24 ./ow/templates/change_password.pt:109
 msgid "Change password"
 msgstr ""
 
@@ -302,6 +316,14 @@ msgstr ""
 msgid "Duration:"
 msgstr ""
 
+#: ./ow/templates/delete_workout.pt:55
+msgid "Are you sure you want to delete this workout?"
+msgstr ""
+
+#: ./ow/templates/delete_workout.pt:58
+msgid "Yes, delete"
+msgstr ""
+
 #: ./ow/templates/edit_manual_workout.pt:16
 #: ./ow/templates/edit_manual_workout.pt:21
 #: ./ow/templates/edit_manual_workout.pt:26
@@ -321,39 +343,39 @@ msgstr ""
 msgid "Nickname:"
 msgstr ""
 
-#: ./ow/templates/edit_profile.pt:49
+#: ./ow/templates/edit_profile.pt:48
 msgid "Current picture:"
 msgstr ""
 
-#: ./ow/templates/edit_profile.pt:57
+#: ./ow/templates/edit_profile.pt:56
 msgid "Picture (jpg, jpeg, png or gif):"
 msgstr ""
 
-#: ./ow/templates/edit_profile.pt:65
+#: ./ow/templates/edit_profile.pt:64
 msgid "First name:"
 msgstr ""
 
-#: ./ow/templates/edit_profile.pt:70
+#: ./ow/templates/edit_profile.pt:69
 msgid "Last name:"
 msgstr ""
 
-#: ./ow/templates/edit_profile.pt:75 ./ow/templates/profile.pt:165
+#: ./ow/templates/edit_profile.pt:74 ./ow/templates/profile.pt:165
 msgid "Gender:"
 msgstr ""
 
-#: ./ow/templates/edit_profile.pt:83 ./ow/templates/profile.pt:169
+#: ./ow/templates/edit_profile.pt:82 ./ow/templates/profile.pt:169
 msgid "Birth date:"
 msgstr ""
 
-#: ./ow/templates/edit_profile.pt:88
+#: ./ow/templates/edit_profile.pt:87
 msgid "Height (meters):"
 msgstr ""
 
-#: ./ow/templates/edit_profile.pt:93
+#: ./ow/templates/edit_profile.pt:92
 msgid "Weight (kg):"
 msgstr ""
 
-#: ./ow/templates/edit_profile.pt:99
+#: ./ow/templates/edit_profile.pt:98
 msgid "Bio/About you:"
 msgstr ""
 
@@ -361,8 +383,16 @@ msgstr ""
 msgid "Timezone:"
 msgstr ""
 
-#: ./ow/templates/edit_profile.pt:105
+#: ./ow/templates/edit_profile.pt:106
 msgid "All dates and times will be formatted for this timezone"
+msgstr ""
+
+#: ./ow/templates/edit_profile.pt:114
+msgid "Language:"
+msgstr ""
+
+#: ./ow/templates/edit_profile.pt:116
+msgid "All texts in the user interface will appear in this language"
 msgstr ""
 
 #: ./ow/templates/login.pt:27
@@ -383,6 +413,10 @@ msgstr ""
 
 #: ./ow/templates/login.pt:40
 msgid "Your password..."
+msgstr ""
+
+#: ./ow/templates/login.pt:44 ./ow/templates/verify.pt:21
+msgid "Login"
 msgstr ""
 
 #: ./ow/templates/login.pt:46
@@ -489,6 +523,10 @@ msgstr ""
 msgid "Confirm your password"
 msgstr ""
 
+#: ./ow/templates/signup.pt:64
+msgid "Sign up!"
+msgstr ""
+
 #: ./ow/templates/update_workout_from_file.pt:11
 #: ./ow/templates/update_workout_from_file.pt:16
 msgid "Update workout from file"
@@ -589,10 +627,6 @@ msgid ""
 "exactly as it was in the verification email."
 msgstr ""
 
-#: ./ow/templates/verify.pt:21
-msgid "Login"
-msgstr ""
-
 #: ./ow/templates/mail_verify_account_html.pt:17
 msgid "Welcome"
 msgstr ""
@@ -615,27 +649,27 @@ msgid ""
 " it on your browser navigation bar:"
 msgstr ""
 
-#: ./ow/views/user.py:55
+#: ./ow/views/user.py:59
 msgid "User has been verified already"
 msgstr ""
 
-#: ./ow/views/user.py:56
+#: ./ow/views/user.py:60
 msgid "Verification link sent, please check your inbox"
 msgstr ""
 
-#: ./ow/views/user.py:57
+#: ./ow/views/user.py:61
 msgid "We already sent you the verification link more than three times"
 msgstr ""
 
-#: ./ow/views/user.py:82
+#: ./ow/views/user.py:96
 msgid "Wrong password"
 msgstr ""
 
-#: ./ow/views/user.py:84
+#: ./ow/views/user.py:98
 msgid "You have to verify your account first"
 msgstr ""
 
-#: ./ow/views/user.py:89
+#: ./ow/views/user.py:103
 msgid "Wrong email address"
 msgstr ""
 

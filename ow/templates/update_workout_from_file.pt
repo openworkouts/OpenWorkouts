@@ -20,7 +20,7 @@
   <metal:content metal:fill-slot="content">
     <div id="update_workout_file" class="ow-forms">
 
-      <a class="back" href="" tal:attributes="href request.resource_url(request.root)"
+      <a class="back" href="" tal:attributes="href request.resource_url(context)"
          i18n:translate="">Back</a>
 
       ${form.begin(multipart=True)}
@@ -66,7 +66,10 @@
         </div>
       </fieldset>
 
-      ${form.submit("submit", "Save",  **{'class':"button button-normal"})}
+      <tal:with-localizer tal:define="localizer get_localizer(request)">
+        ${form.submit("submit", localizer.translate(_('Save')),  **{'class':"button button-normal"})}
+      </tal:with-localizer>
+
       ${form.end()}
     </div>
 

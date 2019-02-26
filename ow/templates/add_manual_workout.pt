@@ -88,9 +88,11 @@
             ${form.errorlist('notes')}
             ${form.textarea('notes', rows=10, cols=50)}
           </div>
-      </fieldset>
+        </fieldset>
 
-        ${form.submit("submit", "Save",  **{'class':"button button-normal"})}
+        <tal:with-localizer tal:define="localizer get_localizer(request)">
+          ${form.submit("submit", localizer.translate(_('Save')),  **{'class':"button button-normal"})}
+        </tal:with-localizer>
 
       ${form.end()}
     </div>

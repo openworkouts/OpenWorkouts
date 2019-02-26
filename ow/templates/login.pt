@@ -41,7 +41,7 @@
                      type="password" i18n:attributes="placeholder">
             </div>
             <div>
-              <input class="button button-action" type="submit" name="submit" value="Login">
+              <input class="button button-action" type="submit" name="submit" value="Login" i18n:attributes="value">
             </div>
             <a class="login-remember" href="#" i18n:translate="">
               Forgot your password?</a>

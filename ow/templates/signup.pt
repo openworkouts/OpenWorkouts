@@ -61,7 +61,8 @@
             </div>
           </fieldset>
 
-          <input class="button button-action" type="submit" name="submit" value="Sign up!">
+          <input class="button button-action" type="submit" name="submit" value="Sign up!"
+                 i18n:attributes="value">
 
         </form>
 

@@ -67,6 +67,9 @@ class TestUserViews(object):
         """
         user = john
         request = DummyRequest()
+        request.registry.settings = {
+            'pyramid.default_locale_name': 'en'
+        }
         request.root = root
         request.method = 'POST'
         request.POST = MultiDict({

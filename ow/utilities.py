@@ -281,6 +281,57 @@ def get_month_week_number(day):
     return None
 
 
+def get_month_names():
+    """
+    Return a list with the names of the months, marked for translation.
+
+    This should be done automatically by the calendar module:
+
+    >>> import calendar
+    >>> calendar.month_name[1]
+    'January'
+    >>>
+
+    But even trying setting the proper locale (using locale.setlocale()),
+    in some operating systems the names are not translated (OpenBSD).
+
+    So, for now, we use this dirty trick
+    """
+    return [
+        '',
+        _('January'),
+        _('February'),
+        _('March'),
+        _('April'),
+        _('May'),
+        _('June'),
+        _('July'),
+        _('August'),
+        _('September'),
+        _('October'),
+        _('November'),
+        _('December')
+    ]
+
+
+def get_week_day_names():
+    """
+    Return a list with the names of the week days, marked for translation.
+
+    As with get_month_names(), this is a dirty workaround for some locale
+    problem in some operating systems
+    """
+    return [
+        _('Monday'),
+        _('Tuesday'),
+        _('Wednesday'),
+        _('Thursday'),
+        _('Friday'),
+        _('Saturday'),
+        _('Sunday'),
+    ]
+
+
 def part_of_day(dt):
     """
     Given a datetime object (dt), return which part of the day was it

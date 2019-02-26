@@ -24,8 +24,9 @@
 
       <section class="workout-list">
 
-        <h3 tal:condition="viewing_month is not None">
-          <tal:d tal:content="month_name[viewing_month] + ' ' + str(viewing_year)"></tal:d> -
+        <h3 tal:condition="viewing_month is not None"
+            tal:define="localizer get_localizer(request)">
+          <tal:d tal:content="localizer.translate(month_name[viewing_month]) + ' ' + str(viewing_year)"></tal:d> -
           <tal:n tal:content="len(workouts)"></tal:n>
           <tal:t i18n:translate="">Workouts</tal:t>
         </h3>
@@ -173,12 +174,13 @@
                               tal:attributes="class 'workout-activity-tree-year' if is_viewing_year  else 'workout-activity-tree-year hidden'">
                               <tal:months tal:repeat="month sorted(tree[year].keys())">
                                   <li tal:define="is_viewing_month is_viewing_year and month == viewing_month">
-                                      <a href=""
-                                         tal:attributes="href request.resource_url(context, query={'year': year, 'month': month});
-                                                         class 'viewing-month' if is_viewing_month else ''">
-                                           <span tal:content="month_name[month]"></span>
-                                           <span tal:content="sum([tree[year][month][sport] for sport in tree[year][month]])"></span>
-                                      </a>
+                                    <a href=""
+                                       tal:attributes="href request.resource_url(context, query={'year': year, 'month': month});
+                                             class 'viewing-month' if is_viewing_month else ''"
+                                       tal:define="localizer get_localizer(request)">
+                                      <span tal:content="localizer.translate(month_name[month])"></span>
+                                      <span tal:content="sum([tree[year][month][sport] for sport in tree[year][month]])"></span>
+                                    </a>
                                   </li>
                               </tal:months>
                           </ul>

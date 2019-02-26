@@ -1,5 +1,4 @@
 import json
-from calendar import month_name
 from datetime import datetime, timezone, timedelta
 from decimal import Decimal
 from io import BytesIO
@@ -24,11 +23,16 @@ from ..views.renderers import OWFormRenderer
 from ..utilities import (
     timedelta_to_hms,
     get_verification_token,
-    get_available_locale_names
+    get_gender_names,
+    get_available_locale_names,
+    get_month_names,
+    get_week_day_names
 )
 from ..mail import send_verification_email
 
 _ = TranslationStringFactory('OpenWorkouts')
+month_name = get_month_names()
+weekday_name = get_week_day_names()
 
 
 @view_config(context=OpenWorkouts)
@@ -410,12 +414,14 @@ def change_password(context, request):
     permission='view',
     name='week')
 def week_stats(context, request):
+    localizer = get_localizer(request)
     stats = context.week_stats
     json_stats = []
     for day in stats:
         hms = timedelta_to_hms(stats[day]['time'])
+        name = localizer.translate(weekday_name[day.weekday()])[:3]
         day_stats = {
-            'name': day.strftime('%a'),
+            'name': name,
             'time': str(hms[0]).zfill(2),
             'distance': int(round(stats[day]['distance'])),
             'elevation': int(stats[day]['elevation']),
@@ -435,6 +441,7 @@ def last_months_stats(context, request):
     """
     Return a json-encoded stream with statistics for the last 12 months
     """
+    localizer = get_localizer(request)
     stats = context.yearly_stats
     # this sets which month is 2 times in the stats, once this year, once
     # the previous year. We will show it a bit different in the UI (showing
@@ -443,7 +450,7 @@ def last_months_stats(context, request):
     json_stats = []
     for month in stats:
         hms = timedelta_to_hms(stats[month]['time'])
-        name = month_name[month[1]][:3]
+        name = localizer.translate(month_name[month[1]])[:3]
         if month[1] == repeated_month:
             name += ' ' + str(month[0])
         month_stats = {
@@ -472,6 +479,7 @@ def last_weeks_stats(context, request):
     Return a json-encoded stream with statistics for the last 12-months, but
     in a per-week basis
     """
+    localizer = get_localizer(request)
     stats = context.weekly_year_stats
     # this sets which month is 2 times in the stats, once this year, once
     # the previous year. We will show it a bit different in the UI (showing
@@ -480,7 +488,7 @@ def last_weeks_stats(context, request):
     json_stats = []
     for week in stats:
         hms = timedelta_to_hms(stats[week]['time'])
-        name = month_name[week[1]][:3]
+        name = localizer.translate(month_name[week[1]])[:3]
         if week[1] == repeated_month:
             name += ' ' + str(week[0])
         week_stats = {

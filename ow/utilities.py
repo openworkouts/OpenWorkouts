@@ -295,3 +295,17 @@ def part_of_day(dt):
     for key, value in parts.items():
         if value[0] <= dt.hour <= value[1]:
             return key
+
+
+def get_available_locale_names():
+    """
+    Return a list of tuples with info about available locale/language
+    names.
+
+    The locale codes and names in this list match the available translations
+    under ow/locale for the UI elements
+    """
+    return [
+        ('en', _('English')),
+        ('es', _('Spanish'))
+    ]

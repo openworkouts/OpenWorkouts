@@ -36,6 +36,7 @@ class User(Folder):
         self.gender = kw.get('gender', 'female')
         self.picture = kw.get('picture', None)  # blob
         self.timezone = kw.get('timezone', 'UTC')
+        self.locale = kw.get('locale', 'en')
         self.__password = None
         self.last_workout_id = 0
         # has this user verified his account?

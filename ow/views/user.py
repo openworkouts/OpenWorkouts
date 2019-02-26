@@ -21,7 +21,11 @@ from ..schemas.user import (
 )
 from ..models.root import OpenWorkouts
 from ..views.renderers import OWFormRenderer
-from ..utilities import timedelta_to_hms, get_verification_token
+from ..utilities import (
+    timedelta_to_hms,
+    get_verification_token,
+    get_available_locale_names
+)
 from ..mail import send_verification_email
 
 _ = TranslationStringFactory('OpenWorkouts')
@@ -75,9 +79,19 @@ def login(context, request):
             if user.verified:
                 password = request.POST.get('password', None)
                 if password is not None and user.check_password(password):
+                    # look for the value of locale for this user, to set the
+                    # LOCALE cookie, so the UI appears on the pre-selected lang
+                    default_locale = request.registry.settings.get(
+                        'pyramid.default_locale_name')
+                    locale = getattr(user, 'locale', default_locale)
+                    request.response.set_cookie('_LOCALE_', locale)
+                    # log in the user and send back to the place he wanted to
+                    # visit
                     headers = remember(request, str(user.uid))
+                    request.response.headers.extend(headers)
                     redirect_url = return_to or request.resource_url(user)
-                    return HTTPFound(location=redirect_url, headers=headers)
+                    return HTTPFound(location=redirect_url,
+                                     headers=request.response.headers)
                 else:
                     message = _('Wrong password')
             else:
@@ -99,8 +113,11 @@ def login(context, request):
 
 @view_config(context=OpenWorkouts, name='logout')
 def logout(context, request):
+    request.response.delete_cookie('_LOCALE_')
     headers = forget(request)
-    return HTTPFound(location=request.resource_url(context), headers=headers)
+    request.response.headers.extend(headers)
+    return HTTPFound(location=request.resource_url(context),
+                     headers=request.response.headers)
 
 
 @view_config(
@@ -318,6 +335,10 @@ def profile_picture(context, request):
     name='edit',
     renderer='ow:templates/edit_profile.pt')
 def edit_profile(context, request):
+    default_locale = request.registry.settings.get(
+        'pyramid.default_locale_name')
+    available_locale_names = get_available_locale_names()
+    current_locale = request.cookies.get('_LOCALE_', default_locale)
     # if not given a file there is an empty byte in POST, which breaks
     # our blob storage validator.
     # dirty fix until formencode fixes its api.is_empty method
@@ -339,15 +360,21 @@ def edit_profile(context, request):
         form.bind(context)
         # reindex
         request.root.reindex(context)
+        # set the cookie for the locale/lang
+        request.response.set_cookie('_LOCALE_', form.data['locale'])
+        current_locale = form.data['locale']
         # Saved, send the user to the public view of her profile
-        return HTTPFound(location=request.resource_url(context, 'profile'))
+        return HTTPFound(location=request.resource_url(context, 'profile'),
+                         headers=request.response.headers)
 
     # prevent crashes on the form
     if 'picture' in form.data:
         del form.data['picture']
 
     return {'form': OWFormRenderer(form),
-            'timezones': common_timezones}
+            'timezones': common_timezones,
+            'available_locale_names': available_locale_names,
+            'current_locale': current_locale}
 
 
 @view_config(

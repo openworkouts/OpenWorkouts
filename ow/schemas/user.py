@@ -3,6 +3,7 @@ from formencode import Schema, validators
 from pytz import common_timezones
 
 from ow.schemas.blob import FieldStorageBlob
+from ow.utilities import get_available_locale_names
 
 _ = TranslationStringFactory('OpenWorkouts')
 
@@ -75,6 +76,10 @@ class UserProfileSchema(Schema):
     picture = FieldStorageBlob(if_emtpy=None, if_missing=None,
                                whitelist=['jpg', 'jpeg', 'png', 'gif'])
     timezone = validators.OneOf(common_timezones, if_missing='UTC')
+    locale = validators.OneOf(
+        [locale[0] for locale in get_available_locale_names()],
+        if_missing='en'
+    )
 
 
 class ChangePasswordSchema(Schema):

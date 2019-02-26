@@ -19,10 +19,13 @@ from webob.multidict import MultiDict
 
 from PIL import Image
 
+from pytz import common_timezones
+
 from ow.models.root import OpenWorkouts
 from ow.models.user import User
 from ow.models.workout import Workout
 from ow.views.renderers import OWFormRenderer
+from ow.utilities import get_available_locale_names
 import ow.views.user as user_views
 
 
@@ -50,6 +53,9 @@ class TestUserViews(object):
     @pytest.fixture
     def dummy_request(self, root):
         request = DummyRequest()
+        request.registry.settings = {
+            'pyramid.default_locale_name': 'en'
+        }
         request.root = root
         return request
 
@@ -560,6 +566,34 @@ class TestUserViews(object):
         assert isinstance(response, HTTPFound)
         assert rem.called
         assert response.location == request.resource_url(john)
+        # the response headers contain the proper set_cookie for the default
+        # locale
+        default_locale_name = request.registry.settings[
+            'pyramid.default_locale_name']
+        expected_locale_header = '_LOCALE_=' + default_locale_name + '; Path=/'
+        assert response.headers['Set-Cookie'] == expected_locale_header
+
+    @patch('ow.views.user.remember')
+    def test_login_post_ok_set_locale(self, rem, dummy_request, john):
+        # same as the previous test, but this time the user has set a
+        # locale different than the default one
+        request = dummy_request
+        request.method = 'POST'
+        request.POST['submit'] = True
+        request.POST['email'] = 'john.doe@example.net'
+        request.POST['password'] = 's3cr3t'
+        # verify the user first
+        john.verified = True
+        # set the locale
+        john.locale = 'es'
+        response = user_views.login(request.root, request)
+        assert isinstance(response, HTTPFound)
+        assert rem.called
+        assert response.location == request.resource_url(john)
+        # the response headers contain the proper set_cookie for the user
+        # locale setting
+        expected_locale_header = '_LOCALE_=es; Path=/'
+        assert response.headers['Set-Cookie'] == expected_locale_header
 
     @patch('ow.views.user.forget')
     def test_logout(self, forg, dummy_request):
@@ -568,6 +602,12 @@ class TestUserViews(object):
         assert isinstance(response, HTTPFound)
         assert forg.called
         assert response.location == request.resource_url(request.root)
+        # the response headers contain the needed Set-Cookie header that
+        # invalidates the _LOCALE_ cookie, preventing problems with users
+        # sharing the same web browser (one locale setting being set for
+        # another user)
+        expected_locale_header = '_LOCALE_=; Max-Age=0; Path=/; expires='
+        assert expected_locale_header in response.headers['Set-Cookie']
 
     extensions = ('png', 'jpg', 'jpeg', 'gif')
 
@@ -638,10 +678,16 @@ class TestUserViews(object):
         # the form carries along the proper data keys, taken from the
         # loaded user profile
         data = ['firstname', 'lastname', 'email', 'nickname', 'bio',
-                'birth_date', 'height', 'weight', 'gender', 'timezone']
+                'birth_date', 'height', 'weight', 'gender', 'timezone',
+                'locale']
         assert list(response['form'].data.keys()) == data
         # and check the email to see data is properly loaded
         assert response['form'].data['email'] == 'john.doe@example.net'
+        assert response['timezones'] == common_timezones
+        assert response[
+            'available_locale_names'] == get_available_locale_names()
+        assert response['current_locale'] == request.registry.settings[
+            'pyramid.default_locale_name']
 
     def test_edit_profile_post_ok(self, profile_post_request, john):
         request = profile_post_request
@@ -653,6 +699,30 @@ class TestUserViews(object):
         assert isinstance(response, HTTPFound)
         assert response.location == request.resource_url(user, 'profile')
         assert user.bio == bio
+
+    def test_edit_profile_post_ok_change_locale(
+            self, profile_post_request, john):
+        request = profile_post_request
+        user = john
+        # Update the locale
+        request.POST['locale'] = 'es'
+        response = user_views.edit_profile(user, request)
+        assert isinstance(response, HTTPFound)
+        assert response.location == request.resource_url(user, 'profile')
+        assert user.locale == 'es'
+
+    def test_edit_profile_post_ok_invalid_locale(
+            self, profile_post_request, john):
+        request = profile_post_request
+        user = john
+        # Update the locale with an invalid option
+        request.POST['locale'] = 'XX'
+        response = user_views.edit_profile(user, request)
+        assert isinstance(response['form'], OWFormRenderer)
+        # as an error happened, the current_locale had not changed
+        assert response['form'].errors == {
+            'locale': "Value must be one of: en; es (not 'XX')"}
+        assert user.locale == 'en'
 
     def test_edit_profile_post_missing_required(
             self, profile_post_request, john):

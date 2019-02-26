@@ -45,7 +45,6 @@
             <div  class="input-container ly-flex ly-2 has-gap">
                 <div>
                   <tal:c tal:condition="getattr(context, 'picture', None)">
-
                       <label for="current_picture" i18n:translate="">
                           Current picture:</label>
                       <img id="current_picture"
@@ -100,14 +99,28 @@
                 ${form.errorlist('bio')}
                 ${form.textarea('bio', rows=10, cols=50)}
             </p>
-            <div>
-              <label for="timezone" i18n:translate="">Timezone:</label>
-                <small i18n:translate="">
+            <div class="input-container ly-flex ly-2 has-gap">
+              <div>
+                <label for="timezone" i18n:translate="">Timezone:</label>
+                <p>
+                  <small i18n:translate="">
                     All dates and times will be formatted for this timezone
-                </small>
+                  </small>
+                </p>
+                ${form.errorlist('timezone')}
+                ${form.select('timezone', timezones)}
+              </div>
+              <div>
+                <label for="locale" i18n:translate="">Language:</label>
+                <p>
+                  <small i18n:translate="">
+                    All texts in the user interface will appear in this language
+                  </small>
+                </p>
+                ${form.errorlist('locale')}
+                ${form.select('locale', available_locale_names, selected_value=current_locale)}
+              </div>
             </div>
-            ${form.errorlist('timezone')}
-            ${form.select('timezone', timezones)}
         </fieldset>
 
         <p>

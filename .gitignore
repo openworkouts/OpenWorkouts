@@ -26,6 +26,7 @@ coverage.xml
 # Translations
 #*.mo
 #*.pot
+*.po~
 
 # Environments
 .env

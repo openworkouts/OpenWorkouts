@@ -72,14 +72,14 @@
           <li tal:condition="context.speed">
             <span><tal:t i18n:translate="">Speed</tal:t></span>
             <span class="avg"><tal:t i18n:translate="">Avg.</tal:t>
-              <tal:c tal:content="round(context.speed['avg'], 1)"></tal:c>km/h</span>
+              <tal:c tal:content="round(context.speed['avg'], 1)"></tal:c> km/h</span>
             <span class="max"><tal:t i18n:translate="">Max.</tal:t>
-              <tal:c tal:content="round(context.speed['max'], 1)"></tal:c>km/h</span>
+              <tal:c tal:content="round(context.speed['max'], 1)"></tal:c> km/h</span>
           </li>
           <li tal:condition="hr">
             <span><tal:t i18n:translate="">Heart Rate</tal:t></span>
             <span class="avg"><tal:t i18n:translate="">Avg.</tal:t>
-              <tal:c tal:content="hr['avg']"></tal:c>bpm</span>
+              <tal:c tal:content="hr['avg']"></tal:c> bpm</span>
             <span class="max"><tal:t i18n:translate="">Max.</tal:t>
               <tal:c tal:content="hr['max']"></tal:c> bpm</span>
           </li>
@@ -93,11 +93,11 @@
           <li tal:condition="atemp">
             <span><tal:t i18n:translate="">Temperature</tal:t></span>
             <span class="min"><tal:t i18n:translate="">Min.</tal:t>
-              <tal:c tal:content="atemp['min']"></tal:c>℃</span>
+              <tal:c tal:content="atemp['min']"></tal:c> ℃</span>
             <span class="avg"><tal:t i18n:translate="">Avg.</tal:t>
-              <tal:c tal:content="atemp['avg']"></tal:c>℃</span>
+              <tal:c tal:content="atemp['avg']"></tal:c> ℃</span>
             <span class="max"><tal:t i18n:translate="">Max.</tal:t>
-              <tal:c tal:content="atemp['max']"></tal:c>℃</span>
+              <tal:c tal:content="atemp['max']"></tal:c> ℃</span>
           </li>
         </ul>
         <div id="elevation"></div>

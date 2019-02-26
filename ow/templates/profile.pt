@@ -163,7 +163,7 @@
           <ul class="profile-data">
             <li>
               <span><tal:t i18n:translate="">Gender:</tal:t></span>
-              <tal:c tal:content="getattr(user, 'gender', '-')"></tal:c>
+              <tal:c tal:content="user_gender"></tal:c>
             </li>
             <li tal:define="birth_date getattr(user, 'birth_date', None)">
               <span><tal:t i18n:translate="">Birth date:</tal:t></span>

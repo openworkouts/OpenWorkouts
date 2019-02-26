@@ -309,3 +309,11 @@ def get_available_locale_names():
         ('en', _('English')),
         ('es', _('Spanish'))
     ]
+
+
+def get_gender_names():
+    return [
+        ('male', _('Male')),
+        ('female', _('Female')),
+        ('robot', _('Robot'))
+    ]

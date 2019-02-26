@@ -33,7 +33,7 @@ class User(Folder):
         self.birth_date = kw.get('birth_date', None)
         self.height = kw.get('height', None)
         self.weight = kw.get('weight', None)
-        self.gender = kw.get('gender', 'female')
+        self.gender = kw.get('gender', 'robot')
         self.picture = kw.get('picture', None)  # blob
         self.timezone = kw.get('timezone', 'UTC')
         self.locale = kw.get('locale', 'en')

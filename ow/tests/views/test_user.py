@@ -408,9 +408,10 @@ class TestUserViews(object):
         request = dummy_request
         # profile page for the current day (no workouts avalable)
         response = user_views.profile(john, request)
-        assert len(response.keys()) == 5
+        assert len(response.keys()) == 6
         current_month = datetime.now(timezone.utc).strftime('%Y-%m')
         assert response['user'] == john
+        assert response['user_gender'] == 'Robot'
         assert response['current_month'] == current_month
         assert response['current_week'] is None
         assert response['workouts'] == []
@@ -423,8 +424,9 @@ class TestUserViews(object):
         request.GET['year'] = 2015
         request.GET['month'] = 6
         response = user_views.profile(john, request)
-        assert len(response.keys()) == 5
+        assert len(response.keys()) == 6
         assert response['user'] == john
+        assert response['user_gender'] == 'Robot'
         assert response['current_month'] == '2015-06'
         assert response['current_week'] is None
         workouts = john.workouts(2015, 6)
@@ -439,8 +441,9 @@ class TestUserViews(object):
         request.GET['month'] = 6
         request.GET['week'] = 25
         response = user_views.profile(john, request)
-        assert len(response.keys()) == 5
+        assert len(response.keys()) == 6
         assert response['user'] == john
+        assert response['user_gender'] == 'Robot'
         assert response['current_month'] == '2015-06'
         assert response['current_week'] == 25
         assert response['workouts'] == []
@@ -454,8 +457,9 @@ class TestUserViews(object):
         request.GET['month'] = 6
         request.GET['week'] = 26
         response = user_views.profile(john, request)
-        assert len(response.keys()) == 5
+        assert len(response.keys()) == 6
         assert response['user'] == john
+        assert response['user_gender'] == 'Robot'
         assert response['current_month'] == '2015-06'
         assert response['current_week'] == 26
         workouts = john.workouts(2015, 6)

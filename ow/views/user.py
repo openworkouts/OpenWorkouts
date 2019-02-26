@@ -8,7 +8,7 @@ from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from pyramid.view import view_config
 from pyramid.security import remember, forget
 from pyramid.response import Response
-from pyramid.i18n import TranslationStringFactory
+from pyramid.i18n import TranslationStringFactory, get_localizer
 from pyramid_simpleform import Form, State
 from pytz import common_timezones
 from PIL import Image
@@ -294,8 +294,15 @@ def profile(context, request):
         totals['elevation'] += (
             getattr(workout, 'uphill', Decimal(0)) or Decimal(0))
 
+    localizer = get_localizer(request)
+    user_gender = _('Unknown')
+    for g in get_gender_names():
+        if g[0] == context.gender:
+            user_gender = localizer.translate(g[1])
+
     return {
         'user': user,
+        'user_gender': user_gender,
         'workouts': workouts,
         'current_month': '{year}-{month}'.format(
             year=str(year), month=str(month).zfill(2)),
@@ -337,7 +344,6 @@ def profile_picture(context, request):
 def edit_profile(context, request):
     default_locale = request.registry.settings.get(
         'pyramid.default_locale_name')
-    available_locale_names = get_available_locale_names()
     current_locale = request.cookies.get('_LOCALE_', default_locale)
     # if not given a file there is an empty byte in POST, which breaks
     # our blob storage validator.
@@ -371,8 +377,16 @@ def edit_profile(context, request):
     if 'picture' in form.data:
         del form.data['picture']
 
+    localizer = get_localizer(request)
+    gender_names = [
+        (g[0], localizer.translate(g[1])) for g in get_gender_names()]
+    available_locale_names = [
+        (l[0], localizer.translate(l[1])) for l in get_available_locale_names()
+    ]
+
     return {'form': OWFormRenderer(form),
             'timezones': common_timezones,
+            'gender_names': gender_names,
             'available_locale_names': available_locale_names,
             'current_locale': current_locale}
 

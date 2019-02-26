@@ -3,7 +3,7 @@ from formencode import Schema, validators
 from pytz import common_timezones
 
 from ow.schemas.blob import FieldStorageBlob
-from ow.utilities import get_available_locale_names
+from ow.utilities import get_available_locale_names, get_gender_names
 
 _ = TranslationStringFactory('OpenWorkouts')
 
@@ -72,7 +72,9 @@ class UserProfileSchema(Schema):
     birth_date = validators.DateConverter(month_style='dd/mm/yyyy')
     height = validators.Number()
     weight = validators.Number()
-    gender = validators.OneOf(('male', 'female'), not_empty=True)
+    gender = validators.OneOf(
+        [gender[0] for gender in get_gender_names()],
+        not_empty=True)
     picture = FieldStorageBlob(if_emtpy=None, if_missing=None,
                                whitelist=['jpg', 'jpeg', 'png', 'gif'])
     timezone = validators.OneOf(common_timezones, if_missing='UTC')

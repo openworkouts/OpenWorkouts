@@ -71,9 +71,9 @@
                   ${form.text('lastname')}
               </div>
               <div>
-                  <label for="gender" i18n:translate="">Gender:</label>
-                  ${form.errorlist('gender')}
-                  ${form.select('gender', ['male', 'female'])}
+                <label for="gender" i18n:translate="">Gender:</label>
+                ${form.errorlist('gender')}
+                ${form.select('gender', gender_names)}
               </div>
             </div>
 

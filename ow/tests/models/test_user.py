@@ -347,3 +347,207 @@ class TestUser(object):
             'distance': Decimal(0),
             'time': timedelta(0)
         }
+
+    def test_yearly_stats(self, root):
+        expected_no_stats_per_month = {
+            'workouts': 0,
+            'time': timedelta(0),
+            'distance': Decimal(0),
+            'elevation': Decimal(0),
+            'sports': {}
+        }
+
+        yearly_stats = root['john'].yearly_stats
+        for month, stats in yearly_stats.items():
+            assert stats == expected_no_stats_per_month
+
+        # add a cycling workout
+        start_date = datetime.now(timezone.utc)
+        workout = Workout(
+            start=start_date,
+            duration=timedelta(minutes=(60*4)),
+            uphill=1200,
+            distance=115,
+            sport='cycling')
+        root['john'].add_workout(workout)
+
+        yearly_stats = root['john'].yearly_stats
+        for month, stats in yearly_stats.items():
+            if month == (start_date.year, start_date.month):
+                assert stats == {
+                    'workouts': 1,
+                    'time': timedelta(minutes=(60*4)),
+                    'distance': Decimal(115),
+                    'elevation': Decimal(1200),
+                    'sports': {
+                        'cycling': {'distance': Decimal(115),
+                                    'elevation': Decimal(1200),
+                                    'time': timedelta(minutes=(60*4)),
+                                    'workouts': 1}
+                    }
+                }
+            else:
+                assert stats == expected_no_stats_per_month
+
+        # add a second cycling workout
+        workout = Workout(
+            start=start_date,
+            duration=timedelta(minutes=(30)),
+            uphill=500,
+            distance=20,
+            sport='cycling')
+        root['john'].add_workout(workout)
+
+        yearly_stats = root['john'].yearly_stats
+        for month, stats in yearly_stats.items():
+            if month == (start_date.year, start_date.month):
+                assert stats == {
+                    'workouts': 2,
+                    'time': timedelta(minutes=((60*4)+30)),
+                    'distance': Decimal(115+20),
+                    'elevation': Decimal(1200+500),
+                    'sports': {
+                        'cycling': {'distance': Decimal(115+20),
+                                    'elevation': Decimal(1200+500),
+                                    'time': timedelta(minutes=((60*4)+30)),
+                                    'workouts': 2}
+                    }
+                }
+            else:
+                assert stats == expected_no_stats_per_month
+
+        # add a running workout
+        workout = Workout(
+            start=start_date,
+            duration=timedelta(minutes=(60)),
+            uphill=200,
+            distance=5,
+            sport='running')
+        root['john'].add_workout(workout)
+
+        yearly_stats = root['john'].yearly_stats
+        for month, stats in yearly_stats.items():
+            if month == (start_date.year, start_date.month):
+                assert stats == {
+                    'workouts': 3,
+                    'time': timedelta(minutes=((60*4)+30+60)),
+                    'distance': Decimal(115+20+5),
+                    'elevation': Decimal(1200+500+200),
+                    'sports': {
+                        'cycling': {'distance': Decimal(115+20),
+                                    'elevation': Decimal(1200+500),
+                                    'time': timedelta(minutes=((60*4)+30)),
+                                    'workouts': 2},
+                        'running': {'distance': Decimal(5),
+                                    'elevation': Decimal(200),
+                                    'time': timedelta(minutes=(60)),
+                                    'workouts': 1}
+                    }
+                }
+            else:
+                assert stats == expected_no_stats_per_month
+
+    def test_weekly_year_stats(self, root):
+        expected_no_stats_per_week = {
+            'workouts': 0,
+            'time': timedelta(0),
+            'distance': Decimal(0),
+            'elevation': Decimal(0),
+            'sports': {}
+        }
+
+        weekly_year_stats = root['john'].weekly_year_stats
+        for week, stats in weekly_year_stats.items():
+            assert stats == expected_no_stats_per_week
+
+        # add a cycling workout
+        start_date = datetime.now(timezone.utc)
+        workout = Workout(
+            start=start_date,
+            duration=timedelta(minutes=(60*4)),
+            uphill=1200,
+            distance=115,
+            sport='cycling')
+        root['john'].add_workout(workout)
+
+        weekly_year_stats = root['john'].weekly_year_stats
+        workout_week = (start_date.year, start_date.month,
+                        start_date.isocalendar()[1])
+        for week, stats in weekly_year_stats.items():
+            if week[:3] == workout_week:
+                assert stats == {
+                    'workouts': 1,
+                    'time': timedelta(minutes=(60*4)),
+                    'distance': Decimal(115),
+                    'elevation': Decimal(1200),
+                    'sports': {
+                        'cycling': {'distance': Decimal(115),
+                                    'elevation': Decimal(1200),
+                                    'time': timedelta(minutes=(60*4)),
+                                    'workouts': 1}
+                    }
+                }
+            else:
+                assert stats == expected_no_stats_per_week
+
+        # add a second cycling workout
+        workout = Workout(
+            start=start_date,
+            duration=timedelta(minutes=(30)),
+            uphill=500,
+            distance=20,
+            sport='cycling')
+        root['john'].add_workout(workout)
+
+        weekly_year_stats = root['john'].weekly_year_stats
+        workout_week = (start_date.year, start_date.month,
+                        start_date.isocalendar()[1])
+        for week, stats in weekly_year_stats.items():
+            if week[:3] == workout_week:
+                assert stats == {
+                    'workouts': 2,
+                    'time': timedelta(minutes=((60*4)+30)),
+                    'distance': Decimal(115+20),
+                    'elevation': Decimal(1200+500),
+                    'sports': {
+                        'cycling': {'distance': Decimal(115+20),
+                                    'elevation': Decimal(1200+500),
+                                    'time': timedelta(minutes=((60*4)+30)),
+                                    'workouts': 2}
+                    }
+                }
+            else:
+                assert stats == expected_no_stats_per_week
+
+        # add a running workout
+        workout = Workout(
+            start=start_date,
+            duration=timedelta(minutes=(60)),
+            uphill=200,
+            distance=5,
+            sport='running')
+        root['john'].add_workout(workout)
+
+        weekly_year_stats = root['john'].weekly_year_stats
+        workout_week = (start_date.year, start_date.month,
+                        start_date.isocalendar()[1])
+        for week, stats in weekly_year_stats.items():
+            if week[:3] == workout_week:
+                assert stats == {
+                    'workouts': 3,
+                    'time': timedelta(minutes=((60*4)+30+60)),
+                    'distance': Decimal(115+20+5),
+                    'elevation': Decimal(1200+500+200),
+                    'sports': {
+                        'cycling': {'distance': Decimal(115+20),
+                                    'elevation': Decimal(1200+500),
+                                    'time': timedelta(minutes=((60*4)+30)),
+                                    'workouts': 2},
+                        'running': {'distance': Decimal(5),
+                                    'elevation': Decimal(200),
+                                    'time': timedelta(minutes=(60)),
+                                    'workouts': 1}
+                    }
+                }
+            else:
+                assert stats == expected_no_stats_per_week

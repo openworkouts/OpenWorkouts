@@ -111,6 +111,24 @@ class TestRootOpenWorkouts(object):
         with pytest.raises(TypeError):
             user = root.get_user_by_email(Mock())
 
+    def test_get_user_by_nickname(self, root, john):
+        # set a nickname for john
+        john.nickname = 'JohnDoe'
+        root.reindex(john)
+        user = root.get_user_by_nickname('JohnDoe')
+        assert user == john
+        user = root.get_user_by_nickname('NonExistant')
+        assert user is None
+        # passing in None
+        user = root.get_user_by_nickname(None)
+        assert user is None
+        # passing in something that is not None or a string will break
+        # the query code
+        with pytest.raises(TypeError):
+            user = root.get_user_by_nickname(False)
+        with pytest.raises(TypeError):
+            user = root.get_user_by_nickname(Mock())
+
     def test_users(self, root, john):
         assert root.users == [john]
 

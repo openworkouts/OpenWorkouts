@@ -301,7 +301,7 @@ def profile(context, request):
     localizer = get_localizer(request)
     user_gender = _('Unknown')
     for g in get_gender_names():
-        if g[0] == context.gender:
+        if g[0] == user.gender:
             user_gender = localizer.translate(g[1])
 
     return {

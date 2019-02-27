@@ -278,7 +278,6 @@ def get_month_week_number(day):
     for week in weeks:
         if day.day in week:
             return weeks.index(week)
-    return None
 
 
 def get_month_names():

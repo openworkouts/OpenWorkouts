@@ -12,7 +12,7 @@ import pytest
 from ZODB.blob import Blob
 
 from pyramid.testing import DummyRequest
-from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from pyramid.response import Response
 
 from webob.multidict import MultiDict
@@ -474,6 +474,24 @@ class TestUserViews(object):
             'elevation': Decimal(0)
         }
 
+    def test_profile_with_nickname(self, dummy_request, john):
+        """
+        Loading the profile page using the user nickname
+        """
+        request = dummy_request
+        john.nickname = 'JohnDoe'
+        request.root.reindex(john)
+        # first load using the uuid
+        response_uuid = user_views.profile(john, request)
+        # now, do it with the nickname
+        request.subpath = ['JohnDoe']
+        response_nickname = user_views.profile(request.root, request)
+        assert response_uuid == response_nickname
+        # try an unknown nickname, HTTPNotFound is returned
+        request.subpath = ['Invalid']
+        response_nickname = user_views.profile(request.root, request)
+        assert isinstance(response_nickname, HTTPNotFound)
+
     def test_login_get(self, dummy_request):
         """
         GET request to access the login page
@@ -674,6 +692,15 @@ class TestUserViews(object):
         # now the size of the original image is bigger
         returned_image = Image.open(BytesIO(response.body))
         assert original_image.size == returned_image.size
+
+    def test_profile_picture_none(self, dummy_request, john):
+        """
+        GET request for an user without a profile picture
+        """
+        request = dummy_request
+        user = john
+        response = user_views.profile_picture(user, request)
+        assert isinstance(response, HTTPNotFound)
 
     def test_edit_profile_get(self, dummy_request, john):
         """
@@ -1001,3 +1028,126 @@ class TestUserViews(object):
                 day['elevation'] == 0
                 day['time'] == '00'
                 day['workouts'] == 0
+
+    def test_last_months_stats(self, dummy_request, john):
+        request = dummy_request
+        user = john
+        response = user_views.last_months_stats(user, request)
+        assert isinstance(response, Response)
+        assert response.content_type == 'application/json'
+        # the body is a valid json-encoded stream
+        obj = json.loads(response.body)
+        assert len(obj) == 13
+        for month in obj:
+            assert len(month.keys()) == 7
+            assert 'id' in month.keys()
+            assert 'name' in month.keys()
+            assert month['distance'] == 0
+            assert month['elevation'] == 0
+            assert month['time'] == '00'
+            assert month['workouts'] == 0
+            assert str(user.uid) in month['url']
+            assert 'profile' in month['url']
+            assert 'year' in month['url']
+            assert 'month' in month['url']
+
+        # try now with a workout
+        workout_start = datetime.now(timezone.utc)
+        workout_start_id = (
+            str(workout_start.year) + '-' + str(workout_start.month).zfill(2))
+        workout = Workout(
+            sport='cycling',
+            start=workout_start,
+            duration=timedelta(minutes=60),
+            distance=30,
+            uphill=540
+        )
+        user.add_workout(workout)
+        response = user_views.last_months_stats(user, request)
+        assert isinstance(response, Response)
+        assert response.content_type == 'application/json'
+        # the body is a valid json-encoded stream
+        obj = json.loads(response.body)
+        assert len(obj) == 13
+        for month in obj:
+            assert len(month.keys()) == 7
+            assert 'id' in month.keys()
+            assert 'name' in month.keys()
+            assert str(user.uid) in month['url']
+            assert 'profile' in month['url']
+            assert 'year' in month['url']
+            assert 'month' in month['url']
+            if month['id'] == workout_start_id:
+                assert month['distance'] == 30
+                assert month['elevation'] == 540
+                assert month['time'] == '01'
+                assert month['workouts'] == 1
+            else:
+                assert month['distance'] == 0
+                assert month['elevation'] == 0
+                assert month['time'] == '00'
+                assert month['workouts'] == 0
+
+    def test_last_weeks_stats(self, dummy_request, john):
+        request = dummy_request
+        user = john
+        response = user_views.last_weeks_stats(user, request)
+        assert isinstance(response, Response)
+        assert response.content_type == 'application/json'
+        # the body is a valid json-encoded stream
+        obj = json.loads(response.body)
+        assert len(obj) == 68
+        for week in obj:
+            assert len(week.keys()) == 8
+            assert 'id' in week.keys()
+            assert 'name' in week.keys()
+            assert 'week' in week.keys()
+            assert week['distance'] == 0
+            assert week['elevation'] == 0
+            assert week['time'] == '00'
+            assert week['workouts'] == 0
+            assert str(user.uid) in week['url']
+            assert 'profile' in week['url']
+            assert 'year' in week['url']
+            assert 'month' in week['url']
+            assert 'week' in week['url']
+
+        # try now with a workout
+        workout_start = datetime.now(timezone.utc)
+        workout_start_id = str(workout_start.year)
+        workout_start_id += '-' + str(workout_start.month).zfill(2)
+        workout_start_id += '-' + str(workout_start.isocalendar()[1])
+        workout = Workout(
+            sport='cycling',
+            start=workout_start,
+            duration=timedelta(minutes=60),
+            distance=30,
+            uphill=540
+        )
+        user.add_workout(workout)
+        response = user_views.last_weeks_stats(user, request)
+        assert isinstance(response, Response)
+        assert response.content_type == 'application/json'
+        # the body is a valid json-encoded stream
+        obj = json.loads(response.body)
+        assert len(obj) == 68
+        for week in obj:
+            assert len(week.keys()) == 8
+            assert 'id' in week.keys()
+            assert 'name' in week.keys()
+            assert 'week' in week.keys()
+            assert str(user.uid) in week['url']
+            assert 'profile' in week['url']
+            assert 'year' in week['url']
+            assert 'month' in week['url']
+            assert 'week' in week['url']
+            if week['id'] == workout_start_id:
+                assert week['distance'] == 30
+                assert week['elevation'] == 540
+                assert week['time'] == '01'
+                assert week['workouts'] == 1
+            else:
+                assert week['distance'] == 0
+                assert week['elevation'] == 0
+                assert week['time'] == '00'
+                assert week['workouts'] == 0

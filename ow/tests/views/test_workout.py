@@ -1,13 +1,15 @@
 import os
+import json
 from io import BytesIO
 from datetime import datetime, timedelta, timezone
 from cgi import FieldStorage
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, patch, PropertyMock
 
 import pytest
 
 from pyramid.testing import DummyRequest
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
+from pyramid.response import Response
 
 from webob.multidict import MultiDict
 
@@ -476,3 +478,54 @@ class TestWorkoutViews(object):
                         'longitude': 25.472489344630546
                     }
                 }
+
+    @patch('ow.views.workout.save_map_screenshot')
+    def test_workout_map_shot_generate_map(self, save_map, dummy_request):
+        """
+        Call the view that returns the url to the screenshot of a workout
+        tracking map, without a map being generated previously, the map is
+        generated using save_map_screenshot
+        """
+        def static_url(url):
+            return url
+        request = dummy_request
+        # mock static url to make testing this a bit easier
+        request.static_url = static_url
+        user = request.root['john']
+        workout = user.workouts()[0]
+        # we mock map_screenshot so the first access is None, triggering the
+        # save_map_screenshot call. The second access returns a string we can
+        # use with static_url for testing purposes
+        type(workout).map_screenshot = PropertyMock(
+            side_effect=[None, 'ow:static/maps/somemap.png'])
+        response = workout_views.workout_map_shot(workout, request)
+        save_map.assert_called_once_with(workout, request)
+        assert isinstance(response, Response)
+        assert response.content_type == 'application/json'
+        # the body is a valid json-encoded stream
+        obj = json.loads(response.body)
+        assert 'ow:static/maps/somemap.png' in obj['url']
+
+    @patch('ow.views.workout.save_map_screenshot')
+    def test_workout_map_shot_existing(self, save_map, dummy_request):
+        """
+        Call the view that returns the url to the screenshot of a workout
+        tracking map, with an existing map already there
+        """
+        def static_url(url):
+            return url
+        request = dummy_request
+        # mock static url to make testing this a bit easier
+        request.static_url = static_url
+        user = request.root['john']
+        workout = user.workouts()[0]
+        type(workout).map_screenshot = PropertyMock(
+            side_effect=['ow:static/maps/somemap.png',
+                         'ow:static/maps/somemap.png'])
+        response = workout_views.workout_map_shot(workout, request)
+        assert not save_map.called
+        assert isinstance(response, Response)
+        assert response.content_type == 'application/json'
+        # the body is a valid json-encoded stream
+        obj = json.loads(response.body)
+        assert 'ow:static/maps/somemap.png' in obj['url']

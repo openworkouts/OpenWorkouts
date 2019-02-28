@@ -9,20 +9,30 @@
 
   <metal:content metal:fill-slot="content">
 
-    <div class="verify-content">
+    <div class="verify-account-content">
 
-      <p i18n:translate="">
-        Your email hasn't been verified. Check the url and make sure you copied
-        it exactly as it was in the verification email.
-      </p>
+      <div class="info">
 
-      <tal:not-logged-in tal:condition="not request.authenticated_userid">
-        <a href="" tal:attributes="href request.resource_url(request.root, 'login')"
-           i18n:translate="">Login</a>
+        <h1 i18n:translate="">Wrong verification code</h1>
 
-        <a href="" tal:attributes="href request.resource_url(request.root, 'signup')"
-           i18n:translate="">Join now!</a>
-      </tal:not-logged-in>
+        <p i18n:translate="">
+          Your email hasn't been verified. Check the url and make sure you copied
+          it exactly as it was in the verification email.
+        </p>
+
+        <tal:not-logged-in tal:condition="not request.authenticated_userid">
+          <a href="" class="button button-action"
+             tal:attributes="href request.resource_url(request.root, 'login', query={'email': context.email} )"
+             i18n:translate="">Back to login</a>
+
+          <a href="" class="button button-action"
+             tal:attributes="href request.resource_url(context, 'resend-verification-link')"
+             i18n:translate="">Please send me the verification link again</a>
+
+        </tal:not-logged-in>
+
+      </div>
+
     </div>
 
   </metal:content>

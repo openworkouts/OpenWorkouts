@@ -277,10 +277,16 @@ owjs.year_chart = function(spec) {
 
     function get_name_for_x(d) {
         if (d.week == undefined || d.week == 0) {
+            // Monthly chart or first week of the weekly chart, return
+            // the name of the month, which will be shown in the x-axis
+            // ticks
             return d.name;
         }
         else {
-            return d.id.split('-')[2];
+            // Weekly chart, week other than the first, return the id so
+            // we can place it in the chart, we won't show this to the
+            // user
+            return d.id
         }
     }
 

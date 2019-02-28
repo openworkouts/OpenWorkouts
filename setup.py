@@ -54,7 +54,7 @@ tests_require = [
 
 setup(
     name='ow',
-    version='0.2.0a0',
+    version='0.2.0',
     description='OpenWorkouts, tracking your workouts openly',
     long_description=README + '\n\n' + CHANGES,
     classifiers=[

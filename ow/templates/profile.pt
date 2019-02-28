@@ -86,9 +86,16 @@
                 <li><a href="#" class="js-elevation" i18n:translate="">elevation</a></li>
               </ul>
 
-              <ul class="workout-options switcher js-switcher">
-                <li><a href="#" class="js-weekly" i18n:translate="">weekly</a></li>
-                <li><a href="#" class="js-monthly is-active" i18n:translate="">monthly</a></li>
+              <ul class="workout-options switcher js-switcher"
+                  tal:define="weekly 'week' in request.GET">
+                <li>
+                  <a href="#" class="" i18n:translate=""
+                     tal:attributes="class 'js-weekly is-active' if weekly else 'js-weekly'">
+                    weekly</a></li>
+                <li>
+                  <a href="#" class="" i18n:translate=""
+                     tal:attributes="class 'js-monthly is-active' if not weekly else 'js-monthly'">
+                    monthly</a></li>
               </ul>
             </div>
           </div>

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2019-02-26 18:41+0100\n"
+"POT-Creation-Date: 2019-02-28 10:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,115 +16,115 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Lingua 4.13\n"
 
-#: ./ow/utilities.py:302
+#: ./ow/utilities.py:301
 msgid "January"
 msgstr ""
 
-#: ./ow/utilities.py:303
+#: ./ow/utilities.py:302
 msgid "February"
 msgstr ""
 
-#: ./ow/utilities.py:304
+#: ./ow/utilities.py:303
 msgid "March"
 msgstr ""
 
-#: ./ow/utilities.py:305
+#: ./ow/utilities.py:304
 msgid "April"
 msgstr ""
 
-#: ./ow/utilities.py:306
+#: ./ow/utilities.py:305
 msgid "May"
 msgstr ""
 
-#: ./ow/utilities.py:307
+#: ./ow/utilities.py:306
 msgid "June"
 msgstr ""
 
-#: ./ow/utilities.py:308
+#: ./ow/utilities.py:307
 msgid "July"
 msgstr ""
 
-#: ./ow/utilities.py:309
+#: ./ow/utilities.py:308
 msgid "August"
 msgstr ""
 
-#: ./ow/utilities.py:310
+#: ./ow/utilities.py:309
 msgid "September"
 msgstr ""
 
-#: ./ow/utilities.py:311
+#: ./ow/utilities.py:310
 msgid "October"
 msgstr ""
 
-#: ./ow/utilities.py:312
+#: ./ow/utilities.py:311
 msgid "November"
 msgstr ""
 
-#: ./ow/utilities.py:313
+#: ./ow/utilities.py:312
 msgid "December"
 msgstr ""
 
-#: ./ow/utilities.py:325
+#: ./ow/utilities.py:324
 msgid "Monday"
 msgstr ""
 
-#: ./ow/utilities.py:326
+#: ./ow/utilities.py:325
 msgid "Tuesday"
 msgstr ""
 
-#: ./ow/utilities.py:327
+#: ./ow/utilities.py:326
 msgid "Wednesday"
 msgstr ""
 
-#: ./ow/utilities.py:328
+#: ./ow/utilities.py:327
 msgid "Thursday"
 msgstr ""
 
-#: ./ow/utilities.py:329
+#: ./ow/utilities.py:328
 msgid "Friday"
 msgstr ""
 
-#: ./ow/utilities.py:330
+#: ./ow/utilities.py:329
 msgid "Saturday"
 msgstr ""
 
-#: ./ow/utilities.py:331
+#: ./ow/utilities.py:330
 msgid "Sunday"
 msgstr ""
 
-#: ./ow/utilities.py:341
+#: ./ow/utilities.py:340
 msgid "Morning"
 msgstr ""
 
-#: ./ow/utilities.py:342
+#: ./ow/utilities.py:341
 msgid "Afternoon"
 msgstr ""
 
-#: ./ow/utilities.py:343
+#: ./ow/utilities.py:342
 msgid "Evening"
 msgstr ""
 
-#: ./ow/utilities.py:344
+#: ./ow/utilities.py:343
 msgid "Night"
 msgstr ""
 
-#: ./ow/utilities.py:360
+#: ./ow/utilities.py:359
 msgid "English"
 msgstr ""
 
-#: ./ow/utilities.py:361
+#: ./ow/utilities.py:360
 msgid "Spanish"
 msgstr ""
 
-#: ./ow/utilities.py:367
+#: ./ow/utilities.py:366
 msgid "Male"
 msgstr ""
 
-#: ./ow/utilities.py:368
+#: ./ow/utilities.py:367
 msgid "Female"
 msgstr ""
 
-#: ./ow/utilities.py:369
+#: ./ow/utilities.py:368
 msgid "Robot"
 msgstr ""
 
@@ -447,11 +447,11 @@ msgstr ""
 msgid "Last name:"
 msgstr ""
 
-#: ./ow/templates/edit_profile.pt:74 ./ow/templates/profile.pt:165
+#: ./ow/templates/edit_profile.pt:74 ./ow/templates/profile.pt:172
 msgid "Gender:"
 msgstr ""
 
-#: ./ow/templates/edit_profile.pt:82 ./ow/templates/profile.pt:169
+#: ./ow/templates/edit_profile.pt:82 ./ow/templates/profile.pt:176
 msgid "Birth date:"
 msgstr ""
 
@@ -483,7 +483,7 @@ msgstr ""
 msgid "All texts in the user interface will appear in this language"
 msgstr ""
 
-#: ./ow/templates/login.pt:27
+#: ./ow/templates/login.pt:27 ./ow/templates/verify.pt:30
 msgid "Please send me the verification link again"
 msgstr ""
 
@@ -503,7 +503,7 @@ msgstr ""
 msgid "Your password..."
 msgstr ""
 
-#: ./ow/templates/login.pt:44 ./ow/templates/verify.pt:21
+#: ./ow/templates/login.pt:44
 msgid "Login"
 msgstr ""
 
@@ -511,7 +511,7 @@ msgstr ""
 msgid "Forgot your password?"
 msgstr ""
 
-#: ./ow/templates/login.pt:49 ./ow/templates/verify.pt:24
+#: ./ow/templates/login.pt:49
 msgid "Join now!"
 msgstr ""
 
@@ -539,39 +539,39 @@ msgstr ""
 msgid "elevation"
 msgstr ""
 
-#: ./ow/templates/profile.pt:90
+#: ./ow/templates/profile.pt:93
 msgid "weekly"
 msgstr ""
 
-#: ./ow/templates/profile.pt:91
+#: ./ow/templates/profile.pt:97
 msgid "monthly"
 msgstr ""
 
-#: ./ow/templates/profile.pt:124
+#: ./ow/templates/profile.pt:131
 msgid "HR (bpm)"
 msgstr ""
 
-#: ./ow/templates/profile.pt:126 ./ow/templates/profile.pt:133
+#: ./ow/templates/profile.pt:133 ./ow/templates/profile.pt:140
 #: ./ow/templates/workout.pt:74 ./ow/templates/workout.pt:81
 #: ./ow/templates/workout.pt:88 ./ow/templates/workout.pt:97
 msgid "Avg."
 msgstr ""
 
-#: ./ow/templates/profile.pt:128 ./ow/templates/profile.pt:135
+#: ./ow/templates/profile.pt:135 ./ow/templates/profile.pt:142
 #: ./ow/templates/workout.pt:76 ./ow/templates/workout.pt:83
 #: ./ow/templates/workout.pt:90 ./ow/templates/workout.pt:99
 msgid "Max."
 msgstr ""
 
-#: ./ow/templates/profile.pt:131
+#: ./ow/templates/profile.pt:138
 msgid "Cad"
 msgstr ""
 
-#: ./ow/templates/profile.pt:175
+#: ./ow/templates/profile.pt:182
 msgid "Height:"
 msgstr ""
 
-#: ./ow/templates/profile.pt:179
+#: ./ow/templates/profile.pt:186
 msgid "Weight:"
 msgstr ""
 
@@ -709,10 +709,18 @@ msgstr ""
 msgid "Thank you for joining us. Best regards from the OpenWorkouts team."
 msgstr ""
 
-#: ./ow/templates/verify.pt:14
+#: ./ow/templates/verify.pt:16
+msgid "Wrong verification code"
+msgstr ""
+
+#: ./ow/templates/verify.pt:18
 msgid ""
 "Your email hasn't been verified. Check the url and make sure you copied it "
 "exactly as it was in the verification email."
+msgstr ""
+
+#: ./ow/templates/verify.pt:26
+msgid "Back to login"
 msgstr ""
 
 #: ./ow/templates/mail_verify_account_html.pt:17

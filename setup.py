@@ -38,6 +38,10 @@ requires = [
     'premailer'
 ]
 
+docs_require = [
+    'sphinx'
+]
+
 translations_require = [
     'babel',
     'lingua'
@@ -49,7 +53,7 @@ tests_require = [
     'pytest-cov',
     'pytest-flakes',
     'pytest-xdist',
-    'pytest-codestyle',
+    'pytest-codestyle'
 ]
 
 setup(
@@ -73,6 +77,7 @@ setup(
     extras_require={
         'testing': tests_require,
         'translations': translations_require,
+        'docs': docs_require
     },
     install_requires=requires,
     entry_points={

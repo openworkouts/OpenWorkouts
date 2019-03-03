@@ -35,7 +35,8 @@ requires = [
     'fitparse',
     'splinter',
     'Pillow',
-    'premailer'
+    'premailer',
+    'uwsgi'
 ]
 
 docs_require = [

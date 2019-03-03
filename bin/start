@@ -12,6 +12,7 @@ env_path=${current}/env
 trap ctrl_c INT
 
 ctrl_c() {
+    ./bin/uwsgi_stop
     ./bin/zeo_stop
 }
 
@@ -31,10 +32,9 @@ echo "Starting database"
 
 # And finally run the server
 echo "Starting OpenWorkouts"
-pserve --reload development.ini >> var/log/pserve.log 2>> var/log/pserve.err &
-echo $! > var/run/pserve.pid
+./bin/uwsgi_start development
 
 # show the url where the app is accesible
-ow_url=http://`grep listen development.ini |cut -f 3 -d " "`
+ow_url=http://`grep http etc/uwsgi_development.ini |cut -f 3 -d " "`
 echo "Open this url in your browser to access the app: ${ow_url}"
 # open ${ow_url}

@@ -58,7 +58,15 @@ var/log/zeo_start.err
 var/log/zeo_start.log
 var/log/zeo_stop.err
 var/log/zeo_stop.log
+var/log/uwsgi/uwsgi.log
+
+# pid files
 var/run/pserve.pid
+var/run/uwsgi.pid
+
+# temp files
+var/tmp/chameleon/*
+var/tmp/egg_cache/*
 
 # JS static external components and libraries
 ow/static/components

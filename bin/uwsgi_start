@@ -4,6 +4,10 @@
 
 
 case "$1" in
+    'development')
+        uwsgi --ini etc/uwsgi_development.ini
+        echo "Started uwsgi, check var/log/uwsgi/uwsgi.log for more info"
+        ;;
     'staging')
         uwsgi --ini etc/uwsgi_staging.ini
         echo "Started uwsgi, check var/log/uwsgi/uwsgi.log for more info"

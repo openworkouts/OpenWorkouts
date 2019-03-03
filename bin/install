@@ -93,6 +93,13 @@ create_mail_queue() {
     mkdir -p ${mail_queue_path}/cur >> ${install_log}.stdout 2>> ${install_log}.stderr
 }
 
+create_temp_dirs() {
+    # Creates the tmp directory where cache files are stored
+    echo "Creating tmp and cache directories ${current}/var/tmp"
+    mkdir -p ${current}/var/tmp/chameleon
+    mkdir -p ${current}/var/tmp/egg_cache
+}
+
 setup_mail_server() {
     echo ""
     echo "IMPORTANT, READ BEFORE STARTING OpenWorkouts"
@@ -151,4 +158,5 @@ install_js_deps
 create_mail_queue
 setup_mail_server
 create_cron_job
+create_temp_dirs
 setup_start_stop

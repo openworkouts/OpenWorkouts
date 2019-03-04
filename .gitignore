@@ -31,8 +31,8 @@ coverage.xml
 # Environments
 .env
 .venv
-env/
-venv/
+env
+venv
 
 # ZODB databases
 var/db/Data.*

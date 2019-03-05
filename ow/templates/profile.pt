@@ -26,7 +26,7 @@
           </tal:c>
           <div>
             <h2>
-                <tal:fullname tal:content="user.fullname"></tal:fullname>
+              <tal:fullname tal:content="user.fullname"></tal:fullname>
             </h2>
             <p>
               <tal:has-nickname tal:condition="user.nickname">

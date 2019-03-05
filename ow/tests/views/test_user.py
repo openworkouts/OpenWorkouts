@@ -1103,7 +1103,6 @@ class TestUserViews(object):
         assert response.content_type == 'application/json'
         # the body is a valid json-encoded stream
         obj = json.loads(response.body)
-        assert len(obj) == 68
         for week in obj:
             assert len(week.keys()) == 8
             assert 'id' in week.keys()
@@ -1137,7 +1136,6 @@ class TestUserViews(object):
         assert response.content_type == 'application/json'
         # the body is a valid json-encoded stream
         obj = json.loads(response.body)
-        assert len(obj) == 68
         for week in obj:
             assert len(week.keys()) == 8
             assert 'id' in week.keys()

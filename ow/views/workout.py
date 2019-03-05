@@ -59,7 +59,6 @@ def add_workout_manually(context, request):
             if workout.sport:
                 workout.title += ' ' + workout.sport
             workout.title += ' ' + _('workout')
-
         context.add_workout(workout)
         return HTTPFound(location=request.resource_url(workout))
 

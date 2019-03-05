@@ -114,6 +114,28 @@ class User(Folder):
         return len(self.workout_ids())
 
     @property
+    def favorite_sport(self):
+        """
+        Return which sport is the one with most workouts for this user.
+        In case of more than one sport with the maximum number of workouts,
+        return the first in reversed alphabetical ordering
+        """
+        sports = {}
+        for w in self.workouts():
+            if w.sport not in sports.keys():
+                sports[w.sport] = 0
+            sports[w.sport] += 1
+        _sports = sorted(sports.items(), reverse=True,
+                         key=lambda x: (x[1], x[0]))
+        if _sports:
+            return _sports[0][0]
+        return None
+
+    @property
+    def activity_sports(self):
+        return sorted(list(set(w.sport for w in self.workouts())))
+
+    @property
     def activity_years(self):
         return sorted(list(set(w.start.year for w in self.workouts())),
                       reverse=True)
@@ -367,3 +389,29 @@ class User(Folder):
                     workout.uphill or Decimal(0))
 
         return stats
+
+    def sport_totals(self, sport=None, year=None):
+        """
+        Return totals for this user, filtered by sport.
+
+        If no sport is passed, the favorite sport is picked up
+
+        If the additional parameter year is passed, show stats only
+        for that year
+        """
+        totals = {
+            'workouts': 0,
+            'time': timedelta(0),
+            'distance': Decimal(0),
+            'elevation': Decimal(0),
+        }
+        if self.activity_sports:
+            sport = sport or self.favorite_sport
+            for workout in self.workouts():
+                if workout.sport == sport:
+                    if year is None or workout.start.year == year:
+                        totals['workouts'] += 1
+                        totals['time'] += workout.duration or timedelta(0)
+                        totals['distance'] += workout.distance or Decimal(0)
+                        totals['elevation'] += workout.uphill or Decimal(0)
+        return totals

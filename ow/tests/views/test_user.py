@@ -45,7 +45,8 @@ class TestUserViews(object):
         workout = Workout(
             start=datetime(2015, 6, 28, 12, 55, tzinfo=timezone.utc),
             duration=timedelta(minutes=60),
-            distance=30
+            distance=30,
+            sport='cycling'
         )
         john.add_workout(workout)
         return root
@@ -412,7 +413,7 @@ class TestUserViews(object):
         request = dummy_request
         # profile page for the current day (no workouts avalable)
         response = user_views.profile(john, request)
-        assert len(response.keys()) == 6
+        assert len(response.keys()) == 7
         current_month = datetime.now(timezone.utc).strftime('%Y-%m')
         assert response['user'] == john
         assert response['user_gender'] == 'Robot'
@@ -424,11 +425,17 @@ class TestUserViews(object):
             'time': timedelta(0),
             'elevation': Decimal(0)
         }
+        assert response['profile_stats'] == {
+            'sports': ['cycling'],
+            'years': [2015],
+            'current_year': datetime.now(timezone.utc).year,
+            'current_sport': 'cycling'
+        }
         # profile page for a previous date, that has workouts
         request.GET['year'] = 2015
         request.GET['month'] = 6
         response = user_views.profile(john, request)
-        assert len(response.keys()) == 6
+        assert len(response.keys()) == 7
         assert response['user'] == john
         assert response['user_gender'] == 'Robot'
         assert response['current_month'] == '2015-06'
@@ -445,7 +452,7 @@ class TestUserViews(object):
         request.GET['month'] = 6
         request.GET['week'] = 25
         response = user_views.profile(john, request)
-        assert len(response.keys()) == 6
+        assert len(response.keys()) == 7
         assert response['user'] == john
         assert response['user_gender'] == 'Robot'
         assert response['current_month'] == '2015-06'
@@ -461,7 +468,7 @@ class TestUserViews(object):
         request.GET['month'] = 6
         request.GET['week'] = 26
         response = user_views.profile(john, request)
-        assert len(response.keys()) == 6
+        assert len(response.keys()) == 7
         assert response['user'] == john
         assert response['user_gender'] == 'Robot'
         assert response['current_month'] == '2015-06'

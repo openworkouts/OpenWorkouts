@@ -304,6 +304,14 @@ def profile(context, request):
         if g[0] == user.gender:
             user_gender = localizer.translate(g[1])
 
+    # get some data to be shown in the "profile stats" totals column
+    profile_stats = {
+        'sports': user.activity_sports,
+        'years': user.activity_years,
+        'current_year': request.GET.get('stats_year', now.year),
+        'current_sport': request.GET.get('stats_sport', user.favorite_sport),
+    }
+
     return {
         'user': user,
         'user_gender': user_gender,
@@ -311,7 +319,8 @@ def profile(context, request):
         'current_month': '{year}-{month}'.format(
             year=str(year), month=str(month).zfill(2)),
         'current_week': week,
-        'totals': totals
+        'totals': totals,
+        'profile_stats': profile_stats
     }
 
 

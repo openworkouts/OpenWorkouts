@@ -485,3 +485,78 @@ owjs.map_shots = function(spec) {
     return that
 
 };
+
+
+owjs.sport_stats = function(spec) {
+
+    "use strict";
+
+    var link_selector = spec.link_selector;
+    var stats_selector = spec.stats_selector;
+    var selected = spec.selected;
+    var dropdown_selector = spec.dropdown_selector;
+    var current_year = spec.current_year;
+    var year_link_selector = spec.year_link_selector;
+
+    var setup = function setup() {
+        // Hide all sports stats by default
+        $(stats_selector).hide();
+        // Show the pre-selected one
+        $(selected).show();
+
+        $(link_selector).on('click', function(e) {
+            e.preventDefault();
+            var selected = $(this).attr('class').split(' ')[1];
+            var sport = selected.split('-')[1]
+            // Hide them all
+            $(stats_selector).hide();
+            // Show the selected one
+            $(stats_selector + '.' + selected).show();
+            // Update the sport on the sports selector widget
+            $(dropdown_selector + ' strong').html(sport);
+            // finally "click" on the proper year to be displayed for this sport
+            $(year_link_selector + sport + '-' + current_year).click();
+        });
+    };
+
+    var that = {}
+    that.setup = setup;
+    return that
+
+};
+
+
+owjs.year_stats = function(spec) {
+
+    "use strict";
+
+    var link_selector = spec.link_selector;
+    var stats_selector = spec.stats_selector;
+    var selected = spec.selected;
+    var dropdown_selector = spec.dropdown_selector;
+
+    var setup = function setup() {
+        // Hide all years stats by default
+        $(stats_selector).hide();
+        // Show the pre-selected one
+        $(selected).show();
+
+        $(link_selector).on('click', function(e) {
+            e.preventDefault();
+            var selected = $(this).attr('class').split(' ')[1];
+            var sport = selected.split('-')[1]
+            var year = selected.split('-')[2]
+            // Hide them all
+            $(stats_selector).hide();
+            // Show the selected one
+            $(stats_selector + '.' + selected).show();
+            // Update the year on the years selector widget
+            $(dropdown_selector + sport + ' strong').html(year);
+        });
+    };
+
+    var that = {}
+    that.setup = setup;
+    return that
+
+};

@@ -81,6 +81,105 @@ class TestUser(object):
         assert list(root['john'].workout_ids()) == ['1', '2', '3']
         assert root['john'].num_workouts == len(workouts)
 
+    def test_favorite_sport(self, root):
+        assert root['john'].favorite_sport is None
+        # add a cycling workout
+        workout = Workout(
+            sport='cycling',
+            start=datetime.now(timezone.utc),
+            duration=timedelta(minutes=120),
+            distance=66,
+        )
+        root['john'].add_workout(workout)
+        assert root['john'].favorite_sport == 'cycling'
+        # add a running workout, both sports have same amount of workouts,
+        # favorite is picked up reversed alphabetically
+        workout = Workout(
+            sport='running',
+            start=datetime.now(timezone.utc),
+            duration=timedelta(minutes=45),
+            distance=5,
+        )
+        root['john'].add_workout(workout)
+        assert root['john'].favorite_sport == 'running'
+        # add another cycling workout, now that is the favorite sport
+        workout = Workout(
+            sport='cycling',
+            start=datetime.now(timezone.utc),
+            duration=timedelta(minutes=60),
+            distance=30,
+        )
+        root['john'].add_workout(workout)
+        assert root['john'].favorite_sport == 'cycling'
+
+    def test_activity_sports(self, root):
+        assert root['john'].activity_sports == []
+        workout = Workout(
+            sport='cycling',
+            start=datetime.now(timezone.utc),
+            duration=timedelta(minutes=120),
+            distance=66,
+        )
+        root['john'].add_workout(workout)
+        assert root['john'].activity_sports == ['cycling']
+        workout = Workout(
+            sport='running',
+            start=datetime.now(timezone.utc),
+            duration=timedelta(minutes=45),
+            distance=5,
+        )
+        root['john'].add_workout(workout)
+        assert root['john'].activity_sports == ['cycling', 'running']
+
+    def test_activity_years(self, root):
+        assert root['john'].activity_years == []
+        workout = Workout(
+            sport='cycling',
+            start=datetime.now(timezone.utc),
+            duration=timedelta(minutes=120),
+            distance=66,
+        )
+        root['john'].add_workout(workout)
+        assert root['john'].activity_years == [datetime.now(timezone.utc).year]
+        workout = Workout(
+            sport='running',
+            start=datetime(2018, 11, 25, 10, 00, tzinfo=timezone.utc),
+            duration=timedelta(minutes=45),
+            distance=5,
+        )
+        root['john'].add_workout(workout)
+        assert root['john'].activity_years == [
+            datetime.now(timezone.utc).year,
+            2018
+        ]
+
+    def test_activity_months(self, root):
+        # we have to pass a year parameter
+        with pytest.raises(TypeError):
+            root['john'].activity_months()
+        now = datetime.now(timezone.utc)
+        assert root['john'].activity_months(now.year) == []
+        workout = Workout(
+            sport='cycling',
+            start=datetime.now(timezone.utc),
+            duration=timedelta(minutes=120),
+            distance=66,
+        )
+        root['john'].add_workout(workout)
+        assert root['john'].activity_months(now.year) == [now.month]
+        assert root['john'].activity_months(now.year-1) == []
+        assert root['john'].activity_months(now.year+1) == []
+        workout = Workout(
+            sport='running',
+            start=datetime(2018, 11, 25, 10, 00, tzinfo=timezone.utc),
+            duration=timedelta(minutes=45),
+            distance=5,
+        )
+        root['john'].add_workout(workout)
+        assert root['john'].activity_months(now.year) == [now.month]
+        assert root['john'].activity_months(2018) == [11]
+        assert root['john'].activity_months(now.year+1) == []
+
     def test_activity_dates_tree(self, root):
         # first an empty test
         assert root['john'].activity_dates_tree == {}
@@ -551,3 +650,100 @@ class TestUser(object):
                 }
             else:
                 assert stats == expected_no_stats_per_week
+
+    def test_sport_totals(self, root):
+        # user has no workouts, so no totals
+        assert root['john'].sport_totals() == {
+            'workouts': 0,
+            'time': timedelta(0),
+            'distance': Decimal(0),
+            'elevation': Decimal(0),
+        }
+        # add a cycling workout happening now
+        workout = Workout(
+            sport='cycling',
+            start=datetime.now(timezone.utc),
+            duration=timedelta(minutes=120),
+            distance=66,
+        )
+        root['john'].add_workout(workout)
+        # only one workout, one sport, so the default will show totals
+        # for that sport
+        assert root['john'].sport_totals() == {
+            'workouts': 1,
+            'time': timedelta(minutes=120),
+            'distance': Decimal(66),
+            'elevation': Decimal(0),
+        }
+        # Add a running workout
+        workout = Workout(
+            sport='running',
+            start=datetime(2018, 11, 25, 10, 00, tzinfo=timezone.utc),
+            duration=timedelta(minutes=45),
+            distance=5,
+        )
+        root['john'].add_workout(workout)
+        # the favorite sport is running now
+        assert root['john'].sport_totals() == {
+            'workouts': 1,
+            'time': timedelta(minutes=45),
+            'distance': Decimal(5),
+            'elevation': Decimal(0),
+        }
+        # but we can get the totals for cycling too
+        assert root['john'].sport_totals('cycling') == {
+            'workouts': 1,
+            'time': timedelta(minutes=120),
+            'distance': Decimal(66),
+            'elevation': Decimal(0),
+        }
+        # adding a new cycling workout, in a different year
+        workout = Workout(
+            sport='cycling',
+            start=datetime(2017, 11, 25, 10, 00, tzinfo=timezone.utc),
+            duration=timedelta(minutes=60),
+            distance=32,
+        )
+        root['john'].add_workout(workout)
+        # now cycling is the favorite sport
+        assert root['john'].sport_totals() == {
+            'workouts': 2,
+            'time': timedelta(minutes=180),
+            'distance': Decimal(98),
+            'elevation': Decimal(0),
+        }
+        # but we can get running stats too
+        assert root['john'].sport_totals('running') == {
+            'workouts': 1,
+            'time': timedelta(minutes=45),
+            'distance': Decimal(5),
+            'elevation': Decimal(0),
+        }
+        # there are no running activities for 2016
+        assert root['john'].sport_totals('running', 2016) == {
+            'workouts': 0,
+            'time': timedelta(0),
+            'distance': Decimal(0),
+            'elevation': Decimal(0),
+        }
+        # and not activities for cycling in 2016 neither
+        assert root['john'].sport_totals('cycling', 2016) == {
+            'workouts': 0,
+            'time': timedelta(0),
+            'distance': Decimal(0),
+            'elevation': Decimal(0),
+        }
+        # and we can get the separate totals for cycling in different years
+        year = datetime.now(timezone.utc).year
+        assert root['john'].sport_totals('cycling', year) == {
+            'workouts': 1,
+            'time': timedelta(minutes=120),
+            'distance': Decimal(66),
+            'elevation': Decimal(0),
+        }
+        assert root['john'].sport_totals('cycling', 2017) == {
+            'workouts': 1,
+            'time': timedelta(minutes=60),
+            'distance': Decimal(32),
+            'elevation': Decimal(0),
+        }

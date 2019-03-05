@@ -250,6 +250,32 @@ d3() {
     fi
 }
 
+jquery_dropdown() {
+    # We need version "master", as the latest release does not work properly
+    NAME="jquery-dropdown"
+    VERSION=master
+    URL=https://github.com/soundasleep/${NAME}/archive/${VERSION}.tar.gz
+    check_cache ${NAME} ${VERSION}
+    in_cache=$?
+    if [ ${in_cache} -eq 0 -a ${REINSTALL} -eq 1 ]; then
+        echo "${NAME}-${VERSION} $ALREADY_INSTALLED"
+    else
+        echo "> Installing ${NAME} ${VERSION}"
+        if [ -d ${COMPONENTS}/${NAME} ]; then
+            # Clean up, delete previous install before installing
+            rm -r ${COMPONENTS}/${NAME}
+        fi
+        mkdir ${COMPONENTS}/${NAME}
+        cd ${TMP}
+        ${GET} ${URL}
+        ${TAR} ${VERSION}.tar.gz
+        cd ${CURRENT}
+        mv ${TMP}/${NAME}-${VERSION}/jquery.dropdown.{css,js} ${COMPONENTS}/${NAME}
+        echo "${NAME}-${VERSION}" >> ${CACHE}
+        echo "< Installed ${NAME} ${VERSION}"
+    fi
+}
+
 
 echo "Installing JS dependencies in ${COMPONENTS}"
 
@@ -260,6 +286,7 @@ leaflet_gpx
 leaflet_elevation
 pickadate
 d3
+jquery_dropdown
 
 
 # Clean up, remove the tmp directory

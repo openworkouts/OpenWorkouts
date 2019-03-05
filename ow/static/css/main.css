@@ -641,6 +641,39 @@ input {
 .button-important {
   background-color: #EE4056;
 }
+/*
+Very simple way to paint dropdown-like arrows, without
+using any external dependencies.
+
+To use it, add something like this to your html, to display a "down" arrow:
+
+  <i class="arrow down"></i>
+*/
+i.arrow {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+  margin: 3px;
+  margin-left: 6px;
+  margin-right: 0px;
+}
+.right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+.left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+.up {
+  transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+}
+.down {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
 .header-content {
   padding: 1em 1.5em;
 }
@@ -1487,6 +1520,23 @@ input {
   color: #959595;
   font-size: 13px;
   font-size: 0.8125rem;
+}
+.profile-dropdown-sports,
+.profile-dropdown-years {
+  color: #151515;
+  text-decoration: none;
+}
+.profile-dropdown-sports:hover,
+.profile-dropdown-years:hover {
+  color: #151515;
+}
+.profile-dropdown-sports:active,
+.profile-dropdown-years:active,
+.profile-dropdown-sports:focus,
+.profile-dropdown-years:focus {
+  outline: 0;
+  border: none;
+  -moz-outline-style: none;
 }
 .verify-account-content {
   background-position: center;

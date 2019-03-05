@@ -11,6 +11,10 @@
     <tal:t i18n:translate="">My profile</tal:t>
   </metal:head-title>
 
+  <metal:css metal:fill-slot="css">
+    <link rel="stylesheet" href="${request.static_url('ow:static/components/jquery-dropdown/jquery.dropdown.css')}" />
+  </metal:css>
+
   <metal:content metal:fill-slot="content">
 
     <div class="user-profile">
@@ -167,6 +171,9 @@
         </div>
 
         <div class="workout-aside">
+
+          <h3 i18n:translate="">Profile info</h3>
+
           <ul class="profile-data">
             <li>
               <span><tal:t i18n:translate="">Gender:</tal:t></span>
@@ -187,14 +194,146 @@
               <tal:c tal:content="getattr(user, 'weight', '-')"></tal:c> kg
             </li>
           </ul>
+
+          <tal:has-workouts tal:condition="profile_stats['sports']">
+
+            <h3 i18n:translate="">Workout stats</h3>
+
+            <p>
+              <a href="" data-jq-dropdown="#jq-dropdown-sports"
+                 class="profile-dropdown-sports js-jq-dropdown-sel-sports">
+                <strong tal:content="profile_stats['current_sport']"></strong>
+                <i class="arrow down"></i>
+              </a>
+            </p>
+
+            <tal:sports tal:repeat="sport profile_stats['sports']">
+              <div class="" tal:attributes="class 'js-sport-stats js-' + sport">
+
+                <a href="" data-jq-dropdown=""
+                   tal:attributes="data-jq-dropdown '#jq-dropdown-' + sport;
+                         class 'profile-dropdown-years js-jq-dropdown-sel-' + sport">
+                  <strong tal:content="profile_stats['current_year']"></strong>
+                  <i class="arrow down"></i>
+                </a>
+
+                <tal:years tal:repeat="year profile_stats['years']">
+                  <div class="" tal:attributes="class 'js-year-stats js-' + sport + '-' + str(year)">
+                    <ul class="profile-data"
+                        tal:define="sport_totals context.sport_totals(sport, year)">
+                      <li>
+                        <span>
+                          <tal:t i18n:translate="">Workouts</tal:t>
+                        </span>
+                        <tal:w tal:replace="sport_totals['workouts']"></tal:w>
+                      </li>
+                      <li>
+                        <span>
+                          <tal:t i18n:translate="">Time</tal:t>
+                        </span>
+                        <tal:hms tal:define="hms timedelta_to_hms(sport_totals['time'])">
+                          <tal:h tal:content="str(hms[0]).zfill(2)"></tal:h>
+                          <tal:t i18n:translate="">hours</tal:t>,
+                          <tal:h tal:content="str(hms[1]).zfill(2)"></tal:h>
+                          <tal:t i18n:translate="">min.</tal:t>
+                        </tal:hms>
+                      </li>
+                      <li>
+                        <span>
+                          <tal:t i18n:translate="">Distance</tal:t>
+                        </span>
+                        <tal:w tal:replace="round(sport_totals['distance'])"></tal:w>
+                        <tal:t i18n:translate="">km</tal:t>
+                      </li>
+                      <li>
+                        <span>
+                          <tal:t i18n:translate="">Elevation</tal:t>
+                        </span>
+                        <tal:w tal:replace="round(sport_totals['elevation'])"></tal:w>
+                        <tal:t i18n:translate="">m</tal:t>
+                      </li>
+                    </ul>
+                  </div>
+                </tal:years>
+
+                <strong i18n:translate="">All time</strong>
+                <ul class="profile-data"
+                    tal:define="sport_totals context.sport_totals(sport)">
+                  <li>
+                    <span>
+                      <tal:t i18n:translate="">Workouts</tal:t>
+                    </span>
+                    <tal:w tal:replace="sport_totals['workouts']"></tal:w>
+                  </li>
+                  <li>
+                    <span>
+                      <tal:t i18n:translate="">Time</tal:t>
+                    </span>
+                    <tal:hms tal:define="hms timedelta_to_hms(sport_totals['time'])">
+                      <tal:h tal:content="str(hms[0]).zfill(2)"></tal:h>
+                      <tal:t i18n:translate="">hours</tal:t>,
+                      <tal:h tal:content="str(hms[1]).zfill(2)"></tal:h>
+                      <tal:t i18n:translate="">min.</tal:t>
+                    </tal:hms>
+                  </li>
+                  <li>
+                    <span>
+                      <tal:t i18n:translate="">Distance</tal:t>
+                    </span>
+                    <tal:w tal:replace="round(sport_totals['distance'])"></tal:w>
+                    <tal:t i18n:translate="">km</tal:t>
+                  </li>
+                  <li>
+                    <span>
+                      <tal:t i18n:translate="">Elevation</tal:t>
+                    </span>
+                    <tal:w tal:replace="round(sport_totals['elevation'])"></tal:w>
+                    <tal:t i18n:translate="">m</tal:t>
+                  </li>
+                </ul>
+              </div>
+            </tal:sports>
+
+          </tal:has-workouts>
+
         </div>
       </div>
     </div>
+
+      <div id="jq-dropdown-sports" class="jq-dropdown jq-dropdown-tip">
+        <ul class="jq-dropdown-menu">
+          <tal:sports tal:repeat="sport profile_stats['sports']">
+            <li>
+              <a href="#" class="" tal:content="sport"
+                 tal:attributes="class 'js-choose-sport-stats js-' + sport">
+              </a>
+            </li>
+          </tal:sports>
+        </ul>
+      </div>
+
+
+    <tal:sports tal:repeat="sport profile_stats['sports']">
+      <div id="" class="jq-dropdown jq-dropdown-tip"
+           tal:attributes="id 'jq-dropdown-' + sport">
+        <ul class="jq-dropdown-menu">
+          <tal:years tal:repeat="year profile_stats['years']">
+            <li>
+              <a href="#" class="" tal:content="year"
+                 tal:attributes="class 'js-choose-year-stats js-' + sport + '-' + str(year)">
+              </a>
+            </li>
+          </tal:years>
+        </ul>
+      </div>
+    </tal:sports>
+
 
   </metal:content>
 
   <metal:body-js metal:fill-slot="body-js">
 
+    <script src="${request.static_url('ow:static/components/jquery-dropdown/jquery.dropdown.js')}"></script>
     <script src="${request.static_url('ow:static/components/d3/d3.min.js')}"></script>
     <script src="${request.static_url('ow:static/js/ow.js')}"></script>
 
@@ -203,6 +342,24 @@
          img_selector: 'img.js-needs-map',
      })
      map_shots.run();
+
+     var sport_stats = owjs.sport_stats({
+         link_selector: 'a.js-choose-sport-stats',
+         stats_selector: 'div.js-sport-stats',
+         selected: 'div.js-sport-stats.js-${profile_stats['current_sport']}',
+         dropdown_selector: 'a.js-jq-dropdown-sel-sports',
+         current_year: '${profile_stats['current_year']}',
+         year_link_selector: 'a.js-choose-year-stats.js-'
+     })
+     sport_stats.setup();
+
+     var year_stats = owjs.year_stats({
+         link_selector: 'a.js-choose-year-stats',
+         stats_selector: 'div.js-year-stats',
+         selected: 'div.js-year-stats.js-${profile_stats['current_sport']}-${profile_stats['current_year']}',
+         dropdown_selector: 'a.js-jq-dropdown-sel-'
+     })
+     year_stats.setup();
 
      var y_axis_labels = {
          "distance": "Kilometers",

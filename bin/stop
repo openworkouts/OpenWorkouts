@@ -13,7 +13,8 @@ env_path=${current}/env
 
 # stop pserve
 echo "Stopping OpenWorkouts"
-kill -15 `cat var/run/pserve.pid`
+./bin/uwsgi_stop
+#kill -15 `cat var/run/pserve.pid`
 
 # Stop ZEO
 echo "Stopping database"

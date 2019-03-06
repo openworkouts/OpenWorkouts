@@ -404,14 +404,35 @@ class User(Folder):
             'time': timedelta(0),
             'distance': Decimal(0),
             'elevation': Decimal(0),
+            'max_time': timedelta(0),
+            'max_time_wid': None,
+            'max_distance': Decimal(0),
+            'max_distance_wid': None,
+            'max_elevation': Decimal(0),
+            'max_elevation_wid': None
         }
+
         if self.activity_sports:
             sport = sport or self.favorite_sport
             for workout in self.workouts():
                 if workout.sport == sport:
                     if year is None or workout.start.year == year:
+                        wid = str(workout.workout_id)
+                        time = workout.duration or timedelta(0)
+                        distance = workout.distance or Decimal(0)
+                        elevation = workout.uphill or Decimal(0)
                         totals['workouts'] += 1
-                        totals['time'] += workout.duration or timedelta(0)
-                        totals['distance'] += workout.distance or Decimal(0)
-                        totals['elevation'] += workout.uphill or Decimal(0)
+                        totals['time'] += time
+                        totals['distance'] += distance
+                        totals['elevation'] += elevation
+                        if time > totals['max_time']:
+                            totals['max_time'] = time
+                            totals['max_time_wid'] = wid
+                        if distance > totals['max_distance']:
+                            totals['max_distance'] = distance
+                            totals['max_distance_wid'] = wid
+                        if elevation > totals['max_elevation']:
+                            totals['max_elevation'] = elevation
+                            totals['max_elevation_wid'] = wid
+
         return totals

@@ -252,6 +252,38 @@
                         <tal:w tal:replace="round(sport_totals['elevation'])"></tal:w>
                         <tal:t i18n:translate="">m</tal:t>
                       </li>
+                      <li><span i18n:translate="">Single workout records:</span></li>
+                      <li>
+                        <span>
+                          <tal:t i18n:translate="">Farthest distance</tal:t>
+                        </span>
+                        <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_distance_wid']])">
+                          <tal:w tal:replace="round(sport_totals['max_distance'])"></tal:w>
+                          <tal:t i18n:translate="">km</tal:t>
+                        </a>
+                      </li>
+                      <li>
+                        <span>
+                          <tal:t i18n:translate="">Longer workout</tal:t>
+                        </span>
+                        <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_time_wid']])">
+                          <tal:hms tal:define="hms timedelta_to_hms(sport_totals['max_time'])">
+                            <tal:h tal:content="str(hms[0]).zfill(2)"></tal:h>
+                            <tal:t i18n:translate="">hours</tal:t>,
+                            <tal:h tal:content="str(hms[1]).zfill(2)"></tal:h>
+                            <tal:t i18n:translate="">min.</tal:t>
+                          </tal:hms>
+                        </a>
+                      </li>
+                      <li>
+                        <span>
+                          <tal:t i18n:translate="">Higher elevation gain</tal:t>
+                        </span>
+                        <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_elevation_wid']])">
+                          <tal:w tal:replace="round(sport_totals['max_elevation'])"></tal:w>
+                          <tal:t i18n:translate="">m</tal:t>
+                        </a>
+                      </li>
                     </ul>
                   </div>
                 </tal:years>
@@ -289,6 +321,38 @@
                     </span>
                     <tal:w tal:replace="round(sport_totals['elevation'])"></tal:w>
                     <tal:t i18n:translate="">m</tal:t>
+                  </li>
+                  <li><span i18n:translate="">Single workout records:</span></li>
+                  <li>
+                    <span>
+                      <tal:t i18n:translate="">Farthest distance</tal:t>
+                    </span>
+                    <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_distance_wid']])">
+                      <tal:w tal:replace="round(sport_totals['max_distance'])"></tal:w>
+                      <tal:t i18n:translate="">km</tal:t>
+                    </a>
+                  </li>
+                  <li>
+                    <span>
+                      <tal:t i18n:translate="">Longer workout</tal:t>
+                    </span>
+                    <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_time_wid']])">
+                      <tal:hms tal:define="hms timedelta_to_hms(sport_totals['max_time'])">
+                        <tal:h tal:content="str(hms[0]).zfill(2)"></tal:h>
+                        <tal:t i18n:translate="">hours</tal:t>,
+                        <tal:h tal:content="str(hms[1]).zfill(2)"></tal:h>
+                        <tal:t i18n:translate="">min.</tal:t>
+                      </tal:hms>
+                    </a>
+                  </li>
+                  <li>
+                    <span>
+                      <tal:t i18n:translate="">Higher elevation gain</tal:t>
+                    </span>
+                    <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_elevation_wid']])">
+                      <tal:w tal:replace="round(sport_totals['max_elevation'])"></tal:w>
+                      <tal:t i18n:translate="">m</tal:t>
+                    </a>
                   </li>
                 </ul>
               </div>

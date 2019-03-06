@@ -89,6 +89,18 @@
 			font-weight: bold;
 			color: @color-main;
 		}
+                a {
+                    color: @color-app;
+                    text-decoration: none;
+                    &:hover {
+	                color: @color-main;
+                    }
+                    &:active, &:focus {
+                        outline: 0;
+                        border: none;
+                        -moz-outline-style: none;
+                    }
+                }
 	}
 }
 

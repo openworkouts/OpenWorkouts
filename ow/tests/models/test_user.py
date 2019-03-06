@@ -658,15 +658,22 @@ class TestUser(object):
             'time': timedelta(0),
             'distance': Decimal(0),
             'elevation': Decimal(0),
+            'max_time': timedelta(0),
+            'max_time_wid': None,
+            'max_distance': Decimal(0),
+            'max_distance_wid': None,
+            'max_elevation': Decimal(0),
+            'max_elevation_wid': None
         }
         # add a cycling workout happening now
         workout = Workout(
             sport='cycling',
             start=datetime.now(timezone.utc),
             duration=timedelta(minutes=120),
-            distance=66,
+            distance=Decimal(66),
         )
         root['john'].add_workout(workout)
+        cycling_wid = workout.workout_id
         # only one workout, one sport, so the default will show totals
         # for that sport
         assert root['john'].sport_totals() == {
@@ -674,21 +681,34 @@ class TestUser(object):
             'time': timedelta(minutes=120),
             'distance': Decimal(66),
             'elevation': Decimal(0),
+            'max_time': timedelta(minutes=120),
+            'max_time_wid': cycling_wid,
+            'max_distance': Decimal(66),
+            'max_distance_wid': cycling_wid,
+            'max_elevation': Decimal(0),
+            'max_elevation_wid': None
         }
         # Add a running workout
         workout = Workout(
             sport='running',
             start=datetime(2018, 11, 25, 10, 00, tzinfo=timezone.utc),
             duration=timedelta(minutes=45),
-            distance=5,
+            distance=Decimal(5),
         )
         root['john'].add_workout(workout)
+        running_wid = workout.workout_id
         # the favorite sport is running now
         assert root['john'].sport_totals() == {
             'workouts': 1,
             'time': timedelta(minutes=45),
             'distance': Decimal(5),
             'elevation': Decimal(0),
+            'max_time': timedelta(minutes=45),
+            'max_time_wid': running_wid,
+            'max_distance': Decimal(5),
+            'max_distance_wid': running_wid,
+            'max_elevation': Decimal(0),
+            'max_elevation_wid': None,
         }
         # but we can get the totals for cycling too
         assert root['john'].sport_totals('cycling') == {
@@ -696,21 +716,35 @@ class TestUser(object):
             'time': timedelta(minutes=120),
             'distance': Decimal(66),
             'elevation': Decimal(0),
+            'max_time': timedelta(minutes=120),
+            'max_time_wid': cycling_wid,
+            'max_distance': Decimal(66),
+            'max_distance_wid': cycling_wid,
+            'max_elevation': Decimal(0),
+            'max_elevation_wid': None
         }
         # adding a new cycling workout, in a different year
         workout = Workout(
             sport='cycling',
             start=datetime(2017, 11, 25, 10, 00, tzinfo=timezone.utc),
             duration=timedelta(minutes=60),
-            distance=32,
+            distance=Decimal(32),
+            uphill=Decimal(430)
         )
         root['john'].add_workout(workout)
+        second_cycling_wid = workout.workout_id
         # now cycling is the favorite sport
         assert root['john'].sport_totals() == {
             'workouts': 2,
             'time': timedelta(minutes=180),
             'distance': Decimal(98),
-            'elevation': Decimal(0),
+            'elevation': Decimal(430),
+            'max_time': timedelta(minutes=120),
+            'max_time_wid': cycling_wid,
+            'max_distance': Decimal(66),
+            'max_distance_wid': cycling_wid,
+            'max_elevation': Decimal(430),
+            'max_elevation_wid': second_cycling_wid
         }
         # but we can get running stats too
         assert root['john'].sport_totals('running') == {
@@ -718,6 +752,12 @@ class TestUser(object):
             'time': timedelta(minutes=45),
             'distance': Decimal(5),
             'elevation': Decimal(0),
+            'max_time': timedelta(minutes=45),
+            'max_time_wid': running_wid,
+            'max_distance': Decimal(5),
+            'max_distance_wid': running_wid,
+            'max_elevation': Decimal(0),
+            'max_elevation_wid': None,
         }
         # there are no running activities for 2016
         assert root['john'].sport_totals('running', 2016) == {
@@ -725,6 +765,12 @@ class TestUser(object):
             'time': timedelta(0),
             'distance': Decimal(0),
             'elevation': Decimal(0),
+            'max_time': timedelta(0),
+            'max_time_wid': None,
+            'max_distance': Decimal(0),
+            'max_distance_wid': None,
+            'max_elevation': Decimal(0),
+            'max_elevation_wid': None
         }
         # and not activities for cycling in 2016 neither
         assert root['john'].sport_totals('cycling', 2016) == {
@@ -732,6 +778,12 @@ class TestUser(object):
             'time': timedelta(0),
             'distance': Decimal(0),
             'elevation': Decimal(0),
+            'max_time': timedelta(0),
+            'max_time_wid': None,
+            'max_distance': Decimal(0),
+            'max_distance_wid': None,
+            'max_elevation': Decimal(0),
+            'max_elevation_wid': None
         }
         # and we can get the separate totals for cycling in different years
         year = datetime.now(timezone.utc).year
@@ -740,10 +792,22 @@ class TestUser(object):
             'time': timedelta(minutes=120),
             'distance': Decimal(66),
             'elevation': Decimal(0),
+            'max_time': timedelta(minutes=120),
+            'max_time_wid': cycling_wid,
+            'max_distance': Decimal(66),
+            'max_distance_wid': cycling_wid,
+            'max_elevation': Decimal(0),
+            'max_elevation_wid': None
         }
         assert root['john'].sport_totals('cycling', 2017) == {
             'workouts': 1,
             'time': timedelta(minutes=60),
             'distance': Decimal(32),
-            'elevation': Decimal(0),
+            'elevation': Decimal(430),
+            'max_time': timedelta(minutes=60),
+            'max_time_wid': second_cycling_wid,
+            'max_distance': Decimal(32),
+            'max_distance_wid': second_cycling_wid,
+            'max_elevation': Decimal(430),
+            'max_elevation_wid': second_cycling_wid
         }

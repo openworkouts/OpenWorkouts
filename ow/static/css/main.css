@@ -1489,6 +1489,19 @@ i.arrow {
   font-weight: bold;
   color: #151515;
 }
+.profile-data li a {
+  color: #EE4056;
+  text-decoration: none;
+}
+.profile-data li a:hover {
+  color: #151515;
+}
+.profile-data li a:active,
+.profile-data li a:focus {
+  outline: 0;
+  border: none;
+  -moz-outline-style: none;
+}
 .profile-bio {
   margin: 0.5em 0;
   font-size: 14px;

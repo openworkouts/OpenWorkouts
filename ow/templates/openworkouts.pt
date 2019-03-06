@@ -10,10 +10,43 @@
   <metal:content metal:fill-slot="content">
 
       <!-- Promo -->
-
       <div class="promo-content">
-          <h1>Welcome to OpenWorkouts</h1>
+        <h1>Welcome to OpenWorkouts</h1>
+        <p>OpenWorkouts is a open source web app for tracking workouts.</p>
+
+        <p>Add workouts manually or upload them from gps/tracker files (gpx and fit supported currently)</p>
+        <p>Time-based archive to access your workouts</p>
+        <p>Detailed view of each workout, including overview data (speed, distance, time, hr, power, etc), charts and an interactive </p>map view for those workouts with gps tracking information
+        <p>Tools to edit or update workouts from new gps/tracker files</p>
+        <p>Global stats (totals for distance, time, etc) and per-month, per-week stats</p>
+        <p>Personal profile data containing basic info</p>
+
+        <h2>Get the latest release (0.2.0):</h2>
+        <ul>
+          <li>
+            <a href="https://openworkouts.org/sources/releases/OpenWorkouts-0.2.0.tar.gz">tar.gz</a>
+          </li>
+          <li>
+            <a href="https://openworkouts.org/sources/releases/OpenWorkouts-0.2.0.zip">zip</a>
+          </li>
+          <li>
+            <a href="https://openworkouts.readthedocs.io">Documentation</a>
+          </li>
+          <li>
+            <a href="https://openworkouts.readthedocs.io/en/latest/CHANGES.html">What´s new</a>
+          </li>
+        </ul>
+
+        <ul>
+          <li>
+            <a href="https://github.com/openworkouts">github</a>
+          </li>
+          <li>
+            <a href="https://twitter.com/openworkouts">twitter</a>
+          </li>
+        </ul>
       </div>
+      <!-- /Promo -->
 
   </metal:content>
 

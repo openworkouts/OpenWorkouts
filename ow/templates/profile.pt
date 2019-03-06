@@ -257,32 +257,54 @@
                         <span>
                           <tal:t i18n:translate="">Farthest distance</tal:t>
                         </span>
-                        <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_distance_wid']])">
+                        <tal:has-wid tal:condition="sport_totals['max_distance_wid'] is not None">
+                          <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_distance_wid']])">
+                            <tal:w tal:replace="round(sport_totals['max_distance'])"></tal:w>
+                            <tal:t i18n:translate="">km</tal:t>
+                          </a>
+                        </tal:has-wid>
+                        <tal:has-not-wid tal:condition="sport_totals['max_distance_wid'] is None">
                           <tal:w tal:replace="round(sport_totals['max_distance'])"></tal:w>
                           <tal:t i18n:translate="">km</tal:t>
-                        </a>
+                        </tal:has-not-wid>
                       </li>
                       <li>
                         <span>
                           <tal:t i18n:translate="">Longer workout</tal:t>
                         </span>
-                        <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_time_wid']])">
+                        <tal:has-wid tal:condition="sport_totals['max_time_wid'] is not None">
+                          <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_time_wid']])">
+                            <tal:hms tal:define="hms timedelta_to_hms(sport_totals['max_time'])">
+                              <tal:h tal:content="str(hms[0]).zfill(2)"></tal:h>
+                              <tal:t i18n:translate="">hours</tal:t>,
+                              <tal:h tal:content="str(hms[1]).zfill(2)"></tal:h>
+                              <tal:t i18n:translate="">min.</tal:t>
+                            </tal:hms>
+                          </a>
+                        </tal:has-wid>
+                        <tal:has-not-wid tal:condition="sport_totals['max_time_wid'] is None">
                           <tal:hms tal:define="hms timedelta_to_hms(sport_totals['max_time'])">
                             <tal:h tal:content="str(hms[0]).zfill(2)"></tal:h>
                             <tal:t i18n:translate="">hours</tal:t>,
                             <tal:h tal:content="str(hms[1]).zfill(2)"></tal:h>
                             <tal:t i18n:translate="">min.</tal:t>
                           </tal:hms>
-                        </a>
+                        </tal:has-not-wid>
                       </li>
                       <li>
                         <span>
                           <tal:t i18n:translate="">Higher elevation gain</tal:t>
                         </span>
-                        <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_elevation_wid']])">
+                        <tal:has-wid tal:condition="sport_totals['max_elevation_wid'] is not None">
+                          <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_elevation_wid']])">
+                            <tal:w tal:replace="round(sport_totals['max_elevation'])"></tal:w>
+                            <tal:t i18n:translate="">m</tal:t>
+                          </a>
+                        </tal:has-wid>
+                        <tal:has-not-wid tal:condition="sport_totals['max_elevation_wid'] is None">
                           <tal:w tal:replace="round(sport_totals['max_elevation'])"></tal:w>
                           <tal:t i18n:translate="">m</tal:t>
-                        </a>
+                        </tal:has-not-wid>
                       </li>
                     </ul>
                   </div>
@@ -327,32 +349,54 @@
                     <span>
                       <tal:t i18n:translate="">Farthest distance</tal:t>
                     </span>
-                    <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_distance_wid']])">
+                    <tal:has-wid tal:condition="sport_totals['max_distance_wid'] is not None">
+                      <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_distance_wid']])">
+                        <tal:w tal:replace="round(sport_totals['max_distance'])"></tal:w>
+                        <tal:t i18n:translate="">km</tal:t>
+                      </a>
+                    </tal:has-wid>
+                    <tal:has-not-wid tal:condition="sport_totals['max_distance_wid'] is None">
                       <tal:w tal:replace="round(sport_totals['max_distance'])"></tal:w>
                       <tal:t i18n:translate="">km</tal:t>
-                    </a>
+                    </tal:has-not-wid>
                   </li>
                   <li>
                     <span>
                       <tal:t i18n:translate="">Longer workout</tal:t>
                     </span>
-                    <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_time_wid']])">
+                    <tal:has-wid tal:condition="sport_totals['max_time_wid'] is not None">
+                      <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_time_wid']])">
+                        <tal:hms tal:define="hms timedelta_to_hms(sport_totals['max_time'])">
+                          <tal:h tal:content="str(hms[0]).zfill(2)"></tal:h>
+                          <tal:t i18n:translate="">hours</tal:t>,
+                          <tal:h tal:content="str(hms[1]).zfill(2)"></tal:h>
+                          <tal:t i18n:translate="">min.</tal:t>
+                        </tal:hms>
+                      </a>
+                    </tal:has-wid>
+                    <tal:has-not-wid tal:condition="sport_totals['max_time_wid'] is None">
                       <tal:hms tal:define="hms timedelta_to_hms(sport_totals['max_time'])">
                         <tal:h tal:content="str(hms[0]).zfill(2)"></tal:h>
                         <tal:t i18n:translate="">hours</tal:t>,
                         <tal:h tal:content="str(hms[1]).zfill(2)"></tal:h>
                         <tal:t i18n:translate="">min.</tal:t>
                       </tal:hms>
-                    </a>
+                    </tal:has-not-wid>
                   </li>
                   <li>
                     <span>
                       <tal:t i18n:translate="">Higher elevation gain</tal:t>
                     </span>
-                    <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_elevation_wid']])">
+                    <tal:has-wid tal:condition="sport_totals['max_elevation_wid'] is not None">
+                      <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_elevation_wid']])">
+                        <tal:w tal:replace="round(sport_totals['max_elevation'])"></tal:w>
+                        <tal:t i18n:translate="">m</tal:t>
+                      </a>
+                    </tal:has-wid>
+                    <tal:has-not-wid tal:condition="sport_totals['max_elevation_wid'] is None">
                       <tal:w tal:replace="round(sport_totals['max_elevation'])"></tal:w>
                       <tal:t i18n:translate="">m</tal:t>
-                    </a>
+                    </tal:has-not-wid>
                   </li>
                 </ul>
               </div>

@@ -80,7 +80,7 @@
           </div>
 
           <div class="month-stats js-month-stats">
-            <div class="svg-cotent">
+            <div class="svg-content">
               <svg width="900" height="180" viewBox="0 0 900 180"></svg>
             </div>
             <div class="center">

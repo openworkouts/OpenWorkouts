@@ -220,7 +220,7 @@
                 <tal:years tal:repeat="year profile_stats['years']">
                   <div class="" tal:attributes="class 'js-year-stats js-' + sport + '-' + str(year)">
                     <ul class="profile-data"
-                        tal:define="sport_totals context.sport_totals(sport, year)">
+                        tal:define="sport_totals user.sport_totals(sport, year)">
                       <li>
                         <span>
                           <tal:t i18n:translate="">Workouts</tal:t>
@@ -258,7 +258,7 @@
                           <tal:t i18n:translate="">Farthest distance</tal:t>
                         </span>
                         <tal:has-wid tal:condition="sport_totals['max_distance_wid'] is not None">
-                          <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_distance_wid']])">
+                          <a href="" tal:attributes="href request.resource_url(user[sport_totals['max_distance_wid']])">
                             <tal:w tal:replace="round(sport_totals['max_distance'])"></tal:w>
                             <tal:t i18n:translate="">km</tal:t>
                           </a>
@@ -273,7 +273,7 @@
                           <tal:t i18n:translate="">Longer workout</tal:t>
                         </span>
                         <tal:has-wid tal:condition="sport_totals['max_time_wid'] is not None">
-                          <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_time_wid']])">
+                          <a href="" tal:attributes="href request.resource_url(user[sport_totals['max_time_wid']])">
                             <tal:hms tal:define="hms timedelta_to_hms(sport_totals['max_time'])">
                               <tal:h tal:content="str(hms[0]).zfill(2)"></tal:h>
                               <tal:t i18n:translate="">hours</tal:t>,
@@ -296,7 +296,7 @@
                           <tal:t i18n:translate="">Higher elevation gain</tal:t>
                         </span>
                         <tal:has-wid tal:condition="sport_totals['max_elevation_wid'] is not None">
-                          <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_elevation_wid']])">
+                          <a href="" tal:attributes="href request.resource_url(user[sport_totals['max_elevation_wid']])">
                             <tal:w tal:replace="round(sport_totals['max_elevation'])"></tal:w>
                             <tal:t i18n:translate="">m</tal:t>
                           </a>
@@ -312,7 +312,7 @@
 
                 <strong i18n:translate="">All time</strong>
                 <ul class="profile-data"
-                    tal:define="sport_totals context.sport_totals(sport)">
+                    tal:define="sport_totals user.sport_totals(sport)">
                   <li>
                     <span>
                       <tal:t i18n:translate="">Workouts</tal:t>
@@ -350,7 +350,7 @@
                       <tal:t i18n:translate="">Farthest distance</tal:t>
                     </span>
                     <tal:has-wid tal:condition="sport_totals['max_distance_wid'] is not None">
-                      <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_distance_wid']])">
+                      <a href="" tal:attributes="href request.resource_url(user[sport_totals['max_distance_wid']])">
                         <tal:w tal:replace="round(sport_totals['max_distance'])"></tal:w>
                         <tal:t i18n:translate="">km</tal:t>
                       </a>
@@ -365,7 +365,7 @@
                       <tal:t i18n:translate="">Longer workout</tal:t>
                     </span>
                     <tal:has-wid tal:condition="sport_totals['max_time_wid'] is not None">
-                      <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_time_wid']])">
+                      <a href="" tal:attributes="href request.resource_url(user[sport_totals['max_time_wid']])">
                         <tal:hms tal:define="hms timedelta_to_hms(sport_totals['max_time'])">
                           <tal:h tal:content="str(hms[0]).zfill(2)"></tal:h>
                           <tal:t i18n:translate="">hours</tal:t>,
@@ -388,7 +388,7 @@
                       <tal:t i18n:translate="">Higher elevation gain</tal:t>
                     </span>
                     <tal:has-wid tal:condition="sport_totals['max_elevation_wid'] is not None">
-                      <a href="" tal:attributes="href request.resource_url(context[sport_totals['max_elevation_wid']])">
+                      <a href="" tal:attributes="href request.resource_url(user[sport_totals['max_elevation_wid']])">
                         <tal:w tal:replace="round(sport_totals['max_elevation'])"></tal:w>
                         <tal:t i18n:translate="">m</tal:t>
                       </a>

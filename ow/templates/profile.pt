@@ -52,7 +52,7 @@
           </div>
           <div class="calendar-heatmap js-calendar-heatmap">
           </div>
-          <div class="calendar-heatmap-tooltip js-calendar-heatmap-tooltip">
+          <div class="calendar-heatmap-tooltip js-ch-tooltip">
             <ul class="profile-data">
               <li>
                 <span class="js-ch-tooltip-date"></span>
@@ -488,6 +488,7 @@
 
      var heatmap_chart = owjs.calendar_heatmap_chart({
          chart_selector: 'div.js-calendar-heatmap',
+         tooltip_selector: '.js-ch-tooltip',
          url: "${request.resource_url(user, 'month')}",
          // Trick to have all those shortened day names translated
          day_names_list: "${_('Mo Tu We Th Fr Sa Su')}".split(' ')

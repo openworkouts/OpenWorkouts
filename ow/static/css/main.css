@@ -1190,16 +1190,16 @@ i.arrow {
   color: #151515;
 }
 /* Week report */
-.svg-cotent svg {
+.svg-content svg {
   width: 100%;
   height: 100%;
 }
-.svg-cotent .label {
+.svg-content .label {
   font-size: 13px;
   font-size: 0.8125rem;
   text-anchor: middle;
 }
-.svg-cotent .tick {
+.svg-content .tick {
   font-size: 13px;
   font-size: 0.8125rem;
 }

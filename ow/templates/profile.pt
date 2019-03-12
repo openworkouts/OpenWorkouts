@@ -52,6 +52,29 @@
           </div>
           <div class="calendar-heatmap js-calendar-heatmap">
           </div>
+          <div class="calendar-heatmap-tooltip js-calendar-heatmap-tooltip">
+            <ul class="profile-data">
+              <li>
+                <span class="js-ch-tooltip-date"></span>
+              </li>
+              <li>
+                <span><tal:t i18n:translate="">Workouts:</tal:t></span>
+                <span class="js-ch-tooltip-workouts"></span>
+              </li>
+              <li>
+                <span><tal:t i18n:translate="">Time:</tal:t></span>
+                <span class="js-ch-tooltip-time"></span>
+              </li>
+              <li>
+                <span><tal:t i18n:translate="">Distance:</tal:t></span>
+                <span class="js-ch-tooltip-distance"></span>
+              </li>
+              <li>
+                <span><tal:t i18n:translate="">Elevation:</tal:t></span>
+                <span class="js-ch-tooltip-elevation"></span>
+              </li>
+            </ul>
+          </div>
         </div>
 
       </div>

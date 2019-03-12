@@ -465,6 +465,8 @@ def month_stats(context, request):
                 'time': 0,  # seconds
                 'distance': 0,  # kilometers
                 'elevation': 0,  # meters
+                'workouts': 0,
+                'sports': {},
             }
         duration = getattr(workout, 'duration', None) or timedelta(0)
         stats[start]['time'] += duration.seconds
@@ -472,6 +474,10 @@ def month_stats(context, request):
         stats[start]['distance'] += int(round(distance))
         elevation = getattr(workout, 'uphill', None) or 0
         stats[start]['elevation'] += int(elevation)
+        stats[start]['workouts'] += 1
+        if workout.sport not in stats[start]['sports'].keys():
+            stats[start]['sports'][workout.sport] = 0
+        stats[start]['sports'][workout.sport] += 1
 
     json_stats = []
     for day in stats.keys():
@@ -483,12 +489,18 @@ def month_stats(context, request):
             str(hms[0]).zfill(2), localizer.translate(hours_label),
             str(hms[1]).zfill(2), localizer.translate(_('min.'))
         ])
+        distance_formatted = str(round(stats[day]['distance'])) + ' km'
+        elevation_formatted = str(round(stats[day]['elevation'])) + ' m'
         json_stats.append({
             'day': day,
             'time': stats[day]['time'],
             'time_formatted': time_formatted,
             'distance': stats[day]['distance'],
-            'elevation': stats[day]['elevation']
+            'distance_formatted': distance_formatted,
+            'elevation': stats[day]['elevation'],
+            'elevation_formatted': elevation_formatted,
+            'workouts': stats[day]['workouts'],
+            'sports': stats[day]['sports']
         })
 
     return Response(content_type='application/json',

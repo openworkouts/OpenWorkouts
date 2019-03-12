@@ -1574,6 +1574,9 @@ i.arrow {
   stroke: #e1e1e1;
   stroke-width: 2;
 }
+.calendar-heatmap-tooltip {
+  width: 20%;
+}
 .verify-account-content {
   background-position: center;
   background-size: cover;

@@ -488,6 +488,10 @@ owjs.calendar_heatmap_chart = function(spec) {
           Method to actually perform all the loading and rendering of
           the chart
         */
+
+        // Hide the tooltip
+        $('.js-calendar-heatmap-tooltip').hide()
+
         var chart = d3.select(chart_selector);
 
         d3.json(url, {credentials: "same-origin"}).then(function (data) {
@@ -540,6 +544,13 @@ owjs.calendar_heatmap_chart = function(spec) {
                 months = d3.timeMonth.range(d3.timeMonth.floor(min_date), max_date),
                 rows = calendar_rows(max_date);
 
+            var find_day = function(day) {
+                var found = data.find(function(d) {
+                    return d.day == day;
+                });
+                return found;
+            }
+
             // Build the svg image where the chart will be
             var svg = chart.selectAll("svg")
                 .data(months)
@@ -581,9 +592,25 @@ owjs.calendar_heatmap_chart = function(spec) {
                 })
                 .on("mouseover", function(d) {
                     d3.select(this).classed('hover', true);
+                    var day = find_day(d);
+                    $('.js-ch-tooltip-date').html(titleFormat(new Date(d)));
+                    if (day != undefined) {
+                        $('.js-ch-tooltip-workouts').html(day.workouts);
+                        $('.js-ch-tooltip-time').html(day.time_formatted);
+                        $('.js-ch-tooltip-distance').html(day.distance_formatted);
+                        $('.js-ch-tooltip-elevation').html(day.elevation_formatted);
+                    }
+                    else {
+                        $('.js-ch-tooltip-workouts').html(' - ');
+                        $('.js-ch-tooltip-time').html(' - ');
+                        $('.js-ch-tooltip-distance').html(' - ');
+                        $('.js-ch-tooltip-elevation').html(' - ');
+                    }
+                    $('.js-calendar-heatmap-tooltip').fadeIn('fast');
                 })
                 .on("mouseout", function(d) {
                     d3.select(this).classed('hover', false);
+                    $('.js-calendar-heatmap-tooltip').fadeOut('fast');
                 })
                 .datum(format);
 
@@ -606,13 +633,6 @@ owjs.calendar_heatmap_chart = function(spec) {
                 .text(function(d) {
                     return d;
                 });
-
-            var find_day = function(day) {
-                var found = data.find(function(d) {
-                    return d.day == day;
-                });
-                return found;
-            }
 
             var lookup = d3.nest()
                 .key(function(d) {
@@ -654,11 +674,6 @@ owjs.calendar_heatmap_chart = function(spec) {
                     }
                     // doSomething();
                 })
-                .select("title")
-                .text(function(d) {
-                    // Update the title adding some more info
-                    var day = find_day(d);
-                    return titleFormat(new Date(d)) + ":  " + day.time_formatted; });
         });
 
     };

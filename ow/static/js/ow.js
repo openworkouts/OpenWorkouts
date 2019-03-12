@@ -458,6 +458,191 @@ owjs.year_chart = function(spec) {
 
 };
 
+owjs.calendar_heatmap_chart = function(spec) {
+
+    "use strict"
+
+    var chart_selector = spec.chart_selector,
+        url = spec.url,
+        day_names_list = spec.day_names_list;
+
+    var calendar_rows = function(month) {
+        /*
+          Given a date object that "marks" the beginning of a month
+          return the number of "rows" we need to show all days in that
+          month
+        */
+        // m will be actually the last day of the previous month
+        var m = d3.timeMonth.floor(month);
+        return d3.timeWeeks(d3.timeWeek.floor(m),
+                            d3.timeMonth.offset(m,1)).length;
+    }
+
+    // defaults for the squares/"cells" we will show with the info
+    var cell_margin = 3,
+        cell_size = 25;
+
+
+    var render = function render() {
+        /*
+          Method to actually perform all the loading and rendering of
+          the chart
+        */
+        var chart = d3.select(chart_selector);
+
+        d3.json(url, {credentials: "same-origin"}).then(function (data) {
+
+            var min_date = d3.min(data, function(d) {
+                return new Date(d.day);
+            });
+
+            var max_date = d3.max(data, function(d) {
+                return new Date(d.day);
+            });
+
+            // sunday-starting week:
+            // day = d3.timeFormat("%w")
+            // week = d3.timeFormat("%W")
+            // monday-starting week:
+            // day = function(d) {return d3.timeFormat("%u")(d) - 1}
+            // week = d3.timeFormat("%W")
+            var day = function(d) {return d3.timeFormat("%u")(d) - 1},
+                week = d3.timeFormat("%W"),
+                format = d3.timeFormat("%Y-%m-%d"),
+                titleFormat = d3.utcFormat("%a, %d %b"),
+                monthName = d3.timeFormat("%B / %Y"),
+                months = d3.timeMonth.range(d3.timeMonth.floor(min_date), max_date),
+                rows = calendar_rows(max_date);
+
+            // Build the svg image where the chart will be
+            var svg = chart.selectAll("svg")
+                .data(months)
+                .enter().append("svg")
+                .attr("class", "month")
+                .attr("width", (cell_size * 7) + (cell_margin * 8))
+                .attr("height", function(d) {
+                    // we add 50 extra so the month/year label fits
+                    return (cell_size * rows) + (cell_margin * (rows + 1)) + 50;
+                })
+                .append("g");
+
+            // This adds the month/year label above the chart
+            svg.append("text")
+                .attr("class", "month-name")
+                .attr("x", ((cell_size * 7) + (cell_margin * 8)) / 2 )
+                .attr("y", 15)
+                .attr("text-anchor", "middle")
+                .text(function(d) { return monthName(d); });
+
+            // Now, go through each day and add a square/cell for them
+            var rect = svg.selectAll("rect.day")
+                .data(function(d, i) {
+                    return d3.timeDays(
+                        d, new Date(d.getFullYear(), d.getMonth()+1, 1));
+                })
+                .enter().append("rect")
+                .attr("class", "day")
+                .attr("width", cell_size)
+                .attr("height", cell_size)
+                .attr("rx", 6).attr("ry", 6) // rounded corners
+                .attr("fill", '#eaeaea') // default light grey fill
+                .attr("x", function(d) {
+                    return (day(d) * cell_size) + (day(d) * cell_margin) + cell_margin;
+                })
+                .attr("y", function(d) {
+                    var base_value = (week(d) - week(new Date(d.getFullYear(), d.getMonth(), 1)));
+                    return (base_value * cell_size) + (base_value * cell_margin) + cell_margin + 20;
+                })
+                .on("mouseover", function(d) {
+                    d3.select(this).classed('hover', true);
+                })
+                .on("mouseout", function(d) {
+                    d3.select(this).classed('hover', false);
+                })
+                .datum(format);
+
+            rect.append("title")
+                .text(function(d) {return titleFormat(new Date(d));});
+
+            // Add the row with the names of the days
+            var day_names = svg.selectAll('.day-name')
+                .data(day_names_list)
+                .enter().append("text")
+                .attr("class", "day-name")
+                .attr("width", cell_size)
+                .attr("height", cell_size)
+                .attr("x", function(d) {
+                    return (day_names_list.indexOf(d) * cell_size) + (day_names_list.indexOf(d) * cell_margin) + cell_margin * 2;
+                })
+                .attr("y", function(d) {
+                    return ((cell_size * rows) + (cell_margin * (rows + 1))) + 40;
+                })
+                .text(function(d) {
+                    return d;
+                });
+
+            var find_day = function(day) {
+                var found = data.find(function(d) {
+                    return d.day == day;
+                });
+                return found;
+            }
+
+            var lookup = d3.nest()
+                .key(function(d) {
+                    return d.day;
+                })
+                .rollup(function(leaves) {
+                    return leaves[0].time;
+                })
+                .object(data);
+
+            var count = d3.nest()
+                .key(function(d) {
+                    return d.day;
+                })
+                .rollup(function(leaves) {
+                    return leaves[0].time;
+                })
+                .entries(data);
+
+            var scale = d3.scaleLinear()
+                .domain(d3.extent(count, function(d) {
+                    return d.value;
+                }))
+                .range(['#f8b5be', '#f60002']);
+
+            rect.filter(function(d) {
+                return d in lookup;
+            })
+                .style("fill", function(d) {
+                    // Fill in with the proper color
+                    return scale([lookup[d]]);
+                })
+                .classed("clickable", true)
+                .on("click", function(d){
+                    if(d3.select(this).classed('focus')){
+                        d3.select(this).classed('focus', false);
+                    } else {
+                        d3.select(this).classed('focus', true)
+                    }
+                    // doSomething();
+                })
+                .select("title")
+                .text(function(d) {
+                    // Update the title adding some more info
+                    var day = find_day(d);
+                    return titleFormat(new Date(d)) + ":  " + day.time_formatted; });
+        });
+
+    };
+
+    var that = {}
+    that.render = render;
+    return that
+
+};
+
 
 owjs.map_shots = function(spec) {
 

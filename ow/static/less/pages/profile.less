@@ -153,3 +153,30 @@
         -moz-outline-style: none;
     }
 }
+
+
+/* Calendar heatmap */
+.calendar-heatmap {
+    margin: 20px;
+    .month {
+        margin-right: 8px;
+    }
+    .month-name {
+        font-size: 85%;
+        fill: #777;
+    }
+    .day-name {
+        font-size: 85%;
+        fill: #777;
+    }
+    .day {
+        &:hover {
+            stroke: #e1e1e1;
+            stroke-width: 2;
+        }
+        &:focus {
+            stroke: #e1e1e1;
+            stroke-width: 2;
+        }
+    }
+}

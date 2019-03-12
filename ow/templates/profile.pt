@@ -50,6 +50,8 @@
                      i18n:translate="">change password</a></li>
             </ul>
           </div>
+          <div class="calendar-heatmap js-calendar-heatmap">
+          </div>
         </div>
 
       </div>
@@ -460,6 +462,14 @@
          year_link_selector: 'a.js-choose-year-stats.js-'
      })
      sport_stats.setup();
+
+     var heatmap_chart = owjs.calendar_heatmap_chart({
+         chart_selector: 'div.js-calendar-heatmap',
+         url: "${request.resource_url(user, 'month')}",
+         // Trick to have all those shortened day names translated
+         day_names_list: "${_('Mo Tu We Th Fr Sa Su')}".split(' ')
+     });
+     heatmap_chart.render();
 
      var year_stats = owjs.year_stats({
          link_selector: 'a.js-choose-year-stats',

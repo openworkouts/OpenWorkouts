@@ -445,6 +445,60 @@ def week_stats(context, request):
 @view_config(
     context=User,
     permission='view',
+    name='month')
+def month_stats(context, request):
+    """
+    For the given month, return a json-encoded stream containing
+    per-day workouts information.
+    """
+    localizer = get_localizer(request)
+    now = datetime.now(timezone.utc)
+    year = int(request.GET.get('year', now.year))
+    month = int(request.GET.get('month', now.month))
+    workouts = context.workouts(year, month)
+    stats = {}
+
+    for workout in workouts:
+        start = workout.start.strftime('%Y-%m-%d')
+        if start not in stats.keys():
+            stats[start] = {
+                'time': 0,  # seconds
+                'distance': 0,  # kilometers
+                'elevation': 0,  # meters
+            }
+        duration = getattr(workout, 'duration', None) or timedelta(0)
+        stats[start]['time'] += duration.seconds
+        distance = getattr(workout, 'distance', None) or 0
+        stats[start]['distance'] += int(round(distance))
+        elevation = getattr(workout, 'uphill', None) or 0
+        stats[start]['elevation'] += int(elevation)
+
+    json_stats = []
+    for day in stats.keys():
+        hms = timedelta_to_hms(timedelta(seconds=stats[day]['time']))
+        hours_label = _('hour')
+        if hms[0] > 1:
+            hours_label = _('hours')
+        time_formatted = ' '.join([
+            str(hms[0]).zfill(2), localizer.translate(hours_label),
+            str(hms[1]).zfill(2), localizer.translate(_('min.'))
+        ])
+        json_stats.append({
+            'day': day,
+            'time': stats[day]['time'],
+            'time_formatted': time_formatted,
+            'distance': stats[day]['distance'],
+            'elevation': stats[day]['elevation']
+        })
+
+    return Response(content_type='application/json',
+                    charset='utf-8',
+                    body=json.dumps(json_stats))
+
+
+@view_config(
+    context=User,
+    permission='view',
     name='monthly')
 def last_months_stats(context, request):
     """

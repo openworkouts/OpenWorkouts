@@ -1551,6 +1551,29 @@ i.arrow {
   border: none;
   -moz-outline-style: none;
 }
+/* Calendar heatmap */
+.calendar-heatmap {
+  margin: 20px;
+}
+.calendar-heatmap .month {
+  margin-right: 8px;
+}
+.calendar-heatmap .month-name {
+  font-size: 85%;
+  fill: #777;
+}
+.calendar-heatmap .day-name {
+  font-size: 85%;
+  fill: #777;
+}
+.calendar-heatmap .day:hover {
+  stroke: #e1e1e1;
+  stroke-width: 2;
+}
+.calendar-heatmap .day:focus {
+  stroke: #e1e1e1;
+  stroke-width: 2;
+}
 .verify-account-content {
   background-position: center;
   background-size: cover;

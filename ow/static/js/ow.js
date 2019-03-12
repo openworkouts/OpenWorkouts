@@ -492,13 +492,39 @@ owjs.calendar_heatmap_chart = function(spec) {
 
         d3.json(url, {credentials: "same-origin"}).then(function (data) {
 
-            var min_date = d3.min(data, function(d) {
-                return new Date(d.day);
-            });
+            if (data.length == 0){
+                // No data for this month, go on with an empty month.
+                var url_year = url.match(/year=([^&]+)/);
+                var url_month = url.match(/month=([^&]+)/);
+                if (url_year != null && url_month != null) {
+                    // if year/month has been passed in the url to retrieve
+                    // workout data, use that to build the current month range.
+                    //
+                    // url_month is 1-12, while js Date() expects 0-11, so we use
+                    // the currently selected month number as the next month and we
+                    // use the previous number as the min date (start of the month)
+                    var min_date = new Date(url_year[1], url_month[1] - 1);
+                    var max_date = new Date(url_year[1], url_month[1])
+                }
+                else {
+                    // otherwise, get the current month range
+                    var min_date = new Date();
+                    var max_date = new Date();
+                    max_date.setDate(min_date.getDate() + 1);
+                }
+            }
+            else {
+                // We have got some workout data, build the min/max dates
+                // from the workouts data, so we can build the proper month
+                // range
+                var min_date = d3.min(data, function(d) {
+                    return new Date(d.day);
+                });
 
-            var max_date = d3.max(data, function(d) {
-                return new Date(d.day);
-            });
+                var max_date = d3.max(data, function(d) {
+                    return new Date(d.day);
+                });
+            }
 
             // sunday-starting week:
             // day = d3.timeFormat("%w")

@@ -40,8 +40,11 @@ def add_workout_manually(context, request):
         # exclude the three duration_* and start_* fields, so they won't be
         # "bind" to the object, we do calculate both the full duration in
         # seconds and the full datetime "start" and we save that
+        #
+        # exclude also the distance field, we have to convert to decimal
+        # before adding it
         excluded = ['duration_hours', 'duration_minutes', 'duration_seconds',
-                    'start_date', 'start_time']
+                    'start_date', 'start_time', 'distance']
         workout = form.bind(Workout(), exclude=excluded)
         duration = timedelta(hours=form.data['duration_hours'],
                              minutes=form.data['duration_minutes'],
@@ -59,6 +62,7 @@ def add_workout_manually(context, request):
             if workout.sport:
                 workout.title += ' ' + workout.sport
             workout.title += ' ' + _('workout')
+        workout.distance = Decimal(form.data['distance'])
         context.add_workout(workout)
         return HTTPFound(location=request.resource_url(workout))
 

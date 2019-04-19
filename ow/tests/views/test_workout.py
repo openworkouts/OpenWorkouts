@@ -4,6 +4,7 @@ from io import BytesIO
 from datetime import datetime, timedelta, timezone
 from cgi import FieldStorage
 from unittest.mock import Mock, patch, PropertyMock
+from decimal import Decimal
 
 import pytest
 
@@ -130,14 +131,22 @@ class TestWorkoutViews(object):
     add_workout_params = [
         # no title, no sport, we generate a title based on when the
         # workout started
-        ({'title': None, 'sport': None}, 'Morning workout'),
+        ({'title': None, 'sport': None},
+         {'title': 'Morning workout',
+          'distance': 10}),
         # no title, sport given, we use the sport too in the automatically
         # generated title
-        ({'title': None, 'sport': 'cycling'}, 'Morning cycling workout'),
+        ({'title': None, 'sport': 'cycling'},
+         {'title': 'Morning cycling workout',
+          'distance': 10}),
         # title given, no sport, we use the provided title
-        ({'title': 'Example workout', 'sport': None}, 'Example workout'),
+        ({'title': 'Example workout', 'sport': None},
+         {'title': 'Example workout',
+          'distance': 10}),
         # title given, sport too, we use the provided title
-        ({'title': 'Example workout', 'sport': 'cycling'}, 'Example workout'),
+        ({'title': 'Example workout', 'sport': 'cycling'},
+         {'title': 'Example workout',
+          'distance': 10}),
     ]
 
     @pytest.mark.parametrize(('params', 'expected'), add_workout_params)
@@ -157,7 +166,9 @@ class TestWorkoutViews(object):
         assert isinstance(response, HTTPFound)
         assert response.location.endswith('/2/')
         assert len(user.workouts()) == 2
-        assert user['2'].title == expected
+        assert user['2'].title == expected['title']
+        assert isinstance(user['2'].distance, Decimal)
+        assert user['2'].distance == Decimal(expected['distance'])
 
     def test_add_workout_get(self, dummy_request):
         """

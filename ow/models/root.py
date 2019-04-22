@@ -42,6 +42,7 @@ class OpenWorkouts(Folder):
             'email': CatalogFieldIndex('email'),
             'nickname': CatalogFieldIndex('nickname'),
             'sport': CatalogFieldIndex('sport'),
+            'hashed': CatalogFieldIndex('hashed'),
         }
         return indexes
 
@@ -139,3 +140,12 @@ class OpenWorkouts(Folder):
     @property
     def sports_json(self):
         return json.dumps(self.sports)
+
+    def get_workout_by_hash(self, hashed):
+        if hashed is not None:
+            # for some reason, when searching for None
+            # the catalog will return all workouts
+            res = self.query(Eq('hashed', hashed))
+            if res:
+                return next(res)
+        return None

@@ -88,6 +88,9 @@ def add_workout(context, request):
 
     form = Form(request, schema=UploadedWorkoutSchema())
 
+    duplicate = None
+    allow_duplicates = request.POST.get('allow_duplicates') == 'on'
+
     if 'submit' in request.POST and form.validate():
         # Grab some information from the tracking file
         trackfile_ext = request.POST['tracking_file'].filename.split('.')[-1]
@@ -97,12 +100,26 @@ def add_workout(context, request):
         workout.tracking_filetype = trackfile_ext
         # Add basic info gathered from the file
         workout.load_from_file()
-        # Add the workout
-        context.add_workout(workout)
-        return HTTPFound(location=request.resource_url(workout))
+        # Ensure this workout is not a duplicate of an existing workout.
+        #
+        # hashed is not "complete" for a workout that has not been added
+        # yet, as it does not have the owner set, so we have to "build it"
+        hashed = str(context.uid) + workout.hashed
+        duplicate = request.root.get_workout_by_hash(hashed)
+
+        if duplicate and not allow_duplicates:
+            form.errors['tracking_file'] = _(
+                'This workout looks like a duplicate of another workout, '
+                'please enable workout duplicates below to save it'
+            )
+        else:
+            # Add the workout
+            context.add_workout(workout)
+            return HTTPFound(location=request.resource_url(workout))
 
     return {
-        'form': FormRenderer(form)
+        'form': FormRenderer(form),
+        'duplicate': duplicate
     }
 
 

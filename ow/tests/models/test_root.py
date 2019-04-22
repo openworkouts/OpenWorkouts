@@ -34,21 +34,21 @@ class TestRootOpenWorkouts(object):
     def test__init__(self, root):
         # a new OpenWorkouts instance has a catalog created automatically
         assert isinstance(root.catalog, Catalog)
-        assert len(root.catalog) == 3
-        for key in ['email', 'nickname', 'sport']:
+        assert len(root.catalog) == 4
+        for key in ['email', 'nickname', 'sport', 'hashed']:
             assert key in root.catalog
 
     def test_update_indexes(self, root):
         indexes = sorted([i for i in root.catalog])
-        assert indexes == ['email', 'nickname', 'sport']
+        assert indexes == ['email', 'hashed', 'nickname', 'sport']
         # remove one index
         del root.catalog['email']
         indexes = sorted([i for i in root.catalog])
-        assert indexes == ['nickname', 'sport']
+        assert indexes == ['hashed', 'nickname', 'sport']
         # now update indexes, the index will be back there
         root._update_indexes()
         indexes = sorted([i for i in root.catalog])
-        assert indexes == ['email', 'nickname', 'sport']
+        assert indexes == ['email', 'hashed', 'nickname', 'sport']
 
     def test_add_user_ok(self, root):
         assert len(root.users) == 1

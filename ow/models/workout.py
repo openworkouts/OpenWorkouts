@@ -135,6 +135,20 @@ class Workout(Folder):
         return '-'
 
     @property
+    def hashed(self):
+        """
+        Return a unique hash that we use to look for duplicated workouts.
+        The hash contains: owner's uid, start time, duration and distance
+        """
+        hashed = ''
+        if self.owner is not None:
+            hashed += str(self.owner.uid)
+        hashed += self.start.strftime('%Y%m%d%H%M%S')
+        hashed += str(self.duration.seconds)
+        hashed += str(self.distance)
+        return hashed
+
+    @property
     def trimmed_notes(self):
         """
         Return a string with a reduced version of the full notes for this

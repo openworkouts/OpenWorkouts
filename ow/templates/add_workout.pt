@@ -24,28 +24,86 @@
         ${form.begin(multipart=True)}
         ${form.csrf_token()}
 
-        <fieldset>
-          <p>
-              <label for="title" i18n:translate="">Title</label>
-              ${form.errorlist('title')}
-              ${form.text('title')}
-          </p>
-          <p>
-              <label for="notes" i18n:translate="">Notes</label>
-              ${form.errorlist('notes')}
-              ${form.textarea('notes', rows=10, cols=50)}
-          </p>
-          <p>
-            <label for="tracking_file" i18n:translate="">
-              Workout file (gpx, fit)</label>
-            ${form.errorlist('tracking_file')}
-            ${form.file('tracking_file')}
-          </p>
-        </fieldset>
+      <tal:is_duplicate tal:condition="duplicate is not None">
+        <article class="workout-resume">
 
-        <tal:with-localizer tal:define="localizer get_localizer(request)">
-          ${form.submit("submit", localizer.translate(_('Save')),  **{'class':"button button-normal"})}
-        </tal:with-localizer>
+          <h2 class="workout-title">
+            <tal:warning i18n:translate="">THIS MAY BE A DUPLICATE OF:</tal:warning>
+            <a href="" tal:content="duplicate.title"
+               tal:attributes="href request.resource_url(duplicate)"></a>
+          </h2>
+
+          <ul class="workout-info">
+            <li>
+              <tal:c tal:content="duplicate.sport"></tal:c>
+            </li>
+            <li>
+              <tal:c tal:content="duplicate.start_in_timezone(context.timezone)"></tal:c>
+            </li>
+            <li>
+              <!--! use the properly formatted duration instead of the timedelta object -->
+              <tal:c tal:content="duplicate._duration"></tal:c>
+            </li>
+            <li tal:condition="duplicate.distance">
+              <tal:c tal:content="duplicate.rounded_distance"></tal:c> km
+            </li>
+            <li tal:condition="duplicate.uphill">
+              +<tal:c tal:content="duplicate.uphill"></tal:c> m
+            </li>
+          </ul>
+
+          <div class="workout-map" tal:condition="duplicate.has_gpx">
+            <a href="" tal:attributes="href request.resource_url(duplicate)">
+              <tal:has-screenshot tal:condition="duplicate.map_screenshot is not None">
+                <img src="" tal:attributes="src request.static_url(duplicate.map_screenshot);
+                          alt duplicate.title; title duplicate.title">
+              </tal:has-screenshot>
+              <tal:has-not-screenshot tal:condition="duplicate.map_screenshot is None">
+                <img src="" tal:attributes="src request.static_url('ow:static/media/img/no_map.gif');
+                          alt duplicate.title; title duplicate.title; class 'js-needs-map'">
+              </tal:has-not-screenshot>
+            </a>
+          </div>
+
+        </article>
+
+        <div>
+      </tal:is_duplicate>
+
+      <fieldset>
+
+        <p>
+          <label for="title" i18n:translate="">Title</label>
+          ${form.errorlist('title')}
+          ${form.text('title')}
+        </p>
+
+        <p>
+          <label for="notes" i18n:translate="">Notes</label>
+          ${form.errorlist('notes')}
+          ${form.textarea('notes', rows=10, cols=50)}
+        </p>
+
+        <p>
+          <label for="tracking_file" i18n:translate="">
+            Workout file (gpx, fit)</label>
+          ${form.errorlist('tracking_file')}
+          ${form.file('tracking_file')}
+        </p>
+
+        <p tal:condition="duplicate is not None">
+          <label for="allow_duplicates" i18n:translate="">Allow duplicated workouts</label>
+          <small i18n:translate="">
+            Mark this checkbox if you want to add to override the mechanism not allowing duplicated workouts
+          </small>
+          <input type="checkbox" name="allow_duplicates">
+        </p>
+
+      </fieldset>
+
+      <tal:with-localizer tal:define="localizer get_localizer(request)">
+        ${form.submit("submit", localizer.translate(_('Save')),  **{'class':"button button-normal"})}
+      </tal:with-localizer>
 
       ${form.end()}
     </div>

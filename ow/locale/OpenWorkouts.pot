@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2019-03-12 12:51+0100\n"
+"POT-Creation-Date: 2019-04-22 22:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -210,7 +210,7 @@ msgstr ""
 msgid "Sport/Activity"
 msgstr ""
 
-#: ./ow/templates/add_manual_workout.pt:47 ./ow/templates/add_workout.pt:29
+#: ./ow/templates/add_manual_workout.pt:47 ./ow/templates/add_workout.pt:76
 msgid "Title"
 msgstr ""
 
@@ -242,7 +242,7 @@ msgstr ""
 msgid "Notes:"
 msgstr ""
 
-#: ./ow/templates/add_manual_workout.pt:187 ./ow/templates/add_workout.pt:93
+#: ./ow/templates/add_manual_workout.pt:187 ./ow/templates/add_workout.pt:209
 #: ./ow/templates/edit_profile.pt:255
 #: ./ow/templates/update_workout_from_file.pt:139
 msgid "Save"
@@ -282,12 +282,26 @@ msgstr ""
 msgid "Upload workout file"
 msgstr ""
 
-#: ./ow/templates/add_workout.pt:34
+#: ./ow/templates/add_workout.pt:31
+msgid "THIS MAY BE A DUPLICATE OF:"
+msgstr ""
+
+#: ./ow/templates/add_workout.pt:82
 msgid "Notes"
 msgstr ""
 
-#: ./ow/templates/add_workout.pt:39
+#: ./ow/templates/add_workout.pt:88
 msgid "Workout file (gpx, fit)"
+msgstr ""
+
+#: ./ow/templates/add_workout.pt:95
+msgid "Allow duplicated workouts"
+msgstr ""
+
+#: ./ow/templates/add_workout.pt:96
+msgid ""
+"Mark this checkbox if you want to add to override the mechanism not allowing "
+"duplicated workouts"
 msgstr ""
 
 #: ./ow/templates/base.pt:69
@@ -335,8 +349,8 @@ msgstr ""
 msgid "My dashboard"
 msgstr ""
 
-#: ./ow/templates/dashboard.pt:31 ./ow/templates/profile.pt:228
-#: ./ow/templates/profile.pt:320 ./ow/templates/user_list.pt:24
+#: ./ow/templates/dashboard.pt:31 ./ow/templates/profile.pt:251
+#: ./ow/templates/profile.pt:343 ./ow/templates/user_list.pt:24
 msgid "Workouts"
 msgstr ""
 
@@ -352,7 +366,7 @@ msgstr ""
 msgid "Add one manually"
 msgstr ""
 
-#: ./ow/templates/dashboard.pt:115 ./ow/templates/profile.pt:64
+#: ./ow/templates/dashboard.pt:115 ./ow/templates/profile.pt:87
 msgid "workouts"
 msgstr ""
 
@@ -360,43 +374,43 @@ msgstr ""
 msgid "This week"
 msgstr ""
 
-#: ./ow/templates/dashboard.pt:124 ./ow/templates/profile.pt:76
-#: ./ow/templates/profile.pt:248 ./ow/templates/profile.pt:265
-#: ./ow/templates/profile.pt:270 ./ow/templates/profile.pt:340
-#: ./ow/templates/profile.pt:357 ./ow/templates/profile.pt:362
+#: ./ow/templates/dashboard.pt:124 ./ow/templates/profile.pt:99
+#: ./ow/templates/profile.pt:271 ./ow/templates/profile.pt:288
+#: ./ow/templates/profile.pt:293 ./ow/templates/profile.pt:363
+#: ./ow/templates/profile.pt:380 ./ow/templates/profile.pt:385
 msgid "km"
 msgstr ""
 
 #: ./ow/templates/dashboard.pt:129 ./ow/templates/dashboard.pt:162
-#: ./ow/templates/profile.pt:69 ./ow/templates/profile.pt:238
-#: ./ow/templates/profile.pt:281 ./ow/templates/profile.pt:290
-#: ./ow/templates/profile.pt:330 ./ow/templates/profile.pt:373
-#: ./ow/templates/profile.pt:382 ./ow/views/user.py:481
+#: ./ow/templates/profile.pt:92 ./ow/templates/profile.pt:261
+#: ./ow/templates/profile.pt:304 ./ow/templates/profile.pt:313
+#: ./ow/templates/profile.pt:353 ./ow/templates/profile.pt:396
+#: ./ow/templates/profile.pt:405 ./ow/views/user.py:487
 msgid "hours"
 msgstr ""
 
 #: ./ow/templates/dashboard.pt:131 ./ow/templates/dashboard.pt:164
-#: ./ow/templates/profile.pt:71 ./ow/templates/profile.pt:240
-#: ./ow/templates/profile.pt:283 ./ow/templates/profile.pt:292
-#: ./ow/templates/profile.pt:332 ./ow/templates/profile.pt:375
-#: ./ow/templates/profile.pt:384 ./ow/views/user.py:484
+#: ./ow/templates/profile.pt:94 ./ow/templates/profile.pt:263
+#: ./ow/templates/profile.pt:306 ./ow/templates/profile.pt:315
+#: ./ow/templates/profile.pt:355 ./ow/templates/profile.pt:398
+#: ./ow/templates/profile.pt:407 ./ow/views/user.py:490
 msgid "min."
 msgstr ""
 
-#: ./ow/templates/dashboard.pt:150
+#: ./ow/templates/dashboard.pt:150 ./ow/templates/profile.pt:61
 msgid "Workouts:"
 msgstr ""
 
 #: ./ow/templates/dashboard.pt:154 ./ow/templates/delete_workout.pt:44
-#: ./ow/templates/update_workout_from_file.pt:52
+#: ./ow/templates/profile.pt:69 ./ow/templates/update_workout_from_file.pt:52
 msgid "Distance:"
 msgstr ""
 
-#: ./ow/templates/dashboard.pt:158
+#: ./ow/templates/dashboard.pt:158 ./ow/templates/profile.pt:65
 msgid "Time:"
 msgstr ""
 
-#: ./ow/templates/dashboard.pt:169
+#: ./ow/templates/dashboard.pt:169 ./ow/templates/profile.pt:73
 msgid "Elevation:"
 msgstr ""
 
@@ -457,11 +471,11 @@ msgstr ""
 msgid "Last name:"
 msgstr ""
 
-#: ./ow/templates/edit_profile.pt:74 ./ow/templates/profile.pt:181
+#: ./ow/templates/edit_profile.pt:74 ./ow/templates/profile.pt:204
 msgid "Gender:"
 msgstr ""
 
-#: ./ow/templates/edit_profile.pt:82 ./ow/templates/profile.pt:185
+#: ./ow/templates/edit_profile.pt:82 ./ow/templates/profile.pt:208
 msgid "Birth date:"
 msgstr ""
 
@@ -533,103 +547,103 @@ msgstr ""
 msgid "change password"
 msgstr ""
 
-#: ./ow/templates/profile.pt:80 ./ow/templates/profile.pt:255
-#: ./ow/templates/profile.pt:303 ./ow/templates/profile.pt:308
-#: ./ow/templates/profile.pt:347 ./ow/templates/profile.pt:395
-#: ./ow/templates/profile.pt:400
+#: ./ow/templates/profile.pt:103 ./ow/templates/profile.pt:278
+#: ./ow/templates/profile.pt:326 ./ow/templates/profile.pt:331
+#: ./ow/templates/profile.pt:370 ./ow/templates/profile.pt:418
+#: ./ow/templates/profile.pt:423
 msgid "m"
 msgstr ""
 
-#: ./ow/templates/profile.pt:90
+#: ./ow/templates/profile.pt:113
 msgid "distance"
 msgstr ""
 
-#: ./ow/templates/profile.pt:91
+#: ./ow/templates/profile.pt:114
 msgid "time"
 msgstr ""
 
-#: ./ow/templates/profile.pt:92
+#: ./ow/templates/profile.pt:115
 msgid "elevation"
 msgstr ""
 
-#: ./ow/templates/profile.pt:99
+#: ./ow/templates/profile.pt:122
 msgid "weekly"
 msgstr ""
 
-#: ./ow/templates/profile.pt:103
+#: ./ow/templates/profile.pt:126
 msgid "monthly"
 msgstr ""
 
-#: ./ow/templates/profile.pt:137
+#: ./ow/templates/profile.pt:160
 msgid "HR (bpm)"
 msgstr ""
 
-#: ./ow/templates/profile.pt:139 ./ow/templates/profile.pt:146
+#: ./ow/templates/profile.pt:162 ./ow/templates/profile.pt:169
 #: ./ow/templates/workout.pt:74 ./ow/templates/workout.pt:81
 #: ./ow/templates/workout.pt:88 ./ow/templates/workout.pt:97
 msgid "Avg."
 msgstr ""
 
-#: ./ow/templates/profile.pt:141 ./ow/templates/profile.pt:148
+#: ./ow/templates/profile.pt:164 ./ow/templates/profile.pt:171
 #: ./ow/templates/workout.pt:76 ./ow/templates/workout.pt:83
 #: ./ow/templates/workout.pt:90 ./ow/templates/workout.pt:99
 msgid "Max."
 msgstr ""
 
-#: ./ow/templates/profile.pt:144
+#: ./ow/templates/profile.pt:167
 msgid "Cad"
 msgstr ""
 
-#: ./ow/templates/profile.pt:177
+#: ./ow/templates/profile.pt:200
 msgid "Profile info"
 msgstr ""
 
-#: ./ow/templates/profile.pt:191
+#: ./ow/templates/profile.pt:214
 msgid "Height:"
 msgstr ""
 
-#: ./ow/templates/profile.pt:195
+#: ./ow/templates/profile.pt:218
 msgid "Weight:"
 msgstr ""
 
-#: ./ow/templates/profile.pt:202
+#: ./ow/templates/profile.pt:225
 msgid "Workout stats"
 msgstr ""
 
-#: ./ow/templates/profile.pt:234 ./ow/templates/profile.pt:326
+#: ./ow/templates/profile.pt:257 ./ow/templates/profile.pt:349
 msgid "Time"
 msgstr ""
 
-#: ./ow/templates/profile.pt:245 ./ow/templates/profile.pt:337
+#: ./ow/templates/profile.pt:268 ./ow/templates/profile.pt:360
 #: ./ow/templates/workout.pt:60
 msgid "Distance"
 msgstr ""
 
-#: ./ow/templates/profile.pt:252 ./ow/templates/profile.pt:344
+#: ./ow/templates/profile.pt:275 ./ow/templates/profile.pt:367
 msgid "Elevation"
 msgstr ""
 
-#: ./ow/templates/profile.pt:257 ./ow/templates/profile.pt:349
+#: ./ow/templates/profile.pt:280 ./ow/templates/profile.pt:372
 msgid "Single workout records:"
 msgstr ""
 
-#: ./ow/templates/profile.pt:260 ./ow/templates/profile.pt:352
+#: ./ow/templates/profile.pt:283 ./ow/templates/profile.pt:375
 msgid "Farthest distance"
 msgstr ""
 
-#: ./ow/templates/profile.pt:275 ./ow/templates/profile.pt:367
+#: ./ow/templates/profile.pt:298 ./ow/templates/profile.pt:390
 msgid "Longer workout"
 msgstr ""
 
-#: ./ow/templates/profile.pt:298 ./ow/templates/profile.pt:390
+#: ./ow/templates/profile.pt:321 ./ow/templates/profile.pt:413
 msgid "Higher elevation gain"
 msgstr ""
 
-#: ./ow/templates/profile.pt:315
+#: ./ow/templates/profile.pt:338
 msgid "All time"
 msgstr ""
 
-#: ./ow/templates/profile.pt:905
+#: ./ow/templates/profile.pt:947
 msgid "Mo Tu We Th Fr Sa Su"
 msgstr ""
 
@@ -827,10 +841,16 @@ msgstr ""
 msgid "Unknown"
 msgstr ""
 
-#: ./ow/views/user.py:479
+#: ./ow/views/user.py:485
 msgid "hour"
 msgstr ""
 
-#: ./ow/views/workout.py:61
+#: ./ow/views/workout.py:64
 msgid "workout"
+msgstr ""
+
+#: ./ow/views/workout.py:111
+msgid ""
+"This workout looks like a duplicate of another workout, please enable workout"
+" duplicates below to save it"
 msgstr ""

@@ -181,6 +181,7 @@ class TestWorkoutViews(object):
         assert 'form' in response
         assert len(response['form'].form.errors) == 0
         assert isinstance(response['form'].form.schema, UploadedWorkoutSchema)
+        assert response['duplicate'] is None
 
     def test_add_workout_post_invalid(self, dummy_request):
         """
@@ -195,6 +196,7 @@ class TestWorkoutViews(object):
         assert 'form' in response
         # Only one required field in this case, the tracking file
         assert len(response['form'].form.errors) == 1
+        assert response['duplicate'] is None
 
     def test_add_workout_post_invalid_bytes(self, dummy_request):
         """
@@ -213,6 +215,7 @@ class TestWorkoutViews(object):
         assert 'form' in response
         # Only one required field in this case, the tracking file
         assert len(response['form'].form.errors) == 1
+        assert response['duplicate'] is None
 
     @pytest.mark.parametrize('filename', gpx_filenames)
     def test_add_workout_post_valid(self, filename, dummy_request):
@@ -233,6 +236,57 @@ class TestWorkoutViews(object):
         assert isinstance(response, HTTPFound)
         assert response.location.endswith('/2/')
         assert len(request.root['john'].workouts()) == 2
+        self.close_uploaded_file(uploaded_file)
+
+    def test_add_workout_post_duplicate(self, dummy_request):
+        """
+        POST request, first add a workout uploading one of the sample
+        tracking files, then try to upload it again.
+        """
+        # first, upload the workout
+        filename = self.gpx_filenames[0]
+        request = dummy_request
+        uploaded_file = self.open_uploaded_file(filename)
+        filestorage = self.create_filestorage(uploaded_file)
+        user = request.root['john']
+        request.method = 'POST'
+        request.POST = MultiDict({
+            'tracking_file': filestorage,
+            'submit': True,
+            })
+        assert len(request.root['john'].workouts()) == 1
+        response = workout_views.add_workout(user, request)
+        assert isinstance(response, HTTPFound)
+        assert response.location.endswith('/2/')
+        assert len(request.root['john'].workouts()) == 2
+        self.close_uploaded_file(uploaded_file)
+        # now, try to upload it again
+        uploaded_file = self.open_uploaded_file(filename)
+        filestorage = self.create_filestorage(uploaded_file)
+        user = request.root['john']
+        request.method = 'POST'
+        request.POST = MultiDict({
+            'tracking_file': filestorage,
+            'submit': True,
+            })
+        response = workout_views.add_workout(user, request)
+        assert response['duplicate'] == request.root['john']['2']
+        assert len(request.root['john'].workouts()) == 2
+        self.close_uploaded_file(uploaded_file)
+        # finally, override the duplicate prevention code and save it
+        uploaded_file = self.open_uploaded_file(filename)
+        filestorage = self.create_filestorage(uploaded_file)
+        user = request.root['john']
+        request.method = 'POST'
+        request.POST = MultiDict({
+            'tracking_file': filestorage,
+            'allow_duplicates': 'on',
+            'submit': True,
+            })
+        response = workout_views.add_workout(user, request)
+        assert isinstance(response, HTTPFound)
+        assert response.location.endswith('/3/')
+        assert len(request.root['john'].workouts()) == 3
         self.close_uploaded_file(uploaded_file)
 
     def test_edit_workout_get(self, dummy_request):

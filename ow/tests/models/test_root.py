@@ -1,6 +1,7 @@
 import json
 from unittest.mock import Mock
 from datetime import datetime, timedelta, timezone
+from decimal import Decimal
 
 import pytest
 from repoze.catalog.catalog import Catalog
@@ -174,3 +175,20 @@ class TestRootOpenWorkouts(object):
             distance=10, sport='running')
         john.add_workout(workout)
         assert root.sports_json == json.dumps(["cycling", "running"])
+
+    def test_get_workout_by_hash(self, root, john):
+        # non existant hash
+        found = root.get_workout_by_hash('non-existant-hash')
+        assert found is None
+        # existing workout
+        workout = root[str(john.uid)]['1']
+        found = root.get_workout_by_hash(workout.hashed)
+        assert found == workout
+        # a workout that was not added to the system
+        workout = Workout(
+            start_time=datetime.now(timezone.utc),
+            duration=timedelta(seconds=3600),
+            distance=Decimal(30)
+        )
+        found = root.get_workout_by_hash(workout.hashed)
+        assert found is None

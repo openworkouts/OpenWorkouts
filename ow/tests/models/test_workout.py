@@ -143,6 +143,35 @@ class TestWorkoutModels(object):
         workout.distance = 44.44444444
         assert workout.rounded_distance == 44.44
 
+    def test_hashed(self, root):
+        # first test a workout that is attached to a user
+        workout = root['john']['1']
+        assert workout.hashed == (
+            str(workout.owner.uid) +
+            workout.start.strftime('%Y%m%d%H%M%S') +
+            str(workout.duration.seconds) +
+            str(workout.distance)
+        )
+        # now a workout that is not (no owner info)
+        workout = Workout(
+            start_time=datetime.now(timezone.utc),
+            duration=timedelta(seconds=3600),
+            distance=Decimal(30)
+        )
+        assert workout.hashed == (
+            workout.start.strftime('%Y%m%d%H%M%S') +
+            str(workout.duration.seconds) +
+            str(workout.distance)
+        )
+        # now an empty workout...
+        workout = Workout()
+        with pytest.raises(AttributeError):
+            assert workout.hashed == (
+                workout.start.strftime('%Y%m%d%H%M%S') +
+                str(workout.duration.seconds) +
+                str(workout.distance)
+            )
+
     def test_trimmed_notes(self):
         workout = Workout()
         assert workout.notes == ''

@@ -66,6 +66,11 @@
             <tal:c tal:content="context._duration"></tal:c>
           </li>
           <li class="important">
+            <span><tal:t i18n:translate="">Elevation</tal:t></span>
+            <tal:c tal:content="context.uphill"></tal:c> m
+          </li>
+
+          <li class="important">
             <span><tal:t i18n:translate="">Start</tal:t></span>
             <tal:c tal:content="context.start_in_timezone(timezone)"></tal:c>
           </li>

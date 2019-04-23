@@ -283,6 +283,9 @@ def profile(context, request):
     year = int(request.GET.get('year', now.year))
     month = int(request.GET.get('month', now.month))
     week = request.GET.get('week', None)
+    # filter_by can be 'distance', 'time' or 'elevation', defaults to
+    # 'distance' if no value is provided
+    filter_by = request.GET.get('filter_by', 'distance')
     workouts = user.workouts(year, month, week)
     totals = {
         'distance': Decimal(0),
@@ -320,7 +323,8 @@ def profile(context, request):
             year=str(year), month=str(month).zfill(2)),
         'current_week': week,
         'totals': totals,
-        'profile_stats': profile_stats
+        'profile_stats': profile_stats,
+        'filter_by': filter_by
     }
 
 

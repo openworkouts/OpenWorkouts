@@ -413,7 +413,7 @@ class TestUserViews(object):
         request = dummy_request
         # profile page for the current day (no workouts avalable)
         response = user_views.profile(john, request)
-        assert len(response.keys()) == 7
+        assert len(response.keys()) == 8
         current_month = datetime.now(timezone.utc).strftime('%Y-%m')
         assert response['user'] == john
         assert response['user_gender'] == 'Robot'
@@ -431,11 +431,12 @@ class TestUserViews(object):
             'current_year': datetime.now(timezone.utc).year,
             'current_sport': 'cycling'
         }
+        assert response['filter_by'] == 'distance'
         # profile page for a previous date, that has workouts
         request.GET['year'] = 2015
         request.GET['month'] = 6
         response = user_views.profile(john, request)
-        assert len(response.keys()) == 7
+        assert len(response.keys()) == 8
         assert response['user'] == john
         assert response['user_gender'] == 'Robot'
         assert response['current_month'] == '2015-06'
@@ -447,12 +448,19 @@ class TestUserViews(object):
             'time': workouts[0].duration,
             'elevation': Decimal(0)
         }
-        # same, passing a week, first on a week without workouts
+        assert response['filter_by'] == 'distance'
+        # same request, but passing a filter_by value
+        request.GET['filter_by'] = 'time'
+        response = user_views.profile(john, request)
+        assert len(response.keys()) == 8
+        assert response['filter_by'] == 'time'
+        # same, passing a week, first on a week without workouts,
+        # keeping the modified filter_by GET param
         request.GET['year'] = 2015
         request.GET['month'] = 6
         request.GET['week'] = 25
         response = user_views.profile(john, request)
-        assert len(response.keys()) == 7
+        assert len(response.keys()) == 8
         assert response['user'] == john
         assert response['user_gender'] == 'Robot'
         assert response['current_month'] == '2015-06'
@@ -463,12 +471,14 @@ class TestUserViews(object):
             'time': timedelta(0),
             'elevation': Decimal(0)
         }
-        # now in a week with workouts
+        assert response['filter_by'] == 'time'
+        # now in a week with workouts, changing the filter_by again
         request.GET['year'] = 2015
         request.GET['month'] = 6
         request.GET['week'] = 26
+        request.GET['filter_by'] = 'elevation'
         response = user_views.profile(john, request)
-        assert len(response.keys()) == 7
+        assert len(response.keys()) == 8
         assert response['user'] == john
         assert response['user_gender'] == 'Robot'
         assert response['current_month'] == '2015-06'
@@ -480,6 +490,7 @@ class TestUserViews(object):
             'time': workouts[0].duration,
             'elevation': Decimal(0)
         }
+        assert response['filter_by'] == 'elevation'
 
     def test_profile_with_nickname(self, dummy_request, john):
         """

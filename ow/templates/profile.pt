@@ -110,9 +110,21 @@
             </div>
             <div class="center">
               <ul class="workout-options filters js-filters">
-                <li><a href="#" class="js-distance is-active" i18n:translate="">distance</a></li>
-                <li><a href="#" class="js-time" i18n:translate="">time</a></li>
-                <li><a href="#" class="js-elevation" i18n:translate="">elevation</a></li>
+                <li>
+                  <a href="#" class="js-distance is-active"
+                     tal:attributes="class 'js-distance is-active' if filter_by == 'distance' else 'js-distance'"
+                     i18n:translate="">distance</a>
+                </li>
+                <li>
+                  <a href="#" class="js-time"
+                     tal:attributes="class 'js-time is-active' if filter_by == 'time' else 'js-time'"
+                     i18n:translate="">time</a>
+                </li>
+                <li>
+                  <a href="#" class="js-elevation"
+                     tal:attributes="class 'js-elevation is-active' if filter_by == 'elevation' else 'js-elevation'"
+                     i18n:translate="">elevation</a>
+                </li>
               </ul>
 
               <ul class="workout-options switcher js-switcher"
@@ -519,10 +531,10 @@
          current_month: "${current_month}",
          current_week: "${current_week}",
          y_axis_labels: y_axis_labels,
-         filter_by: "distance",
+         filter_by: "${filter_by}",
          url: "${'monthly' if current_week is None else 'weekly'}",
      });
-     year_chart.render("distance", "${'monthly' if current_week is None else 'weekly'}");
+     year_chart.render("${filter_by}", "${'monthly' if current_week is None else 'weekly'}");
      year_chart.filters_setup();
      year_chart.switcher_setup();
     </script>

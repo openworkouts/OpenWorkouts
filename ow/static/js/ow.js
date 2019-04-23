@@ -402,7 +402,7 @@ owjs.year_chart = function(spec) {
                     }
                 })
                 .on('click', function(d) {
-                    window.location.href = d.url;
+                    window.location.href = d.url+'&filter_by='+filter_by;
                 });
 
             if (url == 'monthly') {

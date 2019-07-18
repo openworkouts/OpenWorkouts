@@ -22,7 +22,7 @@ case "$1" in
         else
             echo "[error] No env name provided"
         fi
-        echo "Valid env names: staging production"
+        echo "Valid env names: development staging production"
         exit 1
         ;;
 esac

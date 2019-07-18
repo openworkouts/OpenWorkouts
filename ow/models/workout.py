@@ -279,10 +279,11 @@ class Workout(Folder):
                 # get_duration returns seconds
                 self.duration = timedelta(seconds=track.get_duration())
                 # length_3d returns meters
-                self.distance = Decimal(track.length_3d()) / Decimal(1000.00)
+                self.distance = round(
+                    Decimal(track.length_3d()) / Decimal(1000.00), 2)
                 ud = track.get_uphill_downhill()
-                self.uphill = Decimal(ud.uphill)
-                self.downhill = Decimal(ud.downhill)
+                self.uphill = round(Decimal(ud.uphill), 0)
+                self.downhill = round(Decimal(ud.downhill), 0)
                 # If the user did not provide us with a title, and the gpx has
                 # one, use that
                 if not self.title and track.name:

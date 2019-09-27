@@ -18,6 +18,16 @@
   </metal:title>
 
   <metal:content metal:fill-slot="content">
+
+    <div class="uploading-workout hidden">
+      <h2 i18n:translate="">Uploading workout, please wait...</h2>
+      <p i18n:translate="">
+        This can take a moment, depending on the size of your tracking file and your connection speed. Be patient and please don't hit the stop or go back buttons on your browser.
+      </p>
+      <img src="" alt="Loading workout" i18n:attributes="alt"
+           tal:attributes="src request.static_url('ow:static/media/img/loading.gif')">
+    </div>
+
     <div id="update_workout_file" class="ow-forms">
 
       <a class="back" href="" tal:attributes="href request.resource_url(context)"
@@ -74,5 +84,18 @@
     </div>
 
   </metal:content>
+
+  <metal:body-js metal:fill-slot="body-js">
+    <script>
+        $(document).ready(function(){
+            $("#update_workout_file form").on("submit", function(){
+                console.log('Showing spinner');
+                $("#update_workout_file").fadeOut();
+                $("div.uploading-workout").fadeIn();
+            });
+        });
+    </script>
+  </metal:body-js>
+
 
 </html>

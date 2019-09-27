@@ -437,3 +437,16 @@
         }
     }
 }
+
+
+.uploading-workout {
+    /* Extends ow-forms, as we use a div with this class to show as a
+       replacement of the uploading form while the form is submitting
+       (that could take some time when uploading bigger tracking files) */
+    &:extend(.ow-forms);
+    width: 100%;
+    text-align: center;
+    // We need to force this here, extending from ow-forms invalidates using
+    // the "hidden" mixin class elements with this class
+    display: none;
+}

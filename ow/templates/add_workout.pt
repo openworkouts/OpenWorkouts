@@ -16,13 +16,23 @@
   </metal:title>
 
   <metal:content metal:fill-slot="content">
+
+    <div class="uploading-workout hidden">
+      <h2 i18n:translate="">Uploading workout, please wait...</h2>
+      <p i18n:translate="">
+        This can take a moment, depending on the size of your tracking file and your connection speed. Be patient and please don't hit the stop or go back buttons on your browser.
+      </p>
+      <img src="" alt="Loading workout" i18n:attributes="alt"
+           tal:attributes="src request.static_url('ow:static/media/img/loading.gif')">
+    </div>
+
     <div class="upload-workout ow-forms">
       <a href="" class="back"
-           tal:attributes="href request.resource_url(context)"
-           i18n:translate="">Back</a>
+         tal:attributes="href request.resource_url(context)"
+         i18n:translate="">Back</a>
       <h2 i18n:translate="">Upload workout file</h2>
-        ${form.begin(multipart=True)}
-        ${form.csrf_token()}
+      ${form.begin(multipart=True)}
+      ${form.csrf_token()}
 
       <tal:is_duplicate tal:condition="duplicate is not None">
         <article class="workout-resume">
@@ -106,8 +116,21 @@
       </tal:with-localizer>
 
       ${form.end()}
-    </div>
+        </div>
 
   </metal:content>
+
+  <metal:body-js metal:fill-slot="body-js">
+    <script>
+        $(document).ready(function(){
+            $("div.upload-workout form").on("submit", function(){
+                console.log('Showing spinner');
+                $("div.upload-workout").fadeOut();
+                $("div.uploading-workout").fadeIn();
+            });
+        });
+    </script>
+  </metal:body-js>
+
 
 </html>

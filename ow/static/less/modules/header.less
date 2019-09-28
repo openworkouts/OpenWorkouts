@@ -185,7 +185,14 @@
             z-index: 20;
         }
         ul{
-            display: inline-block;
+            /* This fixes some problems in the "add workout" submenu,
+             where some elements appeared without full width and on wrong
+             positioning */
+            display: flex;
+            li {
+                width: 100%;
+                text-align: center;
+            }
         }
     }
 

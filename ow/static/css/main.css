@@ -862,7 +862,14 @@ i.arrow {
   z-index: 20;
 }
 .add-workout:hover ul {
-  display: inline-block;
+  /* This fixes some problems in the "add workout" submenu,
+             where some elements appeared without full width and on wrong
+             positioning */
+  display: flex;
+}
+.add-workout:hover ul li {
+  width: 100%;
+  text-align: center;
 }
 .add-workout ul {
   display: none;

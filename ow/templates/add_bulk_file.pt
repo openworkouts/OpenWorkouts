@@ -1,0 +1,85 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="OpenWorkouts"
+      metal:use-macro="load: base.pt"
+      tal:attributes="lang request.locale_name">
+
+  <metal:head-title metal:fill-slot="head-title">
+    <tal:t i18n:translate="">Upload file with multiple workouts</tal:t>
+  </metal:head-title>
+
+  <metal:title metal:fill-slot="title">
+    <tal:t i18n:translate="">Upload file with multiple workouts</tal:t>
+  </metal:title>
+
+  <metal:content metal:fill-slot="content">
+
+    <div class="uploading-workout hidden">
+      <h2 i18n:translate="">Uploading workouts file, please wait...</h2>
+      <p i18n:translate="">
+        This can take a moment, depending on the size of your workouts file and your connection speed. Be patient and please don't hit the stop or go back buttons on your browser.
+      </p>
+      <img src="" alt="Uploading workouts file" i18n:attributes="alt"
+           tal:attributes="src request.static_url('ow:static/media/img/loading.gif')">
+    </div>
+
+    <div class="upload-workout ow-forms">
+      <a href="" class="back"
+         tal:attributes="href request.resource_url(context)"
+         i18n:translate="">Back</a>
+      <h2 i18n:translate="">Upload file with multiple workouts</h2>
+
+      <p tal:condition="request.root['_bulk_files'].get_by_uid(context.uid)">
+        <a href="" tal:attributes="href request.resource_url(context, 'bulk-files')">Manage your uploaded bulk files</a>
+      </p>
+
+      <p i18n:translate="">
+        Add several workouts by providing several tracking files (fit, gpx) in a compressed file (zip, gz, etc)
+      </p>
+
+      <p i18n:translate="">
+        Once uploaded, the tracking files will be extracted, analyzed and imported into your workouts timeline.
+        This task can take some time, so be patient, workouts will start appearing on your timeline as they are
+        added.
+      </p>
+
+      ${form.begin(multipart=True)}
+      ${form.csrf_token()}
+
+
+      <fieldset>
+
+        <p>
+          <label for="compressed_file" i18n:translate="">
+            Workouts file (zip, gz, tgz)</label>
+          ${form.errorlist('compressed_file')}
+          ${form.file('compressed_file')}
+        </p>
+
+      </fieldset>
+
+      <tal:with-localizer tal:define="localizer get_localizer(request)">
+        ${form.submit("submit", localizer.translate(_('Save')),  **{'class':"button button-normal"})}
+      </tal:with-localizer>
+
+      ${form.end()}
+        </div>
+
+  </metal:content>
+
+  <metal:body-js metal:fill-slot="body-js">
+    <script>
+        $(document).ready(function(){
+            $("div.upload-workout form").on("submit", function(){
+                console.log('Showing spinner');
+                $("div.upload-workout").fadeOut();
+                $("div.uploading-workout").fadeIn();
+            });
+        });
+    </script>
+  </metal:body-js>
+
+</html>

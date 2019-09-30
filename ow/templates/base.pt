@@ -84,6 +84,11 @@
                   </li>
                   <li>
                     <a href="" i18n:translate=""
+                       tal:attributes="href request.resource_url(request.root, current_user, 'add-bulk-file')">
+                      Bulk upload</a>
+                  </li>
+                  <li>
+                    <a href="" i18n:translate=""
                        tal:attributes="href request.resource_url(request.root, current_user, 'add-workout-manually')">
                       Add manually</a>
                   </li>

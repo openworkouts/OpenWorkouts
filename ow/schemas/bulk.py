@@ -1,4 +1,4 @@
-from formencode import Schema, validators
+from formencode import Schema
 
 from ow.schemas.blob import FieldStorageBlob
 

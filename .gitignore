@@ -46,6 +46,7 @@ var/zeo/blobs
 # mail queue
 var/spool
 var/run/mail-queue-processor.lock
+var/run/workout-bulk-loading.lock
 
 # log files
 var/log/openworkouts.log

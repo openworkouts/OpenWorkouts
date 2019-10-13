@@ -2,6 +2,7 @@ import sys
 
 from ow.tasks.manager import TasksManager
 from ow.tasks.mail import queue_processor
+from ow.tasks.bulk import process_compressed_files
 
 
 def command_line():
@@ -9,6 +10,7 @@ def command_line():
 
     # "register" the tasks
     tasks_manager.add_task('send_emails', queue_processor)
+    tasks_manager.add_task('bulk_import', process_compressed_files)
 
     if len(sys.argv) != 3:
         tasks_manager.usage(sys.argv[0])

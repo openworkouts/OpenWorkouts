@@ -1,6 +1,5 @@
-from pyramid.httpexceptions import HTTPFound, HTTPNotFound
+from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
-from pyramid.response import Response
 from pyramid_simpleform import Form
 from pyramid_simpleform.renderers import FormRenderer
 from pyramid.i18n import TranslationStringFactory
@@ -27,8 +26,8 @@ def add_bulk_file(context, request):
     # if not given a file there is an empty byte in POST, which breaks
     # our blob storage validator.
     # dirty fix until formencode fixes its api.is_empty method
-    if isinstance(request.POST.get('tracking_file', None), bytes):
-        request.POST['tracking_file'] = ''
+    if isinstance(request.POST.get('compressed_file', None), bytes):
+        request.POST['compressed_file'] = ''
 
     form = Form(request, schema=BulkFileSchema())
 
@@ -51,7 +50,6 @@ def add_bulk_file(context, request):
     return {
         'form': FormRenderer(form),
     }
-
 
 
 @view_config(

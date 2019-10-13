@@ -19,7 +19,7 @@
 
     <div class="bulk-files ow-forms">
       <a href="" class="back"
-         tal:attributes="href request.resource_url(context)"
+         tal:attributes="href request.resource_url(context, 'add-bulk-file')"
          i18n:translate="">Back</a>
       <h2 i18n:translate="">Multiple file uploads</h2>
 
@@ -35,26 +35,43 @@
 
           <p>
             <tal:loaded tal:condition="bulk_file.loaded">
-              <span i18n:translate="">File loaded on></span>
+              <span i18n:translate="">File loaded on</span>
               <span tal:content="bulk_file.loaded_in_timezone(context.timezone)"></span>
+              <ul>
+                <tal:loaded_files tal:repeat="file_name bulk_file.loaded_info.keys()">
+                  <li tal:define="file_info bulk_file.loaded_info[file_name]">
+                    <span tal:content="file_name"></span>
+                    <tal:file_loaded tal:condition="file_info['loaded']">
+                      <span i18n:translate="">Loaded correctly</span>
+                      <a href="" tal:attributes="href request.resource_url(context, file_info['workout'])"
+                         i18n:translate="">See workout</a>
+                    </tal:file_loaded>
+                    <tal:file_not_loaded tal:condition="not file_info['loaded']">
+                      <span i18n:translate="">Couldn't be loaded:</span>
+                      <span tal:content="file_info['error']"></span>
+                    </tal:file_not_loaded>
+                  </li>
+                </tal:loaded_files>
+              </ul>
             </tal:loaded>
             <tal:not_loaded tal:condition="not bulk_file.loaded">
               <span i18n:translate="">This file has not been yet processed</span>
             </tal:not_loaded>
           </p>
 
-          <tal:workouts tal:condition="bulk_file.loaded and bulk_file.workout_ids">
-            <ul class="bulk-loaded-workouts">
-              <tal:workout tal:repeat="workout bulk_file.workouts">
-                <li>
-                  <span tal:content="workout.start_in_timezone(context.timezone)"></span>,
-                  <span tal:content="workout.sport"></span>,
-                  <span tal:content="workout.title"></span>
-                </li>
-              </tal:workout>
-            </ul>
-          </tal:workouts>
-
+          <!--!
+               <tal:workouts tal:condition="bulk_file.loaded and bulk_file.workout_ids">
+               <ul class="bulk-loaded-workouts">
+               <tal:workout tal:repeat="workout bulk_file.workouts">
+               <li>
+               <span tal:content="workout.start_in_timezone(context.timezone)"></span>,
+               <span tal:content="workout.sport"></span>,
+               <span tal:content="workout.title"></span>
+               </li>
+               </tal:workout>
+               </ul>
+               </tal:workouts>
+          -->
           <tal:no_workouts tal:condition="bulk_file.loaded and not bulk_file.workout_ids">
             <p><span i18n:translate>No workouts have been loaded from this file</span></p>
           </tal:no_workouts>

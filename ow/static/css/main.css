@@ -1401,6 +1401,12 @@ i.arrow {
   color: white;
   background-color: red;
 }
+.login-content ul.error {
+  list-style: none;
+  color: white;
+  padding: 5px;
+  margin: 0px;
+}
 /*
 .login-remember {
     color: @color-main-medium;

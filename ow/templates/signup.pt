@@ -17,47 +17,48 @@
 
           <fieldset>
             <div>
-              ${form.errorlist('email')}
               <label for="email" i18n:translate="">Email</label>
               <input placeholder="We need a valid email address"
                      type="text" name="email"
                      value="" i18n:attributes="placeholder"
                      tal:attributes="value form.data.get('email', '')">
+              ${form.errorlist('email')}
+
             </div>
             <div>
-              ${form.errorlist('nickname')}
               <label for="nickname" i18n:translate="">Nickname</label>
               <input placeholder="Choose a cool nickname" type="text"
                      name="nickname" value=""
                      i18n:attributes="placeholder"
                      tal:attributes="value form.data.get('nickname', '')">
+              ${form.errorlist('nickname')}
             </div>
             <div>
-              ${form.errorlist('firstname')}
               <label for="firstname" i18n:translate="">First name</label>
               <input placeholder="Your real first name here" type="text"
                      name="firstname" value="" i18n:attributes="placeholder"
                      tal:attributes="value form.data.get('firstname', '')">
+              ${form.errorlist('firstname')}
             </div>
             <div>
-              ${form.errorlist('lastname')}
               <label for="lastname" i18n:translate="">Last name</label>
               <input placeholder="Your family name here" type="text"
                      name="lastname" value="" i18n:attributes="placeholder"
                      tal:attributes="value form.data.get('lastname', '')">
+              ${form.errorlist('lastname')}
             </div>
             <div>
-              ${form.errorlist('password')}
               <label for="password" i18n:translate="">Password</label>
               <input placeholder="More than 9 characters, numbers and/or symbols"
                      name="password"
                      type="password" i18n:attributes="placeholder">
+              ${form.errorlist('password')}
             </div>
             <div>
-              ${form.errorlist('password_confirm')}
               <label for="password_confirm" i18n:translate="">Password (confirm)</label>
               <input placeholder="Confirm your password" name="password_confirm"
                      type="password" i18n:attributes="placeholder">
+              ${form.errorlist('password_confirm')}
             </div>
           </fieldset>
 

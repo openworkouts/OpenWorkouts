@@ -154,6 +154,7 @@ class TestWorkoutModels(object):
         )
         # now a workout that is not (no owner info)
         workout = Workout(
+            sport='running',
             start_time=datetime.now(timezone.utc),
             duration=timedelta(seconds=3600),
             distance=Decimal(30)
@@ -165,12 +166,9 @@ class TestWorkoutModels(object):
         )
         # now an empty workout...
         workout = Workout()
-        with pytest.raises(AttributeError):
-            assert workout.hashed == (
-                workout.start.strftime('%Y%m%d%H%M%S') +
-                str(workout.duration.seconds) +
-                str(workout.distance)
-            )
+        assert workout.hashed == (
+            workout.start.strftime('%Y%m%d%H%M%S')
+        )
 
     def test_trimmed_notes(self):
         workout = Workout()

@@ -144,8 +144,10 @@ class Workout(Folder):
         if self.owner is not None:
             hashed += str(self.owner.uid)
         hashed += self.start.strftime('%Y%m%d%H%M%S')
-        hashed += str(self.duration.seconds)
-        hashed += str(self.distance)
+        if self.duration is not None:
+            hashed += str(self.duration.seconds)
+        if self.distance is not None:
+            hashed += str(self.distance)
         return hashed
 
     @property

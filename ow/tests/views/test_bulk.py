@@ -215,3 +215,71 @@ class TestBulkViews(object):
         response = bulk_views.bulk_files(user, request)
         assert response == {'bulk_files': [bulk_file]}
         assert response['bulk_files'][0].uid == str(user.uid)
+
+    def test_delete_bulk_file_get(self, dummy_request):
+        request = dummy_request
+        user = request.root.users[0]
+        # let's add one bulk file
+        uid = str(user.uid)
+        bulk_file = BulkFile(uid=uid)
+        bulk_file_path = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)),
+            'fixtures/bulk-fit.zip')
+        with open(bulk_file_path, 'rb') as _bulk_file:
+            bulk_file.compressed_file = create_blob(
+                _bulk_file.read(), file_extension='zip', binary=True)
+        bulk_file.file_name = 'bulk-fit.zip'
+        bulk_file.file_type = 'zip'
+        request.root['_bulk_files'].add_bulk_file(bulk_file)
+        assert len(request.root['_bulk_files']) == 1
+        response = bulk_views.delete_bulk_file(bulk_file, request)
+        assert response == {'user': user}
+        assert len(request.root['_bulk_files']) == 1
+
+    def test_delete_bulk_file_post_invalid(self, dummy_request):
+        request = dummy_request
+        request.method = 'POST'
+        # invalid, missing confirmation delete hidden value
+        request.POST = MultiDict({'submit': True})
+        user = request.root.users[0]
+        # let's add one bulk file
+        uid = str(user.uid)
+        bulk_file = BulkFile(uid=uid)
+        bulk_file_path = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)),
+            'fixtures/bulk-fit.zip')
+        with open(bulk_file_path, 'rb') as _bulk_file:
+            bulk_file.compressed_file = create_blob(
+                _bulk_file.read(), file_extension='zip', binary=True)
+        bulk_file.file_name = 'bulk-fit.zip'
+        bulk_file.file_type = 'zip'
+        request.root['_bulk_files'].add_bulk_file(bulk_file)
+        assert len(request.root['_bulk_files']) == 1
+        response = bulk_views.delete_bulk_file(bulk_file, request)
+        assert response == {'user': user}
+        assert len(request.root['_bulk_files']) == 1
+
+    def test_delete_bulk_file_post_valid(self, dummy_request):
+        request = dummy_request
+        request.method = 'POST'
+        # invalid, missing confirmation delete hidden value
+        request.POST = MultiDict({'submit': True, 'delete': 'yes'})
+        user = request.root.users[0]
+        # let's add one bulk file
+        uid = str(user.uid)
+        bulk_file = BulkFile(uid=uid)
+        bulk_file_path = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)),
+            'fixtures/bulk-fit.zip')
+        with open(bulk_file_path, 'rb') as _bulk_file:
+            bulk_file.compressed_file = create_blob(
+                _bulk_file.read(), file_extension='zip', binary=True)
+        bulk_file.file_name = 'bulk-fit.zip'
+        bulk_file.file_type = 'zip'
+        request.root['_bulk_files'].add_bulk_file(bulk_file)
+        assert len(request.root['_bulk_files']) == 1
+        response = bulk_views.delete_bulk_file(bulk_file, request)
+        # after a successful delete, we send the user back to his dashboard
+        assert isinstance(response, HTTPFound)
+        assert response.location == request.resource_url(user, 'bulk-files')
+        assert len(request.root['_bulk_files']) == 0

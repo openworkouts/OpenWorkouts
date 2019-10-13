@@ -59,6 +59,11 @@
             </tal:not_loaded>
           </p>
 
+          <p>
+            <a href="" tal:attributes="href request.resource_url(bulk_file, 'delete')"
+               i18n:translate="">delete</a>
+          </p>
+
           <!--!
                <tal:workouts tal:condition="bulk_file.loaded and bulk_file.workout_ids">
                <ul class="bulk-loaded-workouts">

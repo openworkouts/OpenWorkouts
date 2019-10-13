@@ -53,6 +53,24 @@ def add_bulk_file(context, request):
 
 
 @view_config(
+    context=BulkFile,
+    permission='delete',
+    name='delete',
+    renderer='ow:templates/delete_bulk_file.pt')
+def delete_bulk_file(context, request):
+    """
+    Delete a bulk file
+    """
+    uid = context.uid
+    user = request.root.get_user_by_uid(uid)
+    if 'submit' in request.POST:
+        if request.POST.get('delete', None) == 'yes':
+            del request.root['_bulk_files'][str(context.bfid)]
+            return HTTPFound(location=request.resource_url(user, 'bulk-files'))
+    return {'user': user}
+
+
+@view_config(
     context=User,
     permission='edit',
     name='bulk-files',

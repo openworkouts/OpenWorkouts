@@ -120,9 +120,9 @@ class OpenWorkouts(Folder):
     @property
     def emails(self):
         """
-        Return all emails currently in use by users
+        Return all emails currently in use by users, sorted alphabetically
         """
-        return [user.email for user in self.users]
+        return sorted([user.email for user in self.users])
 
     @property
     def lowercase_emails(self):

@@ -155,8 +155,8 @@ class TestRootOpenWorkouts(object):
         user = User(firstname='Jack', lastname='Dumb',
                     email='Jack.Dumb@example.net')
         root.add_user(user)
-        assert root.lowercase_emails == ['john.doe@example.net',
-                                         'jack.dumb@example.net']
+        assert root.lowercase_emails == ['jack.dumb@example.net',
+                                         'john.doe@example.net']
 
     def test_sports(self, root, john):
         assert root.sports == ['cycling']
